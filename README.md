@@ -27,7 +27,7 @@ This toolkit simplifies the journey of:
 The tool is designed to follow a simple CLI structure with 4 commands:
 
 - `ingest` various file formats
-- `create` your fine-tuning format: `QA` pairs, `QA` pairs with CoT, `summary` format
+- `create` your fine-tuning format: `QA` pairs, `QA` pairs with CoT, `summary`, `knowledge`, `blog` format
 - `curate`: Using Llama as a judge to curate high quality examples. 
 - `save-as`: After that you can simply save these to a format that your fine-tuning workflow requires.
 
@@ -101,7 +101,12 @@ OR
 # Generate Chain of Thought (CoT) reasoning examples
 synthetic-data-kit create data/parsed/report.txt --type cot
 
-# Both of these save file to data/generated/report_qa_pairs.json
+OR
+
+# Generate a blog post
+synthetic-data-kit create data/parsed/report.txt --type blog
+
+# All of these save files to data/generated/
 
 # Filter content based on quality
 synthetic-data-kit curate data/generated/report_qa_pairs.json
@@ -154,6 +159,24 @@ The toolkit uses a YAML configuration file (default: `configs/config.yaml`).
 
 Note, this can be overridden via either CLI arguments OR passing a custom YAML file
 
+### Environment Variables Setup
+
+For API keys and sensitive credentials, use environment variables instead of hardcoding them in config files:
+
+```bash
+# Quick setup - copy the template
+cp .env.example .env
+
+# Edit .env and add your keys:
+# API_ENDPOINT_KEY=your-api-key
+# OPENAI_API_KEY=sk-your-openai-key
+# ELEVENLABS_API_KEY=your-elevenlabs-key
+```
+
+**📖 See [ENV_SETUP.md](ENV_SETUP.md) for complete environment variable documentation.**
+
+### Configuration Examples
+
 ```yaml
 # Example configuration using vLLM
 llm:
@@ -184,7 +207,7 @@ llm:
 
 api-endpoint:
   api_base: "https://api.llama.com/v1"
-  api_key: "llama-api-key"
+  api_key: "llama-api-key"  # Or use API_ENDPOINT_KEY env var (recommended)
   model: "Llama-4-Maverick-17B-128E-Instruct-FP8"
   sleep_time: 0.5
 ```
@@ -275,6 +298,18 @@ synthetic-data-kit ingest "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 synthetic_data_kit create data/parsed/youtube_dQw4w9WgXcQ.lance
 ```
 
+### Blog Post Generation
+
+Generate engaging blog posts from your documents with structured content, compelling titles, and organized sections.
+
+```bash
+# Generate a blog post from a text file
+synthetic-data-kit create data/parsed/article.txt --type blog
+
+# Process an entire directory of text files as blog posts
+synthetic-data-kit create ./data/parsed/ --type blog
+```
+
 ### Multimodal Usage
 
 The tool can also handle multimodal data, extracting both text and images from documents.
@@ -298,6 +333,9 @@ synthetic-data-kit ingest ./data/input/
 synthetic-data-kit create ./data/parsed/ --type qa -n 20
 synthetic-data-kit curate ./data/generated/ -t 7.5
 synthetic-data-kit save-as ./data/curated/ -f chatml
+
+# Generate blog posts from all parsed text files
+synthetic-data-kit create ./data/parsed/ --type blog
 
 # LEGACY: Bash script to process multiple files (still supported)
 for file in data/pdf/*.pdf; do
@@ -447,6 +485,7 @@ graph LR
     Create --> CoT[CoT]
     Create --> QA[QA Pairs]
     Create --> Summary[Summary]
+    Create --> Blog[Blog Post]
     
     Curate --> Filter[Filter by Quality]
     

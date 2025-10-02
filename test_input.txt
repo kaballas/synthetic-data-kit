@@ -1,0 +1,1 @@
+This is a sample text that will be used to test the blog post generation feature. The Synthetic Data Kit should be able to convert this plain text into a well-structured blog post with an engaging title and organized content.

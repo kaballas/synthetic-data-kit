@@ -14,6 +14,7 @@ from synthetic_data_kit.generators.qa_generator import QAGenerator
 from synthetic_data_kit.generators.vqa_generator import VQAGenerator
 from synthetic_data_kit.generators.multimodal_qa_generator import MultimodalQAGenerator
 from synthetic_data_kit.generators.knowledge_generator import KnowledgeGraphGenerator
+from synthetic_data_kit.generators.blog_generator import BlogGenerator
 
 from synthetic_data_kit.utils.config import get_generation_config
 
@@ -346,6 +347,27 @@ def process_file(
         if verbose:
             print(f"Knowledge graph saved to {output_path}")
             print(f"Generated {len(result.get('nodes', []))} nodes and {len(result.get('relationships', []))} relationships")
+        
+        return output_path
+
+    elif content_type == "blog":
+        # Initialize the Blog Generator
+        generator = BlogGenerator(client, config_path)
+
+        # Process document to generate blog post
+        result = generator.process_documents(
+            documents,
+            verbose=verbose
+        )
+        
+        # Save output
+        output_path = os.path.join(output_dir, f"{base_name}_blog_post.json")
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(result, f, indent=2)
+        
+        if verbose:
+            print(f"Blog post saved to {output_path}")
+            print(f"Generated blog post with {result.get('blog_post', {}).get('word_count', 0)} words")
         
         return output_path
 

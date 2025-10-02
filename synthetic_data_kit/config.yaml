@@ -46,17 +46,17 @@ generation:
   # Document processing strategy
   # "auto": choose based on document size, "single": force single call, "chunking": force chunking
   processing_strategy: "chunking"
-  single_call_max_size: 8000  # Documents smaller than this use single call processing
+  single_call_max_size: 32000  # Documents smaller than this use single call processing
   
   # Chunking parameters (used for large documents)
-  chunk_size: 8000   # Size of text chunks for processing large documents
+  chunk_size: 32000   # Size of text chunks for processing large documents
   overlap: 200       # Overlap between chunks to maintain context (prevents losing info at boundaries)
   
   # Model parameters
   max_tokens: 4096   # Maximum tokens in LLM responses
   
   # Content generation targets
-  num_pairs: 1000      # Default number of QA pairs to generate
+  num_pairs: 10      # Default number of QA pairs to generate
   num_cot_examples: 5  # Default number of Chain of Thought examples to generate
   num_cot_enhance_examples: null  # Maximum number of conversations to enhance (null = enhance all)
   
@@ -320,4 +320,118 @@ prompts:
 
     # Stop Conditions
     - Finish when all possible nodes and relationships are extracted or accounted for in the output format (including errors where information is missing or ambiguous).
+
+  # Blog post generation prompt
+  blog_generation: |
+    You are a professional content writer tasked with creating an engaging blog post from the provided text.
+    
+    Follow these guidelines:
+    1. Create a compelling title and subheadings to structure the content
+    2. Write in an informative yet conversational tone
+    3. Use the provided document text as the main content source
+    4. Add an introduction and conclusion to frame the content
+    5. Maintain factual accuracy to the source material
+    6. Include relevant examples or anecdotes if they help explain concepts
+    7. Ensure the blog post is well-structured with clear sections
+    
+    Your blog post should be comprehensive, engaging, and valuable to readers.
+    
+    Document text to use as source:
+    {document_text}
+    
+    Desired title (use as inspiration, feel free to adjust):
+    {title}
+
+# Podcast generation configuration
+podcast:
+  # Conversation style parameters
+  conversation_style:
+    - "engaging"
+    - "fast-paced"
+    - "enthusiastic"
+  
+  # Role definitions
+  roles:
+    person1: "main summarizer"
+    person2: "questioner/clarifier"
+  
+  # Dialogue structure
+  dialogue_structure:
+    - "Introduction"
+    - "Main Content Summary"
+    - "Conclusion"
+  
+  # Podcast branding
+  podcast_name: "PODCASTIFY"
+  podcast_tagline: "Your Personal Generative AI Podcast"
+  output_language: "English"
+  
+  # Engagement techniques to use
+  engagement_techniques:
+    - "rhetorical questions"
+    - "anecdotes"
+    - "analogies"
+    - "humor"
+  
+  # Generation parameters
+  creativity: 1  # 0-2 scale for creativity level
+  user_instructions: ""
+  
+  # Chunking parameters for long-form content
+  max_num_chunks: 8  # Maximum number of rounds of discussions
+  min_chunk_size: 600  # Minimum characters to generate a discussion round
+  
+  # Text-to-speech configuration
+  text_to_speech:
+    # Default TTS provider: "openai", "elevenlabs", "edge", "gemini", or "geminimulti"
+    default_tts_model: "openai"
+    
+    # Output directories
+    output_directories:
+      transcripts: "./data/transcripts"
+      audio: "./data/audio"
+    
+    # ElevenLabs TTS settings
+    elevenlabs:
+      default_voices:
+        question: "Chris"
+        answer: "Jessica"
+      model: "eleven_multilingual_v2"
+      api_key: null  # Set via ELEVENLABS_API_KEY env var
+    
+    # OpenAI TTS settings
+    openai:
+      default_voices:
+        question: "coral"    # Available: coral, alloy, echo, fable, onyx, nova, shimmer
+        answer: "alloy"
+      model: "gpt-4o-mini-tts"
+      # Voice instructions for tone control
+      voice_instructions:
+        question: "Speak in a curious and engaging tone, as if asking thoughtful questions."
+        answer: "Speak in a clear, informative, and friendly tone, as if explaining concepts."
+    
+    # Edge TTS settings (free, no API key needed)
+    edge:
+      default_voices:
+        question: "en-US-JennyNeural"
+        answer: "en-US-EricNeural"
+    
+    # Google Gemini TTS settings
+    gemini:
+      default_voices:
+        question: "en-US-Journey-D"
+        answer: "en-US-Journey-O"
+      api_key: null  # Set via GOOGLE_API_KEY env var
+    
+    # Google Gemini Multi-speaker TTS settings
+    geminimulti:
+      default_voices:
+        question: "R"
+        answer: "S"
+      model: "en-US-Studio-MultiSpeaker"
+    
+    # Audio output settings
+    audio_format: "mp3"
+    temp_audio_dir: "data/audio/tmp/"
+    ending_message: "See You Next Time!"
 

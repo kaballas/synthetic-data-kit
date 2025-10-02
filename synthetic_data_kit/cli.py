@@ -342,7 +342,7 @@ def ingest(
 def create(
     input: str = typer.Argument(..., help="File or directory to process"),
     content_type: str = typer.Option(
-        "qa", "--type", help="Type of content to generate [qa|summary|cot|cot-enhance|knowledge|multimodal-qa]"
+        "qa", "--type", help="Type of content to generate [qa|summary|cot|cot-enhance|knowledge|multimodal-qa|blog]"
     ),
     output_dir: Optional[Path] = typer.Option(
         None, "--output-dir", "-o", help="Where to save the output"
@@ -388,6 +388,7 @@ def create(
        - An array of conversation objects, each with a 'conversations' field
        - A direct array of conversation messages)
     - knowledge: Extract a knowledge graph from text using LLM to identify entities and relationships (from .txt files)
+    - blog: Generate a blog post from .txt files
     """
     import os
     from synthetic_data_kit.core.create import process_file
@@ -433,7 +434,12 @@ def create(
             # Preview mode - show files without processing
             if preview:
                 # For cot-enhance, look for .json files, otherwise .txt files
-                extensions = ['.json'] if content_type == "cot-enhance" else CREATE_EXTENSIONS
+                if content_type == "cot-enhance":
+                    extensions = ['.json']
+                elif content_type == "blog":
+                    extensions = ['.txt']
+                else:
+                    extensions = CREATE_EXTENSIONS
                 
                 console.print(f"Preview: scanning directory [bold]{input}[/bold] for {content_type} processing", style="blue")
                 stats = get_directory_stats(input, extensions)
@@ -954,6 +960,200 @@ def generate_knowledge_graph_cli(
         for message in errors:
             console.print(f"  - {message}", style="yellow")
     return 0
+
+
+@app.command("podcast")
+def podcast(
+    input: str = typer.Argument(..., help="File or directory to convert to podcast"),
+    output_dir: Optional[Path] = typer.Option(
+        None, "--output-dir", "-o", help="Where to save the podcast outputs"
+    ),
+    api_base: Optional[str] = typer.Option(
+        None, "--api-base", help="LLM API base URL"
+    ),
+    model: Optional[str] = typer.Option(
+        None, "--model", "-m", help="Model to use for dialogue generation"
+    ),
+    generate_audio: bool = typer.Option(
+        False, "--audio", "-a", help="Generate audio file (requires TTS setup)"
+    ),
+    tts_provider: Optional[str] = typer.Option(
+        None, "--tts", help="TTS provider [openai|elevenlabs|edge|gemini|geminimulti]"
+    ),
+    num_chunks: Optional[int] = typer.Option(
+        None, "--num-chunks", help="Number of dialogue chunks for long content"
+    ),
+    verbose: bool = typer.Option(
+        False, "--verbose", "-v", help="Show detailed output"
+    ),
+    preview: bool = typer.Option(
+        False, "--preview", help="Preview files to be processed without actually processing them"
+    ),
+):
+    """
+    Convert text documents to podcast dialogues.
+    
+    Can process:
+    - Single file: synthetic-data-kit podcast document.txt
+    - Directory: synthetic-data-kit podcast ./data/parsed/
+    
+    Generates:
+    - Transcript file (always generated)
+    - Dialogue JSON (always generated)
+    - Audio file (optional, with --audio flag)
+    
+    TTS Providers:
+    - openai: OpenAI TTS (requires API key)
+    - elevenlabs: ElevenLabs (requires API key)
+    - edge: Edge TTS (free, no API key needed)
+    - gemini: Google Gemini TTS (requires API key)
+    
+    Examples:
+        # Generate transcript only
+        synthetic-data-kit podcast document.txt
+        
+        # Generate transcript and audio with OpenAI
+        synthetic-data-kit podcast document.txt --audio --tts openai
+        
+        # Process entire directory with Edge TTS (free)
+        synthetic-data-kit podcast ./data/parsed/ --audio --tts edge -v
+    """
+    import os
+    from synthetic_data_kit.utils.directory_processor import is_directory
+    
+    # Check the LLM provider from config
+    provider = get_llm_provider(ctx.config)
+    console.print(f"🔗 Using {provider} provider for dialogue generation", style="green")
+    
+    if provider == "api-endpoint":
+        # Use API endpoint config
+        api_endpoint_config = get_openai_config(ctx.config)
+        api_base = api_base or api_endpoint_config.get("api_base")
+        model = model or api_endpoint_config.get("model")
+    else:
+        # Use vLLM config
+        vllm_config = get_vllm_config(ctx.config)
+        api_base = api_base or vllm_config.get("api_base")
+        model = model or vllm_config.get("model")
+        
+        # Check vLLM server availability
+        try:
+            response = requests.get(f"{api_base}/models", timeout=2)
+            if response.status_code != 200:
+                console.print(f"❌ Error: VLLM server not available at {api_base}", style="red")
+                console.print("Please start the VLLM server with:", style="yellow")
+                console.print(f"vllm serve {model}", style="bold blue")
+                return 1
+        except requests.exceptions.RequestException:
+            console.print(f"❌ Error: VLLM server not available at {api_base}", style="red")
+            console.print("Please start the VLLM server with:", style="yellow")
+            console.print(f"vllm serve {model}", style="bold blue")
+            return 1
+    
+    # Get output directory from args, then config, then default
+    if output_dir is None:
+        output_dir = get_path_config(ctx.config, "output", "generated")
+    
+    # Get TTS provider from args or config
+    if tts_provider is None:
+        tts_provider = ctx.config.get("podcast", {}).get("text_to_speech", {}).get("default_tts_model", "openai")
+    
+    try:
+        # Check if input is a directory
+        if is_directory(input):
+            # Preview mode - show files without processing
+            if preview:
+                from synthetic_data_kit.utils.directory_processor import get_directory_stats
+                
+                console.print(f"Preview: scanning directory [bold]{input}[/bold] for podcast generation", style="blue")
+                stats = get_directory_stats(input, ['.txt'])
+                
+                if "error" in stats:
+                    console.print(f"❌ {stats['error']}", style="red")
+                    return 1
+                
+                console.print(f"\n📁 Directory: {input}")
+                console.print(f"📄 Total files: {stats['total_files']}")
+                console.print(f"✅ Supported files: {stats['supported_files']}")
+                console.print(f"❌ Unsupported files: {stats['unsupported_files']}")
+                
+                if stats['supported_files'] > 0:
+                    console.print(f"\n📋 Files that would be converted to podcasts:")
+                    for filename in stats['file_list']:
+                        console.print(f"  • {filename}")
+                    
+                    console.print(f"\n💡 To process these files, run:")
+                    audio_flag = "--audio --tts " + tts_provider if generate_audio else ""
+                    console.print(f"   synthetic-data-kit podcast {input} {audio_flag}", style="bold blue")
+                else:
+                    console.print(f"\n⚠️  No .txt files found for podcast generation.", style="yellow")
+                
+                return 0
+            
+            # Process directory
+            from synthetic_data_kit.utils.directory_processor import process_directory_podcast
+            
+            console.print(f"Processing directory: [bold]{input}[/bold] for podcast generation", style="blue")
+            if generate_audio:
+                console.print(f"Audio generation enabled with {tts_provider} TTS", style="cyan")
+            
+            results = process_directory_podcast(
+                directory=input,
+                output_dir=output_dir,
+                config_path=ctx.config_path,
+                api_base=api_base,
+                model=model,
+                generate_audio=generate_audio,
+                tts_provider=tts_provider,
+                num_chunks=num_chunks,
+                verbose=verbose,
+                provider=provider
+            )
+            
+            # Return appropriate exit code
+            if results["failed"] > 0:
+                console.print(f"⚠️  Completed with {results['failed']} errors", style="yellow")
+                return 1
+            else:
+                console.print("✅ All podcasts generated successfully!", style="green")
+                return 0
+        else:
+            # Process single file
+            if preview:
+                console.print("Preview mode is only available for directories. Processing single file...", style="yellow")
+            
+            from synthetic_data_kit.core.podcast import process_file
+            
+            if generate_audio:
+                console.print(f"Generating podcast with audio ({tts_provider} TTS)...", style="cyan")
+            
+            with console.status(f"Generating podcast from {input}..."):
+                result = process_file(
+                    input,
+                    output_dir,
+                    ctx.config_path,
+                    api_base,
+                    model,
+                    generate_audio,
+                    tts_provider,
+                    num_chunks,
+                    verbose,
+                    provider=provider
+                )
+            
+            console.print(f"✅ Podcast transcript saved to [bold]{result['transcript_path']}[/bold]", style="green")
+            if "audio_path" in result:
+                console.print(f"🔊 Audio saved to [bold]{result['audio_path']}[/bold]", style="green")
+            
+            return 0
+            
+    except Exception as e:
+        console.print(f"❌ Error: {e}", style="red")
+        if verbose:
+            import traceback
+            console.print("\n[red]Full traceback:[/red]")
+            traceback.print_exc()
+        return 1
 
 
 @app.command("server")

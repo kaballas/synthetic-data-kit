@@ -300,6 +300,9 @@ def process_directory_create(
     elif content_type == "knowledge":
         # Knowledge extraction can work with both text files and JSON files (for QA pairs)
         extensions = ['.txt', '.json']
+    elif content_type == "blog":
+        # Blog generation works with text files
+        extensions = ['.txt']
     else:
         extensions = ['.txt']
     
@@ -314,6 +317,8 @@ def process_directory_create(
             console.print(f"For multimodal-qa: looking for .lance files", style="yellow")
         elif content_type == "knowledge":
             console.print(f"For knowledge: looking for .txt and .json files", style="yellow")
+        elif content_type == "blog":
+            console.print(f"For blog: looking for .txt files", style="yellow")
         else:
             console.print(f"For {content_type}: looking for .txt files", style="yellow")
         return {
@@ -688,6 +693,144 @@ def process_directory_save_as(
     console.print(f"Total files: {results['total_files']}")
     console.print(f"Successful: {results['successful']}", style="green")
     console.print(f"Failed: {results['failed']}", style="red" if results['failed'] > 0 else "green")
+    console.print("="*50, style="bold")
+    
+    return results
+
+def process_directory_podcast(
+    directory: str,
+    output_dir: Optional[str] = None,
+    config_path: Optional[str] = None,
+    api_base: Optional[str] = None,
+    model: Optional[str] = None,
+    generate_audio: bool = False,
+    tts_provider: Optional[str] = None,
+    num_chunks: Optional[int] = None,
+    verbose: bool = False,
+    provider: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Process all supported files in directory for podcast generation
+    
+    Args:
+        directory: Directory containing .txt files to process
+        output_dir: Directory to save podcast outputs
+        config_path: Path to configuration file
+        api_base: API base URL
+        model: Model to use
+        generate_audio: Whether to generate audio files
+        tts_provider: TTS provider to use
+        num_chunks: Number of dialogue chunks
+        verbose: Show detailed progress
+        provider: LLM provider to use
+    
+    Returns:
+        Dictionary with processing results
+    """
+    from synthetic_data_kit.core.podcast import process_file
+    
+    # For podcast command, we process .txt files
+    supported_files = get_supported_files(directory, ['.txt'])
+    
+    if not supported_files:
+        console.print(f"No supported files found in {directory}", style="yellow")
+        console.print(f"For podcast: looking for .txt files", style="yellow")
+        return {
+            "total_files": 0,
+            "successful": 0,
+            "failed": 0,
+            "results": [],
+            "errors": []
+        }
+    
+    console.print(f"Found {len(supported_files)} text files to convert to podcasts", style="blue")
+    
+    # Initialize results tracking
+    results = {
+        "total_files": len(supported_files),
+        "successful": 0,
+        "failed": 0,
+        "results": [],
+        "errors": []
+    }
+    
+    # Process files with progress bar
+    with Progress(
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+        TextColumn("({task.completed}/{task.total})"),
+        TimeElapsedColumn(),
+        console=console,
+        disable=not verbose
+    ) as progress:
+        
+        task = progress.add_task("Generating podcasts", total=len(supported_files))
+        
+        for file_path in supported_files:
+            filename = os.path.basename(file_path)
+            
+            try:
+                # Process individual file
+                result = process_file(
+                    file_path,
+                    output_dir,
+                    config_path,
+                    api_base,
+                    model,
+                    generate_audio,
+                    tts_provider,
+                    num_chunks,
+                    verbose,
+                    provider=provider
+                )
+                
+                # Record success
+                results["successful"] += 1
+                
+                # Move the processed file to done folder
+                moved_path = move_to_done_folder(file_path, verbose)
+                
+                results["results"].append({
+                    "input_file": file_path,
+                    "transcript_path": result.get("transcript_path"),
+                    "dialogue_path": result.get("dialogue_path"),
+                    "audio_path": result.get("audio_path"),
+                    "status": "success",
+                    "moved_to": moved_path
+                })
+                
+                if verbose:
+                    console.print(f"✓ Generated podcast from {filename}", style="green")
+                    if result.get("audio_path"):
+                        console.print(f"  🔊 Audio: {os.path.basename(result['audio_path'])}", style="cyan")
+                else:
+                    console.print(f"✓ {filename}", style="green")
+                
+            except Exception as e:
+                # Record failure
+                results["failed"] += 1
+                results["errors"].append({
+                    "input_file": file_path,
+                    "error": str(e),
+                    "status": "failed"
+                })
+                
+                if verbose:
+                    console.print(f"✗ Failed to generate podcast from {filename}: {e}", style="red")
+                else:
+                    console.print(f"✗ {filename}: {e}", style="red")
+            
+            progress.update(task, advance=1)
+    
+    # Show summary
+    console.print("\n" + "="*50, style="bold")
+    console.print(f"Podcast Generation Summary:", style="bold blue")
+    console.print(f"Total files: {results['total_files']}")
+    console.print(f"Successful: {results['successful']}", style="green")
+    console.print(f"Failed: {results['failed']}", style="red" if results['failed'] > 0 else "green")
+    if generate_audio:
+        audio_count = sum(1 for r in results["results"] if r.get("audio_path"))
+        console.print(f"Audio files generated: {audio_count}", style="cyan")
     console.print("="*50, style="bold")
     
     return results
