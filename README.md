@@ -234,6 +234,21 @@ synthetic-data-kit curate ./data/generated/ -t 8.5
 synthetic-data-kit save-as ./data/curated/ -f ft --storage hf
 ```
 
+### Generating Knowledge Graphs
+
+```bash
+# Summarize curated QA files into a single graph
+synthetic-data-kit generate-knowledge-graph ./data/curated/ --output data/final/knowledge_graph.json
+
+synthetic-data-kit create ./data/curated/ --type knowledge
+
+
+# Quick preview without writing a file
+synthetic-data-kit generate-knowledge-graph data/curated/report_cleaned.json --preview
+```
+
+`--max-nodes`, `--max-edges`, and `--min-cooccurrence` mirror the Python helper in `synthetic_data_kit.utils.knowledge_graph` so you can tune how dense the output graph becomes.
+
 ### Preview Before Processing
 
 ```bash
@@ -380,7 +395,7 @@ synthetic-data-kit create document.txt --type cot --num-pairs 20 --chunk-size 30
 
 # Directory processing
 synthetic-data-kit create ./data/parsed/ --type qa --num-pairs 100 --chunk-size 3000
-synthetic-data-kit create ./data/parsed/ --type cot --num-pairs 20 --chunk-size 3000
+synthetic-data-kit create ./data/input/ --type cot --num-pairs 20 --chunk-size 3000
 ```
 
 ## Advanced Usage

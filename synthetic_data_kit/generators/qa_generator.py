@@ -118,13 +118,14 @@ class QAGenerator:
             # Format the prompt with summary and text
             qa_prompt = qa_prompt_template.format(
                 num_pairs=pairs_per_chunk,
-                summary=summary[:100],
+                summary=summary,
                 text=chunk
             )
             
             messages = [
                 {"role": "system", "content": qa_prompt}
             ]
+            print(f"Prepared messages for chunk {i+1}/{len(chunks)}: {qa_prompt}")
             all_messages.append(messages)
         
         print(f"Processing {len(chunks)} chunks to generate QA pairs...")

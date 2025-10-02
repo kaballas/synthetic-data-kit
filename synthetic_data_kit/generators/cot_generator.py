@@ -25,32 +25,94 @@ class COTGenerator:
     def parse_json_output(self, output_text: str) -> Optional[List[Dict]]:
         """Parse JSON from LLM output text"""
         verbose = os.environ.get('SDK_VERBOSE', 'false').lower() == 'true'
-        output_text = output_text.strip()
         
-        # Try to extract JSON array
-        json_match = re.search(r"\[.*\]", output_text, re.DOTALL)
-        if json_match:
-            output_text = json_match.group(0)
-        
-        try:
-            # Handle quoted JSON
-            if output_text.startswith('"') and output_text.endswith('"'):
-                output_text = json.loads(output_text)
-            
-            # Load the JSON
-            result = json.loads(output_text)
-            
-            # Ensure it's a list
-            if not isinstance(result, list):
-                if verbose:
-                    print("Warning: Expected a list but got another type")
-                return None
-            
-            return result
-        except json.JSONDecodeError as e:
+        if not output_text:
             if verbose:
-                print(f"Error parsing output: {e}")
+                print("Empty output text received")
             return None
+            
+        original_text = output_text.strip()
+        
+        # Try multiple strategies to extract valid JSON
+        candidates = [original_text]
+        
+        # Try to extract JSON array with regex (more robust patterns)
+        json_patterns = [
+            r"\[.*\]",  # Full array
+            r"\{.*\}",  # Single object (less likely but possible)
+            r"```json\s*(\[.*\])\s*```",  # Code block with JSON
+            r"```\s*(\[.*\])\s*```",  # Code block without language
+        ]
+        
+        for pattern in json_patterns:
+            matches = re.findall(pattern, original_text, re.DOTALL)
+            candidates.extend(matches)
+        
+        # Also try to find JSON that starts with [ but may be cut off
+        if original_text.startswith('['):
+            candidates.append(original_text)
+        
+        # Try each candidate
+        for candidate in candidates:
+            candidate = candidate.strip()
+            if not candidate:
+                continue
+                
+            try:
+                # Handle quoted JSON
+                if candidate.startswith('"') and candidate.endswith('"'):
+                    candidate = json.loads(candidate)
+                
+                # Try to parse as JSON
+                result = json.loads(candidate)
+                
+                # Ensure it's a list
+                if isinstance(result, list):
+                    # Validate that each item has the expected structure
+                    valid_items = []
+                    for item in result:
+                        if isinstance(item, dict) and 'question' in item and 'reasoning' in item and 'answer' in item:
+                            valid_items.append(item)
+                        elif verbose:
+                            print(f"Skipping invalid item: missing required fields (question, reasoning, answer)")
+                    
+                    if valid_items:
+                        if verbose:
+                            print(f"Successfully parsed JSON array with {len(valid_items)} valid items")
+                        return valid_items
+                    else:
+                        if verbose:
+                            print("Parsed JSON array but no items had required fields")
+                        continue
+                elif isinstance(result, dict):
+                    # If it's a single object, check if it has the required fields
+                    if 'question' in result and 'reasoning' in result and 'answer' in result:
+                        if verbose:
+                            print("Parsed single JSON object with required fields, wrapping in list")
+                        return [result]
+                    else:
+                        if verbose:
+                            print("Parsed single JSON object but missing required fields")
+                        continue
+                else:
+                    if verbose:
+                        print(f"Parsed JSON but got unexpected type: {type(result)}")
+                    continue
+                    
+            except json.JSONDecodeError as e:
+                if verbose:
+                    print(f"Failed to parse candidate JSON: {e}")
+                    print(f"Candidate was: {candidate[:200]}...")
+                continue
+            except Exception as e:
+                if verbose:
+                    print(f"Unexpected error parsing candidate: {type(e).__name__}: {e}")
+                continue
+        
+        if verbose:
+            print("All JSON parsing attempts failed")
+            print(f"Original text (first 300 chars): {original_text[:300]}")
+        return None
     
     def generate_cot_examples(self, document_text: str, num_examples: int = None) -> List[Dict[str, Any]]:
         """Generate chain-of-thought reasoning examples using chunking for large documents"""
@@ -80,7 +142,11 @@ class COTGenerator:
             num_examples=num_examples,
             text=document_text
         )
+        if verbose:
+            print(f"Format the prompt {prompt} ")
         
+        
+
         # Generate examples
         temperature = self.generation_config.get("temperature", 0.7)
         max_tokens = self.generation_config.get("max_tokens", 4096)
@@ -89,18 +155,31 @@ class COTGenerator:
             print(f"Generating {num_examples} CoT examples (single call)...")
         
         messages = [{"role": "system", "content": prompt}]
-        response = self.client.chat_completion(
-            messages, 
-            temperature=temperature,
-            max_tokens=max_tokens
-        )
         
-        # Parse response
-        examples = self.parse_json_output(response)
-        
-        if examples is None:
+        try:
+            response = self.client.chat_completion(
+                messages, 
+                temperature=temperature,
+                max_tokens=max_tokens
+            )
+            
             if verbose:
-                print("Failed to parse CoT examples, returning empty list")
+                print(f"\n=== RAW LLM RESPONSE ===")
+                print(response[:500] if len(response) > 500 else response)
+                print(f"=== END RAW RESPONSE (length: {len(response)}) ===")
+            
+            # Parse response
+            examples = self.parse_json_output(response)
+            
+            if examples is None:
+                if verbose:
+                    print("Failed to parse CoT examples, returning empty list")
+                return []
+        except Exception as e:
+            print(f"Error during CoT generation: {type(e).__name__}: {str(e)}")
+            if verbose:
+                import traceback
+                traceback.print_exc()
             return []
         
         if verbose:
@@ -282,14 +361,27 @@ class COTGenerator:
         
         # Generate summary first (helpful context)
         max_context_length = self.generation_config.get("max_context_length", 8000)
-        summary = self.client.chat_completion(
-            [{"role": "system", "content": "Summarize this document in 2-3 sentences."},
-             {"role": "user", "content": document_text[0:max_context_length]}], 
-            temperature=0.1
-        )
+        try:
+            summary = self.client.chat_completion(
+                [{"role": "system", "content": "Summarize this document in 2-3 sentences."},
+                 {"role": "user", "content": document_text[0:max_context_length]}], 
+                temperature=0.1
+            )
+        except Exception as e:
+            print(f"Warning: Failed to generate summary: {e}")
+            summary = "Summary generation failed."
         
         # Generate CoT examples
         examples = self.generate_cot_examples(document_text, num_examples)
+        
+        if not examples:
+            print(f"Warning: No CoT examples were generated successfully")
+            # Return a minimal valid structure
+            return {
+                "summary": summary,
+                "cot_examples": [],
+                "conversations": []
+            }
         
         # Format into simple conversation format as well
         conversations = []

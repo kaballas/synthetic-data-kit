@@ -5,11 +5,13 @@
 # the root directory of this source tree.
 # CLI Logic for synthetic-data-kit
 
+import json
 import os
-import typer
 from pathlib import Path
-from typing import Optional
+from typing import Any, Dict, List, Optional
+
 import requests
+import typer
 from rich.console import Console
 from rich.table import Table
 
@@ -27,6 +29,68 @@ console = Console()
 
 # Create app context
 ctx = AppContext()
+
+
+def _extract_qa_pairs_from_content(data: Any) -> List[Dict[str, Any]]:
+    """Normalize different stored formats into QA pairs."""
+    if isinstance(data, dict):
+        for key in ("qa_pairs", "filtered_pairs"):
+            value = data.get(key)
+            if isinstance(value, list):
+                pairs = [item for item in value if isinstance(item, dict) and "question" in item and "answer" in item]
+                if pairs:
+                    return pairs
+        conversations = data.get("conversations")
+        if isinstance(conversations, list):
+            pairs = []
+            for conversation in conversations:
+                if not isinstance(conversation, list):
+                    continue
+                user_content = None
+                assistant_content = None
+                for message in conversation:
+                    if not isinstance(message, dict):
+                        continue
+                    role = message.get("role")
+                    if role == "user" and user_content is None:
+                        user_content = message.get("content")
+                    elif role == "assistant" and assistant_content is None:
+                        assistant_content = message.get("content")
+                if user_content and assistant_content:
+                    pairs.append({"question": user_content, "answer": assistant_content})
+            if pairs:
+                return pairs
+    elif isinstance(data, list):
+        pairs = [item for item in data if isinstance(item, dict) and "question" in item and "answer" in item]
+        if pairs:
+            return pairs
+    return []
+
+
+def _load_qa_pairs_from_file(file_path: str) -> List[Dict[str, Any]]:
+    """Load QA pairs from a curated artefact or raw list file."""
+    path_obj = Path(file_path)
+    suffix = path_obj.suffix.lower()
+
+    if suffix == '.jsonl':
+        pairs: List[Dict[str, Any]] = []
+        with open(file_path, 'r', encoding='utf-8') as handle:
+            for line in handle:
+                record = line.strip()
+                if not record:
+                    continue
+                item = json.loads(record)
+                if isinstance(item, dict) and 'question' in item and 'answer' in item:
+                    pairs.append(item)
+                else:
+                    extracted = _extract_qa_pairs_from_content(item)
+                    if extracted:
+                        pairs.extend(extracted)
+        return pairs
+
+    with open(file_path, 'r', encoding='utf-8') as handle:
+        data = json.load(handle)
+    return _extract_qa_pairs_from_content(data)
 
 # Define global options
 @app.callback()
@@ -278,7 +342,7 @@ def ingest(
 def create(
     input: str = typer.Argument(..., help="File or directory to process"),
     content_type: str = typer.Option(
-        "qa", "--type", help="Type of content to generate [qa|summary|cot|cot-enhance|multimodal-qa]"
+        "qa", "--type", help="Type of content to generate [qa|summary|cot|cot-enhance|knowledge|multimodal-qa]"
     ),
     output_dir: Optional[Path] = typer.Option(
         None, "--output-dir", "-o", help="Where to save the output"
@@ -323,6 +387,7 @@ def create(
        - A single conversation in 'conversations' field
        - An array of conversation objects, each with a 'conversations' field
        - A direct array of conversation messages)
+    - knowledge: Extract a knowledge graph from text using LLM to identify entities and relationships (from .txt files)
     """
     import os
     from synthetic_data_kit.core.create import process_file
@@ -449,6 +514,10 @@ def create(
             
     except Exception as e:
         console.print(f"❌ Error: {e}", style="red")
+        if verbose:
+            import traceback
+            console.print("\n[red]Full traceback:[/red]")
+            traceback.print_exc()
         return 1
 
 
@@ -746,6 +815,145 @@ def save_as(
     except Exception as e:
         console.print(f"❌ Error: {e}", style="red")
         return 1
+
+
+@app.command("generate-knowledge-graph")
+def generate_knowledge_graph_cli(
+    input: str = typer.Argument(..., help="File or directory of curated QA pairs"),
+    output: Optional[Path] = typer.Option(
+        None, "--output", "-o", help="Path to save the generated knowledge graph JSON"
+    ),
+    max_nodes: int = typer.Option(
+        50, "--max-nodes", help="Maximum number of nodes to include"
+    ),
+    max_edges: int = typer.Option(
+        200, "--max-edges", help="Maximum number of edges to include"
+    ),
+    min_cooccurrence: float = typer.Option(
+        1.0, "--min-cooccurrence", help="Minimum co-occurrence weight for edges"
+    ),
+    # Older Typer/Click versions may not support `multiple=True` on Option.
+    # Accept a single string (comma-separated) or repeated flags depending on the
+    # installed Typer behavior. We'll parse the value(s) into a list below.
+    stopwords: Optional[str] = typer.Option(
+        None,
+        "--stopword",
+        "-s",
+        help="Additional stopwords to exclude (comma-separated or repeat flag for multiple values)",
+    ),
+    preview: bool = typer.Option(
+        False, "--preview", help="Show summary without writing the graph"
+    ),
+    verbose: bool = typer.Option(
+        False, "--verbose", "-v", help="Show detailed loading information"
+    ),
+):
+    """Generate a lightweight knowledge graph from curated QA pairs."""
+    from synthetic_data_kit.utils.directory_processor import get_supported_files, is_directory
+    from synthetic_data_kit.utils.knowledge_graph import generate_knowledge_graph as build_graph
+
+    graph_extensions = ['.json', '.jsonl']
+    input_path = Path(input)
+    # Normalize stopwords into a list. Support three cases:
+    # - None/empty -> None
+    # - A single comma-separated string -> split into list
+    # - A list (if Typer/Click returned multiple flags as a list) -> flatten and split
+    stopword_list = []
+    if stopwords:
+        # If a list was passed (some Typer versions may return a list), handle it
+        if isinstance(stopwords, list):
+            for item in stopwords:
+                if item:
+                    stopword_list.extend([w.strip() for w in str(item).split(",") if w.strip()])
+        else:
+            # Single string: allow comma-separated values
+            stopword_list = [w.strip() for w in str(stopwords).split(",") if w.strip()]
+
+    if not stopword_list:
+        stopword_list = None
+
+    if is_directory(str(input_path)):
+        files = get_supported_files(str(input_path), graph_extensions)
+        if not files:
+            console.print(f"No supported files found in {input_path}", style="yellow")
+            return 1
+    else:
+        if not input_path.exists():
+            console.print(f"Input path not found: {input_path}", style="red")
+            return 1
+        if input_path.suffix.lower() not in graph_extensions:
+            console.print("Input file must be a .json or .jsonl artifact containing QA pairs.", style="red")
+            return 1
+        files = [str(input_path)]
+
+    all_pairs: List[Dict[str, Any]] = []
+    errors: List[str] = []
+
+    for file_str in files:
+        try:
+            pairs = _load_qa_pairs_from_file(file_str)
+        except json.JSONDecodeError as exc:
+            message = f"{file_str}: {exc}"
+            errors.append(message)
+            if verbose:
+                console.print(f"Failed to parse {file_str}: {exc}", style="red")
+            continue
+
+        if not pairs:
+            if verbose:
+                console.print(f"No QA pairs found in {file_str}", style="yellow")
+            continue
+
+        all_pairs.extend(pairs)
+        if verbose:
+            console.print(f"Loaded {len(pairs)} pair(s) from {file_str}", style="blue")
+
+    if not all_pairs:
+        console.print("No QA pairs available to build a knowledge graph.", style="red")
+        if errors:
+            console.print("Files skipped due to errors:", style="yellow")
+            for message in errors:
+                console.print(f"  - {message}", style="yellow")
+        return 1
+
+    graph = build_graph(
+        all_pairs,
+        max_nodes=max_nodes,
+        max_edges=max_edges,
+        min_cooccurrence=min_cooccurrence,
+        additional_stopwords=stopword_list,
+    )
+
+    if preview:
+        console.print(
+            f"Preview: {len(graph['nodes'])} nodes, {len(graph['edges'])} edges from {len(all_pairs)} QA pairs.",
+            style="blue",
+        )
+        if errors:
+            console.print("Files skipped due to errors:", style="yellow")
+            for message in errors:
+                console.print(f"  - {message}", style="yellow")
+        return 0
+
+    if output is None:
+        if is_directory(str(input_path)):
+            output_path = input_path / "knowledge_graph.json"
+        else:
+            output_path = input_path.with_name(f"{input_path.stem}_knowledge_graph.json")
+    else:
+        output_path = Path(output)
+        if output_path.is_dir():
+            output_path = output_path / "knowledge_graph.json"
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(graph, indent=2), encoding='utf-8')
+
+    console.print(f"Knowledge graph saved to {output_path}", style="green")
+    if errors:
+        console.print("Files skipped due to errors:", style="yellow")
+        for message in errors:
+            console.print(f"  - {message}", style="yellow")
+    return 0
 
 
 @app.command("server")

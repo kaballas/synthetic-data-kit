@@ -6,12 +6,56 @@
 # Directory processing utilities for batch operations
 
 import os
+import shutil
 from pathlib import Path
 from typing import List, Dict, Any, Optional, Callable
 from rich.console import Console
 from rich.progress import Progress, BarColumn, TextColumn, TimeElapsedColumn
 
 console = Console()
+
+def move_to_done_folder(file_path: str, verbose: bool = False) -> Optional[str]:
+    """Move a processed file to a 'done' subfolder in the same directory
+    
+    Args:
+        file_path: Path to the file to move
+        verbose: Show detailed output
+    
+    Returns:
+        New file path if successful, None if failed
+    """
+    try:
+        # Get directory and filename
+        directory = os.path.dirname(file_path)
+        filename = os.path.basename(file_path)
+        
+        # Create 'done' subfolder if it doesn't exist
+        done_folder = os.path.join(directory, "done")
+        os.makedirs(done_folder, exist_ok=True)
+        
+        # New file path
+        new_path = os.path.join(done_folder, filename)
+        
+        # If file already exists in done folder, add a number suffix
+        if os.path.exists(new_path):
+            base, ext = os.path.splitext(filename)
+            counter = 1
+            while os.path.exists(new_path):
+                new_filename = f"{base}_{counter}{ext}"
+                new_path = os.path.join(done_folder, new_filename)
+                counter += 1
+        
+        # Move the file
+        shutil.move(file_path, new_path)
+        
+        if verbose:
+            console.print(f"  → Moved to done/{os.path.basename(new_path)}", style="dim")
+        
+        return new_path
+    except Exception as e:
+        if verbose:
+            console.print(f"  ⚠ Failed to move file: {e}", style="yellow")
+        return None
 
 # Supported file extensions for each command
 INGEST_EXTENSIONS = ['.pdf', '.html', '.htm', '.docx', '.pptx', '.txt']
@@ -126,10 +170,15 @@ def process_directory_ingest(
                 
                 # Record success
                 results["successful"] += 1
+                
+                # Move the processed file to done folder
+                moved_path = move_to_done_folder(file_path, verbose)
+                
                 results["results"].append({
                     "input_file": file_path,
                     "output_file": output_path,
-                    "status": "success"
+                    "status": "success",
+                    "moved_to": moved_path
                 })
                 
                 if verbose:
@@ -147,7 +196,7 @@ def process_directory_ingest(
                 })
                 
                 if verbose:
-                    console.print(f"✗ Failed to process {filename}: {e}", style="red")
+                    console.print(f"✗ 1 Failed to process {filename}: {e}", style="red")
                 else:
                     console.print(f"✗ {filename}: {e}", style="red")
             
@@ -248,6 +297,9 @@ def process_directory_create(
         extensions = ['.json']
     elif content_type == "multimodal-qa":
         extensions = ['.lance']
+    elif content_type == "knowledge":
+        # Knowledge extraction can work with both text files and JSON files (for QA pairs)
+        extensions = ['.txt', '.json']
     else:
         extensions = ['.txt']
     
@@ -260,6 +312,8 @@ def process_directory_create(
             console.print(f"For cot-enhance: looking for .json files", style="yellow")
         elif content_type == "multimodal-qa":
             console.print(f"For multimodal-qa: looking for .lance files", style="yellow")
+        elif content_type == "knowledge":
+            console.print(f"For knowledge: looking for .txt and .json files", style="yellow")
         else:
             console.print(f"For {content_type}: looking for .txt files", style="yellow")
         return {
@@ -315,11 +369,16 @@ def process_directory_create(
                 
                 # Record success
                 results["successful"] += 1
+                
+                # Move the processed file to done folder
+                moved_path = move_to_done_folder(file_path, verbose)
+                
                 results["results"].append({
                     "input_file": file_path,
                     "output_file": output_path,
                     "content_type": content_type,
-                    "status": "success"
+                    "status": "success",
+                    "moved_to": moved_path
                 })
                 
                 if verbose:
@@ -338,7 +397,7 @@ def process_directory_create(
                 })
                 
                 if verbose:
-                    console.print(f"✗ Failed to process {filename}: {e}", style="red")
+                    console.print(f"✗ 2 Failed to process {filename}: {e}", style="red")
                 else:
                     console.print(f"✗ {filename}: {e}", style="red")
             
@@ -447,11 +506,16 @@ def process_directory_curate(
                 
                 # Record success
                 results["successful"] += 1
+                
+                # Move the processed file to done folder
+                moved_path = move_to_done_folder(file_path, verbose)
+                
                 results["results"].append({
                     "input_file": file_path,
                     "output_file": result_path,
                     "threshold": threshold,
-                    "status": "success"
+                    "status": "success",
+                    "moved_to": moved_path
                 })
                 
                 if verbose:
@@ -582,12 +646,17 @@ def process_directory_save_as(
                 
                 # Record success
                 results["successful"] += 1
+                
+                # Move the processed file to done folder
+                moved_path = move_to_done_folder(file_path, verbose)
+                
                 results["results"].append({
                     "input_file": file_path,
                     "output_file": result_path,
                     "format": format,
                     "storage": storage_format,
-                    "status": "success"
+                    "status": "success",
+                    "moved_to": moved_path
                 })
                 
                 if verbose:

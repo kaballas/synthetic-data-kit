@@ -13,6 +13,7 @@ from synthetic_data_kit.models.llm_client import LLMClient
 from synthetic_data_kit.generators.qa_generator import QAGenerator
 from synthetic_data_kit.generators.vqa_generator import VQAGenerator
 from synthetic_data_kit.generators.multimodal_qa_generator import MultimodalQAGenerator
+from synthetic_data_kit.generators.knowledge_generator import KnowledgeGraphGenerator
 
 from synthetic_data_kit.utils.config import get_generation_config
 
@@ -315,6 +316,38 @@ def process_file(
         except json.JSONDecodeError:
             raise ValueError(f"Failed to parse {file_path} as JSON. For cot-enhance, input must be a valid JSON file.")
 
+    elif content_type == "knowledge":
+        # Initialize the Knowledge Graph generator
+        from synthetic_data_kit.generators.knowledge_generator import KnowledgeGraphGenerator
+        generator = KnowledgeGraphGenerator(client, config_path)
+
+        # For knowledge extraction, we want to pass the raw content to the LLM
+        # If it's a JSON file, read it as raw text to pass to the LLM
+        if file_path.endswith('.json'):
+            with open(file_path, 'r', encoding='utf-8') as f:
+                raw_content = f.read()  # Read as raw text, not parsed JSON
+            # Create a document with the raw content
+            documents = [{"text": raw_content, "image": None}]
+        else:
+            # For .txt and .lance files, use the existing documents processing
+            pass  # documents is already set from the earlier logic
+
+        # Process document to generate knowledge graph
+        result = generator.process_documents(
+            documents,
+            verbose=verbose
+        )
+        
+        # Save output
+        output_path = os.path.join(output_dir, f"{base_name}_knowledge_graph.json")
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(result, f, indent=2)
+        
+        if verbose:
+            print(f"Knowledge graph saved to {output_path}")
+            print(f"Generated {len(result.get('nodes', []))} nodes and {len(result.get('relationships', []))} relationships")
+        
+        return output_path
 
     else:
         raise ValueError(f"Unknown content type: {content_type}")

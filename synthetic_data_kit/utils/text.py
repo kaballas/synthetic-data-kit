@@ -10,28 +10,28 @@ from typing import List, Dict, Any
 
 def split_into_chunks(text: str, chunk_size: int = 4000, overlap: int = 200) -> List[str]:
     """Split text into chunks with optional overlap"""
-    paragraphs = text.split("\n\n")
+    print(f"DEBUG: Starting split_into_chunks with text length {len(text)}, chunk_size {chunk_size}, overlap {overlap}")
+    if chunk_size <= 0:
+        raise ValueError("chunk_size must be positive")
+    if overlap < 0:
+        raise ValueError("overlap must be non-negative")
+    
     chunks = []
-    current_chunk = ""
+    start = 0
+    text_len = len(text)
     
-    for para in paragraphs:
-        if len(current_chunk) + len(para) > chunk_size and current_chunk:
-            chunks.append(current_chunk)
-            # Keep some overlap for context
-            sentences = current_chunk.split('. ')
-            if len(sentences) > 3:
-                current_chunk = '. '.join(sentences[-3:]) + "\n\n" + para
-            else:
-                current_chunk = para
-        else:
-            if current_chunk:
-                current_chunk += "\n\n" + para
-            else:
-                current_chunk = para
+    while start < text_len:
+        end = min(start + chunk_size, text_len)
+        chunk = text[start:end]
+        print(f"DEBUG: Creating chunk from {start} to {end}, length {len(chunk)}")
+        chunks.append(chunk)
+        
+        # Advance start by chunk_size - overlap, but ensure progress
+        advance = max(chunk_size - overlap, 1)
+        start += advance
+        print(f"DEBUG: Advanced start to {start}")
     
-    if current_chunk:
-        chunks.append(current_chunk)
-    
+    print(f"DEBUG: Returning {len(chunks)} chunks")
     return chunks
 
 def extract_json_from_text(text: str) -> Dict[str, Any]:
