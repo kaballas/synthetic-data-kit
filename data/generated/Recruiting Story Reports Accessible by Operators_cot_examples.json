@@ -1,0 +1,5 @@
+{
+  "summary": "The document describes SAP SuccessFactors Recruiting Story Reports as SAP Analytics Cloud\u2013powered, role-based dashboards that deliver interactive audit and recruiting metrics (requisition status, candidate pipelines, time-to-fill, user activity) to support compliance and data-driven hiring decisions. It also details technical and functional requirements (RBP roles/permissions, IAS auth, data schemas, live sync), data architecture and refresh patterns, UX considerations, workflow impacts, common limitations, integrations, and practical recommendations for implementation and maintenance.",
+  "cot_examples": [],
+  "conversations": []
+}

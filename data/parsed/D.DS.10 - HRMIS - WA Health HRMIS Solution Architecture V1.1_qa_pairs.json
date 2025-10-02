@@ -1,0 +1,601 @@
+{
+  "summary": "This document describes the solution architecture for the Human Resource Management Information System (HRMIS) being implemented across the Western Australia (WA) Health system. The HRMIS program aims to replace legacy HR, payroll, and rostering systems with a unified, modern, and accessible platform, improving reliability, efficiency, and workforce management. The document details the program\u2019s objectives, design principles, system components, data flows, integration points, and user experience considerations. It also outlines the implementation strategy, which leverages commercial off-the-shelf software with minimal customisation, and highlights the collaborative design process involving stakeholders from across WA Health. The architecture serves as a guide for stakeholders to understand the system\u2019s structure and integration within the broader HR service delivery model.",
+  "qa_pairs": [
+    {
+      "question": "What is the main goal of the HRMIS program for WA Health?",
+      "answer": "The main goal is to replace legacy HR, payroll, and rostering systems with a unified, modern, and accessible platform to improve reliability, efficiency, and workforce management."
+    },
+    {
+      "question": "Who is leading the implementation and delivery of the HRMIS Program?",
+      "answer": "Health Support Services (HSS) is leading the implementation and delivery in partnership with Deloitte."
+    },
+    {
+      "question": "What is the implementation strategy for the HRMIS Program?",
+      "answer": "The strategy is to use commercial off-the-shelf software with minimal customisation, relying on configurations and base product functionality."
+    },
+    {
+      "question": "What are some objectives of the HRMIS Program?",
+      "answer": "Objectives include delivering a more reliable and efficient service, providing user-friendly and accessible systems, supporting workforce reporting and planning, and reducing administrative burden."
+    },
+    {
+      "question": "How was the design of the HRMIS solution developed?",
+      "answer": "The design was developed through workshops with subject matter experts from across WA Health, focusing on system configuration, business process design, and necessary custom development."
+    },
+    {
+      "question": "What does the HRMIS solution architecture document provide to stakeholders?",
+      "answer": "It provides an overview of the system\u2019s structure, key components, data flows, integration points, and user experience considerations."
+    },
+    {
+      "question": "What is the commercial name of the HRMIS solution?",
+      "answer": "The HRMIS solution is known commercially as Roster to Pay."
+    },
+    {
+      "question": "What is the expected benefit of not automatically carrying over old processes to the new HRMIS?",
+      "answer": "It allows WA Health to adopt more efficient and effective workflows enabled by the new software."
+    },
+    {
+      "question": "What is the main goal of the HRMIS program for WA Health?",
+      "answer": "The HRMIS program aims to replace legacy HR, payroll, and rostering systems with a unified, modern, and accessible platform to improve reliability, efficiency, and workforce management."
+    },
+    {
+      "question": "What approach does the HRMIS implementation strategy use?",
+      "answer": "The implementation strategy leverages commercial off-the-shelf software with minimal customisation."
+    },
+    {
+      "question": "What are some of the key HR services covered by the HRMIS solution?",
+      "answer": "The HRMIS solution covers human resources portal, rostering management, employee records management, position management, workforce management, and payroll processing."
+    },
+    {
+      "question": "What is the rationale for using standard product functionality wherever possible in the HRMIS design?",
+      "answer": "Using standard product functionality minimises both the cost and time to implement, and reduces ongoing support, effort, and cost."
+    },
+    {
+      "question": "What is the principle regarding historical data in the HRMIS design?",
+      "answer": "Only the minimal set of historical data required to support compliance and business requirements will be converted."
+    },
+    {
+      "question": "How will assumptions made during the HRMIS implementation be managed?",
+      "answer": "All assumptions will be captured and managed in JIRA."
+    },
+    {
+      "question": "What is the purpose of the organisation modelling solution in HRMIS?",
+      "answer": "The organisation modelling solution allows business users to work on a copy of the organisation structure and model planned changes before they are actualised in the live structure."
+    },
+    {
+      "question": "Which system is assumed to be used for organisation modelling and integrated with SAP SuccessFactors Employee Central?",
+      "answer": "It is assumed Ingentis org.manager will be used for organisation modelling and integrated with SAP SuccessFactors Employee Central."
+    },
+    {
+      "question": "What is the main goal of the HRMIS program for WA Health?",
+      "answer": "The HRMIS program aims to replace legacy HR, payroll, and rostering systems with a unified, modern, and accessible platform to improve reliability, efficiency, and workforce management."
+    },
+    {
+      "question": "What principle ensures there is only one master system for each type of data in HRMIS?",
+      "answer": "The 'Single Source of Truth' principle ensures there is only one system of record for each data entity and transaction type."
+    },
+    {
+      "question": "Which system is responsible for employee and organisational structure management in HRMIS?",
+      "answer": "SAP SuccessFactors Employee Central (EC) is responsible for employee and organisational structure management."
+    },
+    {
+      "question": "What is the function of the Widget Brain application in the HRMIS solution?",
+      "answer": "Widget Brain is used for automated rostering and compliance checking, assigning shifts based on rules and validating roster changes for compliance."
+    },
+    {
+      "question": "How does HRMIS handle sensitive or personal information distribution?",
+      "answer": "Sensitive or personal information is only distributed where it serves a clear business requirement and is secured within the receiving application or process."
+    },
+    {
+      "question": "What is the purpose of the Deloitte PeopleForms component in HRMIS?",
+      "answer": "Deloitte PeopleForms is used to create solution enhancements where extensions are required beyond standard functionality."
+    },
+    {
+      "question": "Which component provides the majority of HRMIS reporting?",
+      "answer": "The existing WA Health Snowflake service provides the majority of HRMIS reporting."
+    },
+    {
+      "question": "What is the role of SAP Business Transformation Platform (BTP) in HRMIS?",
+      "answer": "SAP BTP provides integration and monitoring components to manage integrations with third-party applications and between solution components."
+    },
+    {
+      "question": "What is Dell Boomi used for in the HRMIS solution?",
+      "answer": "Dell Boomi is used as an integration solution for most integrations into or out of UKG."
+    },
+    {
+      "question": "Which system is the source of truth for core employee data such as personal and employment information?",
+      "answer": "EC is the source of truth for core employee data including personal and employment information."
+    },
+    {
+      "question": "Where is superannuation information maintained in the HRMIS solution?",
+      "answer": "Superannuation information is maintained in ECP as it is only relevant for payroll."
+    },
+    {
+      "question": "Which systems are used to manage employee skills, credentials, and qualifications?",
+      "answer": "Employee skills, credentials, and qualifications are managed across EC, AHPRA, LMS, and cGov."
+    },
+    {
+      "question": "What is the function of Active Directory in the HRMIS solution?",
+      "answer": "Active Directory provides the email address and network user name for the corporate network."
+    },
+    {
+      "question": "How are documents and attachments managed in SF EC?",
+      "answer": "Documents are attached to data objects in SF EC and then transferred nightly to the EDRMS solution, replacing the document in SF EC with a URL."
+    },
+    {
+      "question": "Which system is responsible for maintaining the organisational structure?",
+      "answer": "The organisational structure is managed in EC, with enhancements provided by the Ingentis org.manager plugin."
+    },
+    {
+      "question": "Where are roster patterns mastered and used for scheduling purposes?",
+      "answer": "Roster patterns are mastered in UKG and used for scheduling purposes."
+    },
+    {
+      "question": "What is the purpose of BSB codes in the HRMIS system?",
+      "answer": "BSB codes are required to validate the BSB code entered by the employee when they provide their Bank Account Details."
+    },
+    {
+      "question": "Where is the Public Holiday Calendar configured in the HRMIS solution?",
+      "answer": "The Public Holiday Calendar is set up in the UKG Pay Policy configuration section."
+    },
+    {
+      "question": "How are legal changes, such as tax coefficients and superannuation rates, managed in SAP ECP?",
+      "answer": "Legal changes are available annually at the start of June and can be maintained manually or by applying the appropriate patch level in SAP ECP."
+    },
+    {
+      "question": "What is the process for updating Actuarial and Leave Provision rates in ECP?",
+      "answer": "If the Actuarial and Leave Provision rates change, the relevant change must be maintained in the customising table in ECP, first in development, then transported to test and production."
+    },
+    {
+      "question": "What are Adjustment Rules used for in the HRMIS solution?",
+      "answer": "Adjustment Rules are used to control rates of pay, manage agency charge rates, and handle allowances and higher duties overrides for WA Health employees."
+    },
+    {
+      "question": "How are Paycodes managed across the HRMIS solution components?",
+      "answer": "Paycodes are configured in each environment, mapped between UKG and ECP, and should be created in development before being moved to production."
+    },
+    {
+      "question": "What is the role of Employee Groups in the HRMIS system?",
+      "answer": "Employee Groups are used to manage permission groups and control which employees a manager can access in UKG from a rostering or time management point."
+    },
+    {
+      "question": "Can members of Permission Groups access more than one system in HRMIS?",
+      "answer": "Yes, members of Permission Groups are allowed to access more than one system."
+    },
+    {
+      "question": "Which systems can most employees access in the HRMIS solution?",
+      "answer": "Most employees can access the EC and UKG systems to access their own data only."
+    },
+    {
+      "question": "Who has wider access to view or maintain other employees\u2019 data in HRMIS?",
+      "answer": "Employees in the relevant HSS teams have wider access to view or maintain other employees\u2019 data based on their assigned permissions."
+    },
+    {
+      "question": "What is the minimum Permission Group assigned to all employees in the HRMIS system?",
+      "answer": "The minimum Permission Group assigned to all employees is 'Employee', which provides access to view and amend their own details where permitted, and to request leave."
+    },
+    {
+      "question": "How are Permission Groups assigned to users in EC (Employee Central)?",
+      "answer": "Permission Groups in EC are assigned dynamically using Role Based Permissions, with rules defined to identify employee attributes for group assignment."
+    },
+    {
+      "question": "What principle must be followed to reduce the risk of fraudulent activities when designing Permission Groups?",
+      "answer": "Segregation of Duties must be followed, meaning process steps are segregated and distributed to different people."
+    },
+    {
+      "question": "How is the assignment of Permission Groups to users managed in ECP?",
+      "answer": "A nightly job in ECP reads from EC the list of users assigned to each Permission Group and updates ECP assignments accordingly, except for the Employee Permission Group, which is automatically assigned to all employees."
+    },
+    {
+      "question": "What additional step is required in UKG after assigning a Permission Group to a user?",
+      "answer": "In UKG, after assigning a Permission Group, it is also necessary to define the group of employees (Target Group) that the permission relates to."
+    },
+    {
+      "question": "Can an employee belong to more than one Permission Group in the HRMIS system?",
+      "answer": "Yes, every employee can have or belong to more than one Permission Group."
+    },
+    {
+      "question": "What is the impact of the Service Delivery Model on Permission Groups?",
+      "answer": "The determination of the Service Delivery Model will impact the mapping and design of the Permission Groups."
+    },
+    {
+      "question": "What is the purpose of Permission Groups in the HRMIS system?",
+      "answer": "Permission Groups provide appropriate access to system components in adherence to the activities performed as part of an employee\u2019s job role."
+    },
+    {
+      "question": "What is the main goal of the HRMIS program for WA Health?",
+      "answer": "The HRMIS program aims to replace legacy HR, payroll, and rostering systems with a unified, modern, and accessible platform to improve reliability, efficiency, and workforce management."
+    },
+    {
+      "question": "What approach is being used for the implementation of the HRMIS system?",
+      "answer": "The implementation strategy leverages commercial off-the-shelf software with minimal customisation."
+    },
+    {
+      "question": "How are Permission Groups managed during the HRMIS build stage?",
+      "answer": "Permission Group design will be continuously revisited throughout the Build stage to cater for changes in business process decisions, which may impact access levels and require new Permission Groups."
+    },
+    {
+      "question": "What is the purpose of the ECP roles in the HRMIS architecture?",
+      "answer": "ECP roles are proposed to define major activities and access levels for teams within the payroll structure and reporting requirements, with possible derivatives for data segregation by HSP or organisational structure."
+    },
+    {
+      "question": "Which Permission Groups do not need access to the EC system as part of their role?",
+      "answer": "Permission Groups such as Admin \u2013 Employee Data Display Only, Overpayment, PRADO, Manager Payroll Support, Payroll Reporting, Recruitment QA Consultant, Payroll QA Consultant, Certification Consultant, Admin \u2013 Rostering, and Admin \u2013 Workforce Planning do not need access to EC."
+    },
+    {
+      "question": "What is the role of the 'Admin \u2013 Payroll Ops' Permission Group in the ECP system?",
+      "answer": "The 'Admin \u2013 Payroll Ops' group has display access to all payroll functionality, allows maintenance of PCC through Manage Process, Manage Policies, and Manage teams, and can add new team members into PCC for Alert processing."
+    },
+    {
+      "question": "What is the function of the 'Contact Centre' Permission Group?",
+      "answer": "The 'Contact Centre' Permission Group has display access only to non-sensitive info types to help with enquiries."
+    },
+    {
+      "question": "What document should stakeholders refer to for detailed permissions by Permission Groups?",
+      "answer": "Stakeholders should refer to the Role-Based Permissions (RBP) workbook for detailed permissions by Permission Groups."
+    },
+    {
+      "question": "What are the three main categories of permission groups in UKG?",
+      "answer": "The three main categories of permission groups in UKG are Employee permission groups, Manager permission groups, and Back-end permission groups."
+    },
+    {
+      "question": "How are Employee and Manager Permission Groups assigned when replicating employee records from EC?",
+      "answer": "Employee and Manager Permission Groups are assigned automatically to the user based on the role they perform and their employment type."
+    },
+    {
+      "question": "What are the three sub-permission groups under the Employee Permission group in UKG?",
+      "answer": "The three sub-permission groups are: Employees required to clock in and out, Employees not required to clock in and out, and Students."
+    },
+    {
+      "question": "What is the main responsibility of Manager Level 9 in UKG?",
+      "answer": "Manager Level 9 is responsible for authorizing pay, including timecard sign off, scheduling, managing exceptions, and actioning requests."
+    },
+    {
+      "question": "Who are considered back-end users in the UKG system?",
+      "answer": "Back-end users include application and system administrators such as Contact Centre, Admin \u2013 Payroll Ops, Technology Support Officer, and Super user."
+    },
+    {
+      "question": "Do all identified Permission Groups need access to the UKG system?",
+      "answer": "No, some Permission Groups do not need to access the UKG system as part of their role, such as Admin \u2013 Establishment Team, Inoculation Nurse, and Legal Services."
+    },
+    {
+      "question": "How does the reporting solution (Snowflake) inherit permissions?",
+      "answer": "The reporting solution inherits its permissions from the individual components the data is provided from, so users have access to the same information in reports and dashboards as they do in the source system."
+    },
+    {
+      "question": "Is there direct user interaction with Widget Brain in the HRMIS solution?",
+      "answer": "No, there is no direct interaction between the user and Widget Brain."
+    },
+    {
+      "question": "Who are the only users that have direct access to Widget Brain?",
+      "answer": "Only administrators and developers have direct access to Widget Brain."
+    },
+    {
+      "question": "How are permissions for forms in Deloitte PeopleForms typically assigned?",
+      "answer": "Permissions for forms in Deloitte PeopleForms are inherited from EC permission groups or employee attributes."
+    },
+    {
+      "question": "What is the exception to inherited permissions in PeopleForms?",
+      "answer": "The exception is for administrators, where System Administrators and Form Administrators are assigned directly to their roles."
+    },
+    {
+      "question": "Who can access SAP BTP and Dell BOOMI tools?",
+      "answer": "Only system administrators and developers can access SAP BTP and Dell BOOMI tools."
+    },
+    {
+      "question": "What is Concurrent Employment in the context of WA Health?",
+      "answer": "Concurrent Employment refers to employees holding multiple positions within WA Health."
+    },
+    {
+      "question": "How does EC handle employees with concurrent employments?",
+      "answer": "EC creates multiple employments for each position held, sharing some data and assigning unique user IDs for each employment."
+    },
+    {
+      "question": "What identifier is used across EC to identify a person?",
+      "answer": "The Person ID External (HE number) is used across EC to identify a person."
+    },
+    {
+      "question": "How does UKG manage concurrent employment?",
+      "answer": "UKG uses the 'Multiple Assignments' functionality, allowing each employee to hold a primary assignment and up to 12 additional positions."
+    },
+    {
+      "question": "How are person records linked in the Payroll environment (ECP)?",
+      "answer": "Person records are linked using a Central Person (CP) ID, which is equal to the Person ID External / HE number in EC."
+    },
+    {
+      "question": "What is the standard process for managing planned higher duties in EC?",
+      "answer": "Planned higher duties are managed using standard EC functionality, calculating allowances and assigning acting positions for specified durations."
+    },
+    {
+      "question": "What is the purpose of the higher duties functionality in the HRMIS system?",
+      "answer": "The higher duties functionality provides alerts for expiring higher duty assignments and automatically reverts employees to their substantive positions, updating reporting lines as needed."
+    },
+    {
+      "question": "How does the HRMIS system handle unplanned higher duties?",
+      "answer": "Unplanned higher duties are managed using UKG and fall into two categories: rate changes, where employees are paid at a higher rate for certain shifts, and allowances, where employees may receive additional payments for acting in specific roles."
+    },
+    {
+      "question": "What is the limitation on the duration of unplanned higher duties in HRMIS?",
+      "answer": "Unplanned higher duties should not extend more than five days, after which planned higher duties should be created, but this is managed by the manager and not enforced by the system."
+    },
+    {
+      "question": "What is the main change in the payroll certification process introduced by HRMIS compared to legacy systems?",
+      "answer": "In HRMIS, payroll certification occurs at the time of data entry when changes impacting payments are made, rather than after payroll results are generated as in legacy systems."
+    },
+    {
+      "question": "What happens if a manager does not sign off on an employee's timecard before the pay run in HRMIS?",
+      "answer": "If a manager does not sign off, the employee will still be paid based on their auto-populated schedule, but any unapproved hours outside the schedule will not be paid and must be adjusted in the next period."
+    },
+    {
+      "question": "How does the HRMIS system escalate unapproved timecards or data changes?",
+      "answer": "The system logs all unsigned timecards and unapproved data changes, and escalates approvals as appropriate if they are not completed in a timely manner."
+    },
+    {
+      "question": "What is the process for filling unallocated nursing shifts in the Agency Nurse Management workflow?",
+      "answer": "Unallocated shifts are first offered to ward nurses, then hospital nurses, then casual pool staff, and if still unfilled, passed to NurseWest and finally to external nursing agencies."
+    },
+    {
+      "question": "Do agency staff have access to UKG in the Agency Nurse Management process?",
+      "answer": "No, agency staff do not have access to UKG; shift allocation is managed through communication between NurseWest and the agencies."
+    },
+    {
+      "question": "What is the main purpose of the HRMIS program for WA Health?",
+      "answer": "The HRMIS program aims to replace legacy HR, payroll, and rostering systems with a unified, modern, and accessible platform to improve reliability, efficiency, and workforce management."
+    },
+    {
+      "question": "How does the HRMIS solution handle agency nurse shift allocation if an agency cannot fill a shift?",
+      "answer": "If an agency cannot fill a shift, the shift is offered to the next agency on the list until an Agency Nurse is allocated or all agencies are exhausted; if still unfilled, NurseWest discusses with the Nurse Unit Manager to change shift parameters."
+    },
+    {
+      "question": "What enhancement is planned for the agency nurse shift allocation process in HRMIS?",
+      "answer": "An enhancement will allow the system to automatically transfer the shift to the next agency in the list after a set time period, based on a custom table of agencies and allocation order."
+    },
+    {
+      "question": "Which components are involved in the HRMIS leave management solution?",
+      "answer": "The leave management solution uses UKG, EC, Deloitte PeopleForms, and a custom leave application realised in ECP."
+    },
+    {
+      "question": "What is the role of the custom leave component in the HRMIS leave process?",
+      "answer": "The custom leave component acts as a middleman between solution components, handling leave validation and determining approval steps based on leave type parameters."
+    },
+    {
+      "question": "What happens if an employee does not have sufficient leave balance when requesting leave in HRMIS?",
+      "answer": "The leave request is automatically rejected, and a note with the validation errors is sent back to the employee within UKG."
+    },
+    {
+      "question": "How are approved leave requests processed in HRMIS?",
+      "answer": "Approved leave requests are passed into the system as approved time off, ensuring visibility within the roster, and the timecard is sent daily by UKG to the payroll environment for processing."
+    },
+    {
+      "question": "What is the purpose of the Country Relief Shortfall solution in HRMIS?",
+      "answer": "It allows managers to create shortfall campaigns for available positions and enables eligible employees to apply for these positions, with workflows for review and transfer processes."
+    },
+    {
+      "question": "How can employees apply for country relief shortfall positions in HRMIS?",
+      "answer": "Employees can browse and apply for shortfall positions via the Employee Self-Service portlet in EC."
+    },
+    {
+      "question": "What attributes can HRMIS positions have regarding requirements?",
+      "answer": "Positions can have attributes such as required certificates (e.g., Working With Children), professional qualifications, credentials, endorsements, competencies, and skills."
+    },
+    {
+      "question": "What is the purpose of the nightly job run by HRMIS regarding employee certificates?",
+      "answer": "The nightly job compares the certificates of each employee with the requirements of the position they hold and reports discrepancies, such as expired certificates, to their manager."
+    },
+    {
+      "question": "How does HRMIS handle personal attributes like ethnicity in relation to position requirements?",
+      "answer": "HRMIS compares the personal attributes of the person to the position requirements when the person is added to the position and provides a warning to the manager if discrepancies are found."
+    },
+    {
+      "question": "What sources does HRMIS integrate with to obtain certificates, professional qualifications, credentials, and competencies?",
+      "answer": "HRMIS integrates with IMC (Learning Management Solutions) and cGov (credentialing solution) to read information about certificates, professional qualifications, credentials, and competencies."
+    },
+    {
+      "question": "How are skills and non-learning based competencies maintained in HRMIS?",
+      "answer": "Skills and non-learning based competencies, including those of agency staff, are maintained directly in HRMIS."
+    },
+    {
+      "question": "What is the function of the delegation schedule in HRMIS?",
+      "answer": "The delegation schedule ensures that processes requiring approval are assigned to a person with the appropriate tier level of authority, based on the position they hold."
+    },
+    {
+      "question": "How does HRMIS determine the delegation tier for an employee?",
+      "answer": "The delegation tier is determined by the position the employee holds, and each position in the system is assigned a delegation tier."
+    },
+    {
+      "question": "What is the main purpose of the Demand Management solution in HRMIS?",
+      "answer": "The Demand Management solution provides near real-time integration between webPAS and UKG, calculates actual patient occupancy, generates occupancy forecasts, updates occupancy data, and provides reports and visualisations for staffing and patient occupancy."
+    },
+    {
+      "question": "How is the forecast for patient occupancy used in the rostering process?",
+      "answer": "The forecast occupancy data is used to project the number of staff members needed per shift, based on the number of forecasted beds occupied, using a staffing matrix for each ward."
+    },
+    {
+      "question": "What is the purpose of the HRMIS program in WA Health?",
+      "answer": "The HRMIS program aims to replace legacy HR, payroll, and rostering systems with a unified, modern, and accessible platform to improve reliability, efficiency, and workforce management."
+    },
+    {
+      "question": "Which personas will use demand data from webPAS?",
+      "answer": "Executive, Line Manager, Nurse Manager, Rostering Professional, Support Professional, and Technology Infrastructure and Support."
+    },
+    {
+      "question": "What is the function of the custom FTE module in legacy Lattice instances?",
+      "answer": "The FTE module holds financial budgets per costing object and payment type, calculates actuals after each payroll run, imports costs for external employees, compares actuals with planned values, and sends the data to the Data Warehouse for reporting."
+    },
+    {
+      "question": "How will FTE functionality be handled in the future HRMIS solution?",
+      "answer": "FTE functionality will be replicated in Snowflake, with planned costs maintained by Finance in Snowflake and actuals sourced from several applications including HRMIS."
+    },
+    {
+      "question": "How will task-based rostering be managed in the new HRMIS solution?",
+      "answer": "Task-based rostering will be managed in UKG using Schedule Tag, Labour Category Entry, additional organizational levels, or defined jobs as tasks, with each department assessed for the best method."
+    },
+    {
+      "question": "What is WACHSView and what functions does it provide?",
+      "answer": "WACHSView is a solution developed by WACHS to manage doctors, providing doctor management, credential view, Medical Service Agreement (MSA) management, roster management, and MAAS integration."
+    },
+    {
+      "question": "What will happen to WACHSView\u2019s functionality after HRMIS implementation?",
+      "answer": "WACHSView will continue to manage contracted doctors, MSA management, and MAAS integration, while its rostering functionality will be replaced by HRMIS."
+    },
+    {
+      "question": "How will employee document management be handled in HRMIS?",
+      "answer": "Documents will initially be stored in EC, then moved nightly to a Document Management (EDRMS) solution, with EC storing a URL to the document in EDRMS after transfer."
+    },
+    {
+      "question": "What are the two methods available for payslip distribution in HRMIS?",
+      "answer": "Payslips can be accessed via Self Service in EC or received by email."
+    },
+    {
+      "question": "What is the default method for accessing payslips for all users in HRMIS?",
+      "answer": "The default method for accessing payslips for all users is through EC Self Service, as it is the most secure and functionally rich."
+    },
+    {
+      "question": "What add-on will be used to email payslips to employees?",
+      "answer": "The Deloitte Payslip Distribution add-on to ECP will be used to email payslips."
+    },
+    {
+      "question": "What options are available for employees to receive their payslips via email?",
+      "answer": "Employees can choose to have their payslip sent to their work email, personal email recorded in their employee record, or a manually defined email address."
+    },
+    {
+      "question": "How can employees who cannot access EC Self Service request payslip email delivery?",
+      "answer": "They can raise a request with the Service Desk for an administrator to make the selection on their behalf."
+    },
+    {
+      "question": "What is a Recipient Created Tax Invoice (RCTI) in the context of HRMIS?",
+      "answer": "An RCTI is a process where the recipient of an invoice creates the invoice on behalf of the supplier to simplify and accelerate payment."
+    },
+    {
+      "question": "Which tool will be used for data ingestion in the WebPAS reporting solution?",
+      "answer": "The Talend ETL tool will be used for data ingestion in the WebPAS reporting solution."
+    },
+    {
+      "question": "What is the long-term data platform selected for WA Health's HRMIS reporting and analytics?",
+      "answer": "Snowflake has been selected as the long-term data platform."
+    },
+    {
+      "question": "Which tool will be used to create and publish reports and dashboards in HRMIS?",
+      "answer": "Power BI will be used to create and publish reports and dashboards."
+    },
+    {
+      "question": "How will access control be managed for the HRMIS reporting portal?",
+      "answer": "Access control will be managed at the portal level with role-based access and at the data level with row-level security (RLS) in Power BI."
+    },
+    {
+      "question": "How often will report access privileges be synchronised from HRMIS source systems?",
+      "answer": "Report access privileges will be synchronised on a nightly basis from HRMIS source systems."
+    },
+    {
+      "question": "What are the three solution components that require pay scales for various processes in the HRMIS?",
+      "answer": "The three solution components that require pay scales are EC, UKG, and ECP."
+    },
+    {
+      "question": "What triggers changes in the configuration of all three solution components regarding pay scales?",
+      "answer": "Changes to the award agreements that impact pay scales, such as annual pay reviews or award re-negotiations, trigger changes in the configuration of all three solution components."
+    },
+    {
+      "question": "What are the four components that make up the pay scale within EC?",
+      "answer": "The four components are Pay Scale Type, Pay Scale Area, Pay Scale Group, and Pay Scale Level."
+    },
+    {
+      "question": "How is an increase in base pay following the Annual Pay Review performed in EC?",
+      "answer": "An increase in base pay is performed by changing the base pay associated with the Pay Scale Level from the date the increase becomes effective."
+    },
+    {
+      "question": "How are mass changes to pay scales imported into EC?",
+      "answer": "Mass changes are defined in a spreadsheet (CSV file) and imported into EC to ensure consistency between non-production and production environments."
+    },
+    {
+      "question": "How does UKG represent pay scale information from EC?",
+      "answer": "UKG holds the pay scale information from EC as a single concatenated field and a single description of what the four EC fields combined equate to in UKG."
+    },
+    {
+      "question": "What is the recommended process for creating new pay scale values in UKG?",
+      "answer": "New pay scale values should be created and tested in UKG\u2019s development configuration before being transported to production, following applicable change control processes."
+    },
+    {
+      "question": "What is the impact of incorrectly updating the Pay Scale Structure in ECP?",
+      "answer": "Incorrect updates to the Pay Scale Structure can impact employee pay retrospectively, as changes are effective dated and the system can recalculate earnings over several months."
+    },
+    {
+      "question": "What should be reviewed and updated if there is a significant change to the Pay Scale Structure following an EBA renegotiation in ECP?",
+      "answer": "Payroll rules that query Pay Scale Type and Area should be reviewed and updated to mitigate the risk of pay errors."
+    },
+    {
+      "question": "What is the purpose of the off-cycle payroll process in the HRMIS?",
+      "answer": "The off-cycle payroll process is designed to provide payment to employees who did not receive money owed to them due to no fault of their own."
+    },
+    {
+      "question": "What is the main goal of the HRMIS program for WA Health?",
+      "answer": "The HRMIS program aims to replace legacy HR, payroll, and rostering systems with a unified, modern, and accessible platform to improve reliability, efficiency, and workforce management."
+    },
+    {
+      "question": "What approach does the HRMIS implementation strategy use?",
+      "answer": "The implementation strategy leverages commercial off-the-shelf software with minimal customisation."
+    },
+    {
+      "question": "Which integration tool is used for replicating Organisation Structure from Employee Central (EC) to UKG?",
+      "answer": "Dell Boomi is used for replicating Organisation Structure from EC to UKG."
+    },
+    {
+      "question": "How often is Employee Details data replicated from EC to UKG?",
+      "answer": "Employee Details are replicated from EC to UKG in near real time."
+    },
+    {
+      "question": "What is the frequency of updating Employee Details to Microsoft Active Directory?",
+      "answer": "Employee Details are replicated to Microsoft Active Directory every 15 minutes."
+    },
+    {
+      "question": "Which system is responsible for managing Employee Master Data in the HRMIS architecture?",
+      "answer": "SAP SuccessFactors Employee Central is responsible for managing Employee Master Data."
+    },
+    {
+      "question": "What is the purpose of the integration between ECP and FMIS at the end of payroll?",
+      "answer": "The integration updates the General Ledger with Payroll Postings."
+    },
+    {
+      "question": "How are superannuation payments for Gold State Members sent to GESB?",
+      "answer": "Superannuation payments for Gold State Members are generated as files and manually sent to GESB at the end of payroll."
+    },
+    {
+      "question": "What type of integration is used for transferring documents between EC and EDRMS?",
+      "answer": "A two-way daily integration using SAP BTP is used for transferring documents between EC and EDRMS."
+    },
+    {
+      "question": "What does the abbreviation 'SaaS' stand for in the context of HRMIS?",
+      "answer": "SaaS stands for Software as a Service."
+    },
+    {
+      "question": "What is the main goal of the HRMIS program for WA Health?",
+      "answer": "The HRMIS program aims to replace legacy HR, payroll, and rostering systems with a unified, modern, and accessible platform to improve reliability, efficiency, and workforce management."
+    },
+    {
+      "question": "What type of software approach does the HRMIS implementation strategy use?",
+      "answer": "The implementation strategy leverages commercial off-the-shelf software with minimal customisation."
+    },
+    {
+      "question": "Who are involved in the collaborative design process for the HRMIS architecture?",
+      "answer": "Stakeholders from across WA Health are involved in the collaborative design process."
+    },
+    {
+      "question": "What does the HRMIS architecture document provide for stakeholders?",
+      "answer": "The architecture serves as a guide for stakeholders to understand the system\u2019s structure and integration within the broader HR service delivery model."
+    },
+    {
+      "question": "What does the acronym 'SaaS' stand for in the context of the HRMIS solution?",
+      "answer": "SaaS stands for Software as a Service."
+    },
+    {
+      "question": "What is the role of UKG in the HRMIS solution?",
+      "answer": "UKG is the vendor of the UKG Dimensions Solution."
+    },
+    {
+      "question": "What does 'CPI' refer to in the HRMIS glossary?",
+      "answer": "CPI is an integration tool provided by SAP, part of the SAP BTP suite of applications."
+    },
+    {
+      "question": "What is the function of the FMIS in WA Health?",
+      "answer": "FMIS is the Finance Management Information System used by WA Health to manage finance processes."
+    }
+  ]
+}

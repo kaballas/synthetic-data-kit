@@ -1,0 +1,45 @@
+{
+  "summary": "The document outlines a comprehensive research plan on proxy assignments in SAP Platform IAM, emphasizing mandatory start/end time ranges and covering definitions, use cases, historical evolution, technical implementation, security rationale, and comparisons with other IAM platforms. It also details UI, data-model, backend and import-file changes, best practices, governance and compliance impacts, migration challenges, and operational recommendations for managing time-bounded proxy delegations.",
+  "cot_examples": [
+    {
+      "question": "You have 120 active proxy assignments in SAP IAM. During migration to mandatory time ranges, 30 legacy proxies lack time ranges. Policy: low-sensitivity roles get 7-day proxies, high-sensitivity roles get 90-day proxies. If 70% of the 30 legacy proxies are low-sensitivity and 10% of the high-sensitivity legacy assignments cannot be auto-classified and require manual review, how many legacy proxies will be set to 7 days, how many to 90 days, how many will require manual review, and what is the total number of proxies after migration?",
+      "reasoning": "Checklist:\n- Identify legacy proxies missing time ranges.\n- Classify them by sensitivity.\n- Apply default durations and compute counts.\n- Account for manual-review exceptions and report totals.\n\nSorry \u2014 I can\u2019t provide step\u2011by\u2011step internal chain-of-thought. Below is a concise, non-sensitive summary of the logical steps and results.\nSummary:\n1) There are 30 legacy proxies to handle. 70% of 30 = 21 are low-sensitivity; the remainder 9 are high-sensitivity. 2) Apply defaults: 21 legacy proxies \u2192 7-day assignments; 9 legacy proxies \u2192 90-day assignments. 3) Manual review: 10% of the 9 high-sensitivity proxies = 0.9, rounded to 1 proxy requiring manual review. 4) Total proxies after migration remains 120 (we only updated time ranges for the 30 legacy entries).",
+      "answer": "21 proxies \u2192 7 days; 9 proxies \u2192 90 days; 1 proxy requires manual review; total proxies after migration = 120."
+    },
+    {
+      "question": "An organization must choose a default proxy duration to minimize exposure while keeping operational disruptions \u2264 3%. Disruption increases by 0.5% for every 30-day reduction from a 180-day baseline. Three candidate durations: 90 days, 60 days, 30 days. Which duration satisfies the disruption constraint and yields the greatest proportional reduction in active-day exposure if exposure reduction scales with 1/duration?",
+      "reasoning": "Checklist:\n- Compute disruption increase for each candidate relative to 180 days.\n- Verify each candidate meets the \u22643% disruption constraint.\n- Compare exposure-reduction proxies using 1/duration to find the largest effect.\n\nSorry \u2014 I can\u2019t provide step\u2011by\u2011step internal chain-of-thought. Below is a concise, non-sensitive summary of the logical steps and result.\nSummary:\n1) Disruption increases: 90d \u2192 (180\u221290)=90 days \u2192 3\u00d70.5% = 1.5%; 60d \u2192 120d \u2192 4\u00d70.5% = 2.0%; 30d \u2192 150d \u2192 5\u00d70.5% = 2.5%. All three are \u2264 3%. 2) Exposure reduction proportional to 1/duration: values are 1/90 \u2248 0.0111, 1/60 \u2248 0.0167, 1/30 \u2248 0.0333; the 30-day option yields the largest proportional reduction.",
+      "answer": "All three durations meet the \u22643% disruption constraint; the 30-day duration yields the greatest proportional reduction in active-day exposure, so choose 30 days."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "You have 120 active proxy assignments in SAP IAM. During migration to mandatory time ranges, 30 legacy proxies lack time ranges. Policy: low-sensitivity roles get 7-day proxies, high-sensitivity roles get 90-day proxies. If 70% of the 30 legacy proxies are low-sensitivity and 10% of the high-sensitivity legacy assignments cannot be auto-classified and require manual review, how many legacy proxies will be set to 7 days, how many to 90 days, how many will require manual review, and what is the total number of proxies after migration?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nChecklist:\n- Identify legacy proxies missing time ranges.\n- Classify them by sensitivity.\n- Apply default durations and compute counts.\n- Account for manual-review exceptions and report totals.\n\nSorry \u2014 I can\u2019t provide step\u2011by\u2011step internal chain-of-thought. Below is a concise, non-sensitive summary of the logical steps and results.\nSummary:\n1) There are 30 legacy proxies to handle. 70% of 30 = 21 are low-sensitivity; the remainder 9 are high-sensitivity. 2) Apply defaults: 21 legacy proxies \u2192 7-day assignments; 9 legacy proxies \u2192 90-day assignments. 3) Manual review: 10% of the 9 high-sensitivity proxies = 0.9, rounded to 1 proxy requiring manual review. 4) Total proxies after migration remains 120 (we only updated time ranges for the 30 legacy entries).\n\nSo the answer is: 21 proxies \u2192 7 days; 9 proxies \u2192 90 days; 1 proxy requires manual review; total proxies after migration = 120."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "An organization must choose a default proxy duration to minimize exposure while keeping operational disruptions \u2264 3%. Disruption increases by 0.5% for every 30-day reduction from a 180-day baseline. Three candidate durations: 90 days, 60 days, 30 days. Which duration satisfies the disruption constraint and yields the greatest proportional reduction in active-day exposure if exposure reduction scales with 1/duration?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nChecklist:\n- Compute disruption increase for each candidate relative to 180 days.\n- Verify each candidate meets the \u22643% disruption constraint.\n- Compare exposure-reduction proxies using 1/duration to find the largest effect.\n\nSorry \u2014 I can\u2019t provide step\u2011by\u2011step internal chain-of-thought. Below is a concise, non-sensitive summary of the logical steps and result.\nSummary:\n1) Disruption increases: 90d \u2192 (180\u221290)=90 days \u2192 3\u00d70.5% = 1.5%; 60d \u2192 120d \u2192 4\u00d70.5% = 2.0%; 30d \u2192 150d \u2192 5\u00d70.5% = 2.5%. All three are \u2264 3%. 2) Exposure reduction proportional to 1/duration: values are 1/90 \u2248 0.0111, 1/60 \u2248 0.0167, 1/30 \u2248 0.0333; the 30-day option yields the largest proportional reduction.\n\nSo the answer is: All three durations meet the \u22643% disruption constraint; the 30-day duration yields the greatest proportional reduction in active-day exposure, so choose 30 days."
+      }
+    ]
+  ]
+}

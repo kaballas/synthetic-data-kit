@@ -1,0 +1,64 @@
+{
+  "summary": "The document explains that the Work Opportunity Tax Credit (WOTC), codified in IRC \u00a751 and administered by the IRS and DOL, gives employers a wage-based federal tax credit (typically up to 40% of first-year wages, max $2,400, with higher limits for some veterans) to incentivize hiring from defined target groups (veterans, TANF, SNAP recipients, ex-felons, SSI recipients, long-term unemployed, etc.). It also summarizes onboarding and compliance: employers must pre-screen hires with IRS Form 8850 and ETA Form 9061, submit them to the State Workforce Agency within 28 days to obtain ETA Form 9062 certification, retain records for audits, and manage timing, privacy, and documentation obligations\u2014often via electronic onboarding or third-party vendors.",
+  "cot_examples": [
+    {
+      "question": "Compute the total WOTC an employer can claim for three new hires given: Hire A worked \u2265400 hours with $6,000 qualified wages; Hire B worked 300 hours with $4,000 qualified wages; Hire C is a veteran who qualifies for the maximum veteran credit of $9,600. Use the program rules from the text.",
+      "reasoning": "- Checklist of steps I'll apply to each example:\n  - Identify relevant rules and limits from the provided text.\n  - Map each hire to the correct credit rate and wage cap.\n  - Compute each hire's credit using the stated percentages and caps.\n  - Sum individual credits to get the total.\n\nStep 1: Extract rules from the text: 40% of up to $6,000 for employees working \u2265400 hours (max $2,400); 25% for employees working 120\u2013399 hours; veterans may receive credits up to $9,600 depending on conditions.\n\nStep 2: Apply rules per hire:\n- Hire A: eligible for 40% of $6,000 \u2192 $$0.40\\times 6000 = 2400.$$ \n- Hire B: 300 hours (120\u2013399) \u2192 25% of actual wages $4,000 \u2192 $$0.25\\times 4000 = 1000.$$ \n- Hire C: veteran qualifying for the maximum stated in the text \u2192 $9,600.\n\nStep 3: Sum the computed credits:\n$$2400 + 1000 + 9600 = 13000.$$",
+      "answer": "Total WOTC claimable = $13,000."
+    },
+    {
+      "question": "An employer missed the 28-calendar-day deadline to submit IRS Form 8850 and ETA Form 9061 for a new hire but obtained SWA certification later. According to the rules in the text, can the employer claim the WOTC for that employee? Explain briefly.",
+      "reasoning": "Step 1: Identify the critical timing rule in the text: Form 8850 and ETA 9061 must be completed and submitted within 28 calendar days of the employee\u2019s start date.\nStep 2: Determine effect of missing deadline: the text states that missing this deadline disqualifies the employer from claiming the credit for that employee.\nStep 3: Conclude based on the rule: even with later SWA action, the late submission forfeits the credit per the provided guidance.",
+      "answer": "No \u2014 missing the 28-day submission window disqualifies the employer from claiming WOTC for that employee."
+    },
+    {
+      "question": "How should an organization configure SAP Onboarding to minimize employee opt-outs of WOTC forms while preserving privacy and ensuring audit-ready compliance? Provide a concise, multi-step configuration plan grounded in the text.",
+      "reasoning": "Step 1: Use the text\u2019s guidance: make WOTC participation voluntary and document privacy safeguards.\nStep 2: Design onboarding flow: present Form 8850 and ETA 9061 as optional but prominent items with clear purpose statements and privacy assurances; include deadline reminders (28 days) and progress indicators.\nStep 3: Implement technical controls: enable conditional workflows that skip WOTC when an employee opts out, log timestamps and e-signatures, and record an immutable audit trail showing opt-in/opt-out decisions.\nStep 4: Integrate with payroll: flag only certified employees for credit tracking and ensure wage/hour feeds are restricted to those profiles; enforce role-based access to sensitive fields.\nStep 5: Operationalize communications and training: add short in-app explanations about benefits and data handling, and train HR to handle opt-out questions neutrally to avoid discrimination.\nStep 6: Retention and compliance: retain certification records and related payroll evidence for at least three years as required for audits.",
+      "answer": "Configure SAP Onboarding to present WOTC forms as voluntary with clear privacy messaging, automated 28-day reminders, conditional workflows that record opt-outs, secure role-based access, payroll integration for only certified hires, and a three-year audit-ready record retention policy."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Compute the total WOTC an employer can claim for three new hires given: Hire A worked \u2265400 hours with $6,000 qualified wages; Hire B worked 300 hours with $4,000 qualified wages; Hire C is a veteran who qualifies for the maximum veteran credit of $9,600. Use the program rules from the text."
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Checklist of steps I'll apply to each example:\n  - Identify relevant rules and limits from the provided text.\n  - Map each hire to the correct credit rate and wage cap.\n  - Compute each hire's credit using the stated percentages and caps.\n  - Sum individual credits to get the total.\n\nStep 1: Extract rules from the text: 40% of up to $6,000 for employees working \u2265400 hours (max $2,400); 25% for employees working 120\u2013399 hours; veterans may receive credits up to $9,600 depending on conditions.\n\nStep 2: Apply rules per hire:\n- Hire A: eligible for 40% of $6,000 \u2192 $$0.40\\times 6000 = 2400.$$ \n- Hire B: 300 hours (120\u2013399) \u2192 25% of actual wages $4,000 \u2192 $$0.25\\times 4000 = 1000.$$ \n- Hire C: veteran qualifying for the maximum stated in the text \u2192 $9,600.\n\nStep 3: Sum the computed credits:\n$$2400 + 1000 + 9600 = 13000.$$\n\nSo the answer is: Total WOTC claimable = $13,000."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "An employer missed the 28-calendar-day deadline to submit IRS Form 8850 and ETA Form 9061 for a new hire but obtained SWA certification later. According to the rules in the text, can the employer claim the WOTC for that employee? Explain briefly."
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nStep 1: Identify the critical timing rule in the text: Form 8850 and ETA 9061 must be completed and submitted within 28 calendar days of the employee\u2019s start date.\nStep 2: Determine effect of missing deadline: the text states that missing this deadline disqualifies the employer from claiming the credit for that employee.\nStep 3: Conclude based on the rule: even with later SWA action, the late submission forfeits the credit per the provided guidance.\n\nSo the answer is: No \u2014 missing the 28-day submission window disqualifies the employer from claiming WOTC for that employee."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "How should an organization configure SAP Onboarding to minimize employee opt-outs of WOTC forms while preserving privacy and ensuring audit-ready compliance? Provide a concise, multi-step configuration plan grounded in the text."
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nStep 1: Use the text\u2019s guidance: make WOTC participation voluntary and document privacy safeguards.\nStep 2: Design onboarding flow: present Form 8850 and ETA 9061 as optional but prominent items with clear purpose statements and privacy assurances; include deadline reminders (28 days) and progress indicators.\nStep 3: Implement technical controls: enable conditional workflows that skip WOTC when an employee opts out, log timestamps and e-signatures, and record an immutable audit trail showing opt-in/opt-out decisions.\nStep 4: Integrate with payroll: flag only certified employees for credit tracking and ensure wage/hour feeds are restricted to those profiles; enforce role-based access to sensitive fields.\nStep 5: Operationalize communications and training: add short in-app explanations about benefits and data handling, and train HR to handle opt-out questions neutrally to avoid discrimination.\nStep 6: Retention and compliance: retain certification records and related payroll evidence for at least three years as required for audits.\n\nSo the answer is: Configure SAP Onboarding to present WOTC forms as voluntary with clear privacy messaging, automated 28-day reminders, conditional workflows that record opt-outs, secure role-based access, payroll integration for only certified hires, and a three-year audit-ready record retention policy."
+      }
+    ]
+  ]
+}

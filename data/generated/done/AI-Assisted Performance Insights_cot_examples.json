@@ -1,0 +1,64 @@
+{
+  "summary": "The document summarizes SAP\u2019s AI-Assisted Performance Insights in the Performance & Goals module: a generative-AI feature that synthesizes continuous feedback, achievements, meeting notes, and form comments to produce on-demand, structured manager-facing insights (summary, strengths, achievements, improvement actions, and talking points) via a permissioned dashboard; outputs are transient and integrate with AI-assisted writing and automation tools.  \nIt also covers the underlying preprocessing, LLM/NLP and statistical methods, interpretability measures (confidence/rationale), bias-mitigation steps, and expected managerial benefits of more data-driven, actionable reviews while noting privacy, role-based access, and non-persistence of generated content.",
+  "cot_examples": [
+    {
+      "question": "A company with 120 managers conducts 30 performance reviews per manager per year. Average manual review time is 90 minutes. After enabling SAP AI-Assisted Performance Insights, average review time drops by 35%. Manager hourly cost is $60. Annual AI licensing is $120,000. What are the annual time-cost savings, net savings after license, and ROI (net savings divided by license cost)?",
+      "reasoning": "- Identify inputs and compute time saved per review\n- Convert minutes saved to hours and compute per-manager annual savings\n- Aggregate savings across all managers and subtract licensing cost\n- Compute ROI as net savings / licensing cost\n\nStep 1: Inputs \u2014 managers = 120, reviews/manager/year = 30, manual time = 90 min, time reduction = 35%, hourly cost = $60, license = $120,000.\nStep 2: Time saved per review = 90 min * 35% = 31.5 minutes = 0.525 hours.\nStep 3: Savings per review = 0.525 hr * $60 = $31.50.\nStep 4: Savings per manager per year = 30 reviews * $31.50 = $945.\nStep 5: Total annual savings = 120 managers * $945 = $113,400.\nStep 6: Net savings after license = $113,400 - $120,000 = -$6,600 (a net cost).\nStep 7: ROI = net savings / license = -$6,600 / $120,000 = -0.055 = -5.5%.",
+      "answer": "Total annual time-cost savings = $113,400; net savings after license = -$6,600 (net cost); ROI = -5.5%."
+    },
+    {
+      "question": "An organization measured inter-group rating variance at 1.44 before deploying AI-assisted insights and 1.08 after. What is the percent reduction in variance, and how should a manager interpret this change qualitatively for fairness improvements?",
+      "reasoning": "- Compute absolute and relative change in variance\n- Express relative change as percent reduction\n- Provide a concise qualitative interpretation regarding fairness\n\nStep 1: Initial variance = 1.44, post-deployment variance = 1.08.\nStep 2: Absolute reduction = 1.44 - 1.08 = 0.36.\nStep 3: Percent reduction = (0.36 / 1.44) * 100% = 25%.\nStep 4: Qualitative interpretation \u2014 a 25% reduction in inter-group variance suggests a meaningful improvement in consistency across groups; it indicates the system likely reduced unexplained variability (a proxy for certain biases), but further statistical testing and contextual checks are needed to confirm fairness improvements fully.",
+      "answer": "Variance reduced by 25%; this suggests a meaningful improvement in rating consistency and a potential reduction in bias, but further validation is recommended."
+    },
+    {
+      "question": "A firm with 1,000 employees runs one performance review per employee annually. Manual review time averages 80 minutes; AI reduces time by 30%. Average reviewer hourly cost is $75. One-time integration cost is $50,000 and annual licensing is $200,000. How many months until the firm breaks even on the combined implementation and first-year licensing cost?",
+      "reasoning": "- List costs and compute per-review time saved\n- Convert time saved to dollar savings per review and aggregate annually\n- Compute total first-year investment (integration + license)\n- Divide investment by monthly savings to get break-even months\n\nStep 1: Inputs \u2014 employees/reviews = 1,000; manual time = 80 min; reduction = 30%; hourly cost = $75; integration = $50,000; annual license = $200,000.\nStep 2: Time saved per review = 80 * 30% = 24 minutes = 0.4 hours.\nStep 3: Savings per review = 0.4 hr * $75 = $30.\nStep 4: Annual savings = 1,000 reviews * $30 = $30,000.\nStep 5: First-year total investment = $50,000 + $200,000 = $250,000.\nStep 6: Monthly savings = $30,000 / 12 = $2,500.\nStep 7: Break-even months = $250,000 / $2,500 = 100 months (\u2248 8.3 years).",
+      "answer": "Break-even \u2248 100 months (about 8.3 years) on the first-year investment."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "A company with 120 managers conducts 30 performance reviews per manager per year. Average manual review time is 90 minutes. After enabling SAP AI-Assisted Performance Insights, average review time drops by 35%. Manager hourly cost is $60. Annual AI licensing is $120,000. What are the annual time-cost savings, net savings after license, and ROI (net savings divided by license cost)?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Identify inputs and compute time saved per review\n- Convert minutes saved to hours and compute per-manager annual savings\n- Aggregate savings across all managers and subtract licensing cost\n- Compute ROI as net savings / licensing cost\n\nStep 1: Inputs \u2014 managers = 120, reviews/manager/year = 30, manual time = 90 min, time reduction = 35%, hourly cost = $60, license = $120,000.\nStep 2: Time saved per review = 90 min * 35% = 31.5 minutes = 0.525 hours.\nStep 3: Savings per review = 0.525 hr * $60 = $31.50.\nStep 4: Savings per manager per year = 30 reviews * $31.50 = $945.\nStep 5: Total annual savings = 120 managers * $945 = $113,400.\nStep 6: Net savings after license = $113,400 - $120,000 = -$6,600 (a net cost).\nStep 7: ROI = net savings / license = -$6,600 / $120,000 = -0.055 = -5.5%.\n\nSo the answer is: Total annual time-cost savings = $113,400; net savings after license = -$6,600 (net cost); ROI = -5.5%."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "An organization measured inter-group rating variance at 1.44 before deploying AI-assisted insights and 1.08 after. What is the percent reduction in variance, and how should a manager interpret this change qualitatively for fairness improvements?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Compute absolute and relative change in variance\n- Express relative change as percent reduction\n- Provide a concise qualitative interpretation regarding fairness\n\nStep 1: Initial variance = 1.44, post-deployment variance = 1.08.\nStep 2: Absolute reduction = 1.44 - 1.08 = 0.36.\nStep 3: Percent reduction = (0.36 / 1.44) * 100% = 25%.\nStep 4: Qualitative interpretation \u2014 a 25% reduction in inter-group variance suggests a meaningful improvement in consistency across groups; it indicates the system likely reduced unexplained variability (a proxy for certain biases), but further statistical testing and contextual checks are needed to confirm fairness improvements fully.\n\nSo the answer is: Variance reduced by 25%; this suggests a meaningful improvement in rating consistency and a potential reduction in bias, but further validation is recommended."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "A firm with 1,000 employees runs one performance review per employee annually. Manual review time averages 80 minutes; AI reduces time by 30%. Average reviewer hourly cost is $75. One-time integration cost is $50,000 and annual licensing is $200,000. How many months until the firm breaks even on the combined implementation and first-year licensing cost?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- List costs and compute per-review time saved\n- Convert time saved to dollar savings per review and aggregate annually\n- Compute total first-year investment (integration + license)\n- Divide investment by monthly savings to get break-even months\n\nStep 1: Inputs \u2014 employees/reviews = 1,000; manual time = 80 min; reduction = 30%; hourly cost = $75; integration = $50,000; annual license = $200,000.\nStep 2: Time saved per review = 80 * 30% = 24 minutes = 0.4 hours.\nStep 3: Savings per review = 0.4 hr * $75 = $30.\nStep 4: Annual savings = 1,000 reviews * $30 = $30,000.\nStep 5: First-year total investment = $50,000 + $200,000 = $250,000.\nStep 6: Monthly savings = $30,000 / 12 = $2,500.\nStep 7: Break-even months = $250,000 / $2,500 = 100 months (\u2248 8.3 years).\n\nSo the answer is: Break-even \u2248 100 months (about 8.3 years) on the first-year investment."
+      }
+    ]
+  ]
+}

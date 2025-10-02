@@ -1,0 +1,637 @@
+{
+  "summary": "The document outlines the Leave Management component of the Human Resources Management Information System (HRMIS) for WA Health, detailing its purpose, design, and implementation strategy. The HRMIS Program aims to replace legacy HR and payroll systems with a modern, integrated solution to improve reliability, efficiency, and workforce management across the health system. Key objectives include streamlining HR processes, enhancing user accessibility, and supporting better workforce planning and reporting. The document covers high-level solution design, specific leave management processes (such as requesting, cancelling, and managing various types of leave), payroll configuration, and supporting documentation. The implementation approach emphasizes using commercial off-the-shelf software with minimal customization, focusing on process improvements and efficient service delivery.",
+  "qa_pairs": [
+    {
+      "question": "What is the main purpose of the HRMIS Program for WA Health?",
+      "answer": "The main purpose is to replace legacy HR and payroll systems with a modern, integrated solution to improve reliability, efficiency, and workforce management across the health system."
+    },
+    {
+      "question": "What are the key objectives of the HRMIS Program?",
+      "answer": "Key objectives include streamlining HR processes, enhancing user accessibility, supporting better workforce planning and reporting, and reducing administrative burden."
+    },
+    {
+      "question": "What approach does the HRMIS Program take for software implementation?",
+      "answer": "The program uses commercial off-the-shelf software with minimal customization, focusing on configuration and base product functionality."
+    },
+    {
+      "question": "Which organization leads the implementation and delivery of the HRMIS Program?",
+      "answer": "Health Support Services (HSS) leads the implementation and delivery in partnership with Deloitte."
+    },
+    {
+      "question": "What are some specific leave management processes covered in the document?",
+      "answer": "Processes include requesting leave, cancelling leave, managing various types of leave, payroll configuration, and supporting documentation."
+    },
+    {
+      "question": "How does the HRMIS Program aim to improve HR service delivery?",
+      "answer": "By implementing new structures, capabilities, processes, and technology to enable more efficient and effective HR workflows."
+    },
+    {
+      "question": "What is the main purpose of the Leave Management component in the HRMIS for WA Health?",
+      "answer": "The Leave Management component aims to streamline HR processes, enhance user accessibility, and support better workforce planning and reporting by replacing legacy HR and payroll systems with a modern, integrated solution."
+    },
+    {
+      "question": "Which systems are involved in the leave management solution for WA Health?",
+      "answer": "The leave management solution involves SuccessFactors core HR, SuccessFactors employee central payroll, UKG Dimensions, PeopleForms, and a custom leave application."
+    },
+    {
+      "question": "What is the role of UKG Dimensions in the leave management process?",
+      "answer": "UKG Dimensions is the system of record for leave requests, manages the roster, and sends approved leave data to the payroll environment."
+    },
+    {
+      "question": "What responsibilities does SuccessFactors Employee Central Payroll have in the leave management process?",
+      "answer": "SuccessFactors Employee Central Payroll processes approved time off, manages leave balances and accruals, and projects leave balances into the future."
+    },
+    {
+      "question": "How does PeopleForms contribute to the leave management process?",
+      "answer": "PeopleForms is used for custom forms, validation, evidence collection, and workflow processing for leave requests that cannot be handled by standard solutions."
+    },
+    {
+      "question": "What is the function of the custom leave application in the HRMIS solution?",
+      "answer": "The custom leave application acts as a middleman between different systems to ensure a seamless leave application process."
+    },
+    {
+      "question": "What is the implementation approach for the HRMIS Leave Management solution?",
+      "answer": "The implementation approach emphasizes using commercial off-the-shelf software with minimal customization, focusing on process improvements and efficient service delivery."
+    },
+    {
+      "question": "What is the main purpose of the Leave Management component in the HRMIS for WA Health?",
+      "answer": "The Leave Management component aims to streamline HR processes, enhance user accessibility, and support better workforce planning and reporting by replacing legacy HR and payroll systems with a modern, integrated solution."
+    },
+    {
+      "question": "How are leave requests initiated in the new HRMIS solution?",
+      "answer": "All individual leave requests are initiated from UKG Dimensions using kiosk, web, or mobile functionality."
+    },
+    {
+      "question": "Who can raise a leave request in the system?",
+      "answer": "Any employee can raise a leave request, and a manager can also raise a leave request on behalf of an employee. Contractors and non-employees cannot request leave."
+    },
+    {
+      "question": "What happens if there is not enough leave balance for a requested leave?",
+      "answer": "If there is not enough balance available, the leave request will be rejected, and the employee will be informed."
+    },
+    {
+      "question": "Where are leave balances stored and validated?",
+      "answer": "Leave balances are stored and validated in Employee Central Payroll, which is the master of the balances."
+    },
+    {
+      "question": "How are user messages handled in UKG Dimensions and PeopleForms?",
+      "answer": "Messages in UKG Dimensions are predefined and cannot be changed, while messages from PeopleForms are defined as part of the design and cannot be adjusted by an administrator."
+    },
+    {
+      "question": "What is required if evidence is needed for a leave request?",
+      "answer": "If evidence is required, the employee is requested to supply it, such as a medical certificate, via a to-do item in SuccessFactors Employee Central and by attaching it in the PeopleForms leave request form."
+    },
+    {
+      "question": "How are workflow participants for leave approval determined?",
+      "answer": "The custom solution determines workflow participants due to the high degree of flexibility and passes the identified approvers to PeopleForms for the approval process."
+    },
+    {
+      "question": "How are errors and exceptions handled in the leave management process?",
+      "answer": "Errors and exceptions are captured in the SLG1 log within employee central payroll or in PeopleForms log functionality and are processed by a centralized exception handling process."
+    },
+    {
+      "question": "What must an employee do if they want to split leave types across a day or across multiple contracts?",
+      "answer": "The employee must raise separate leave requests for each leave type or contract."
+    },
+    {
+      "question": "What is the main purpose of the Leave Management component in the HRMIS for WA Health?",
+      "answer": "The Leave Management component aims to streamline HR processes, enhance user accessibility, and support better workforce planning and reporting by replacing legacy HR and payroll systems with a modern, integrated solution."
+    },
+    {
+      "question": "Which system acts as the system of record for leave requests in the HRMIS solution?",
+      "answer": "UKG Dimensions acts as the system of record for leave requests."
+    },
+    {
+      "question": "How does UKG Dimensions determine the required leave balance for a request?",
+      "answer": "UKG Dimensions determines the required leave balance based on the existing roster or, if no roster is available, the contract schedule."
+    },
+    {
+      "question": "What must a manager do if the rostered hours are incorrect for a leave request?",
+      "answer": "The manager must update the roster hours or overwrite the hours for the request on the approval form."
+    },
+    {
+      "question": "Are leave requesting and scheduling integrated processes in the HRMIS?",
+      "answer": "No, requesting leave and scheduling are two separate, independent system processes."
+    },
+    {
+      "question": "Where are leave balances validated if UKG Dimensions does not hold them?",
+      "answer": "Leave balance validations, such as checking for enough available balance, are done outside of UKG Dimensions."
+    },
+    {
+      "question": "What happens if an open leave request needs to be changed?",
+      "answer": "The existing leave request must be cancelled and a new leave request initiated."
+    },
+    {
+      "question": "Who is responsible for ensuring enough leave balance is available when adjusting approved leave records in the roster?",
+      "answer": "The person making the adjustments is responsible for ensuring enough leave balance is available."
+    },
+    {
+      "question": "Where can employees view their leave balances?",
+      "answer": "Employees can view their leave balances on the balance overview available as custom UIs in HRMIS and on their payslips at the end of the pay period."
+    },
+    {
+      "question": "What is the role of the custom leave application in the leave management process?",
+      "answer": "The custom leave application serves as an interaction layer between UKG Dimensions and PeopleForms, handling workflow requirements in the background without direct end-user interaction."
+    },
+    {
+      "question": "What is the main function of the custom leave application in the HRMIS Leave Management component?",
+      "answer": "The custom leave application retrieves open leave requests from UKG Dimensions, generates leave cases, validates balances, and raises leave approval forms in PeopleForms."
+    },
+    {
+      "question": "Which technology is used to realize the custom leave application?",
+      "answer": "The custom leave application is realized using ABAP technology on the SAP employee central payroll environment."
+    },
+    {
+      "question": "What is the purpose of the WorkflowDelegation configuration table?",
+      "answer": "The WorkflowDelegation configuration table defines the rules for which leave type requires which delegation level to determine workflow participants."
+    },
+    {
+      "question": "What statuses can a leave case have in the CaseManagement master data table?",
+      "answer": "A leave case can have the following statuses: New, In Process, Approved, Rejected, or Withdrawn."
+    },
+    {
+      "question": "How does the custom application handle cancelled leave requests from UKG Dimensions?",
+      "answer": "If a cancelled leave request is received and the case status is still open, the PeopleForms form is withdrawn, the leave request is set to cancelled in UKG, and the case status is set to withdrawn."
+    },
+    {
+      "question": "What is the function of the PEOPLEFORMSRAISEFORM method?",
+      "answer": "The PEOPLEFORMSRAISEFORM method creates a PeopleForms instance for the requested leave ID by calling the PeopleForms API and supplying evidence and workflow parameters."
+    },
+    {
+      "question": "What is the purpose of the LEAVEVALIDATION method in the Leave Management component?",
+      "answer": "The LEAVEVALIDATION method validates the requested duration of leave against the available balance within employee central payroll."
+    },
+    {
+      "question": "How does the system determine if evidence is required for a leave request?",
+      "answer": "The system queries the EVIDENCEREQUIRED table to determine if evidence is none, optional, or mandatory for the leave type."
+    },
+    {
+      "question": "What happens if the hours overwrite field is changed on the PeopleForms leave form?",
+      "answer": "If the hours overwrite field is changed, the balance validation check is executed again to ensure there is enough leave balance."
+    },
+    {
+      "question": "Where are attachments from approved leave requests ultimately stored?",
+      "answer": "Attachments are stored in the document management system on the employee record, with employee central entries replaced by URLs pointing to the files."
+    },
+    {
+      "question": "What is the function of the APPROVELEAVE method?",
+      "answer": "The APPROVELEAVE method registers the final approval of the leave request within UKG Dimensions and allows comments to be supplied."
+    },
+    {
+      "question": "How does the system handle leave types that do not require a balance, such as jury duty?",
+      "answer": "If a leave type holds no balance but employee central payroll allows for taking it, the validation will return successful even if no balance exists."
+    },
+    {
+      "question": "What information is passed into the PeopleForms leave form during creation?",
+      "answer": "Employee details, evidence requirement, workflow, and workflow escalation details are passed into the form and stored as hidden technical fields."
+    },
+    {
+      "question": "What is the purpose of the CASHOUTLEAVETYPES method?",
+      "answer": "The CASHOUTLEAVETYPES method determines the allowed leave types for cash out, validated against a customizing table."
+    },
+    {
+      "question": "What is the master system for all leave balances in the HRMIS Leave Management component?",
+      "answer": "Employee Central Payroll is the master system for all leave balances."
+    },
+    {
+      "question": "How are leave cancellations processed in UKG Dimensions?",
+      "answer": "Leave cancellations are initiated by the employee or manager, and once approved, the leave request is set to cancelled in UKG Dimensions, and the approved leave entries on the roster are replaced with cancelled leave entries."
+    },
+    {
+      "question": "Can workflows in the leave request process be reassigned to other users?",
+      "answer": "Workflows cannot be reassigned to other users, except for leave request workflows raised for JMO\u2019s, where the first approver can re-assign the second approver."
+    },
+    {
+      "question": "What happens after a leave request workflow is completed?",
+      "answer": "A 3-step process occurs: PREWFOUTCOME tasks are executed, WFOUTCOME records the approval or rejection, and POSTWFOUTCOME handles post-approval or rejection actions."
+    },
+    {
+      "question": "How often does the timecard import to Employee Central Payroll occur?",
+      "answer": "The timecard import occurs on a nightly basis."
+    },
+    {
+      "question": "What must be done if an employee needs to change an existing leave request in UKG Dimensions?",
+      "answer": "The original leave request must be cancelled and a new request raised; existing leave requests cannot be modified."
+    },
+    {
+      "question": "How is parental leave initiated and managed in the system?",
+      "answer": "Parental leave is initiated in Employee Central, raising a PeopleForms parental leave form, and upon final approval, a leave of absence record is created in Employee Central and individual pre-approved leave requests are created in UKG Dimensions."
+    },
+    {
+      "question": "Does Employee Central Payroll receive future dated approved leave?",
+      "answer": "No, Employee Central Payroll does not receive any future dated approved leave."
+    },
+    {
+      "question": "What is the purpose of the Leave Management component in the HRMIS for WA Health?",
+      "answer": "The Leave Management component aims to streamline HR processes, enhance user accessibility, and support better workforce planning and reporting by replacing legacy HR and payroll systems with a modern, integrated solution."
+    },
+    {
+      "question": "How can employees view their leave balances in the system?",
+      "answer": "Employees can view their leave balances using a custom balance overview page accessible from within employee central, showing balances for configured leave types as of a selected date."
+    },
+    {
+      "question": "What happens when an employee selects a future 'as-of' date in the leave balance overview?",
+      "answer": "The overview updates with projected future dated balances, considering any pending or approved leave requests."
+    },
+    {
+      "question": "How are excess leave balances indicated in the system?",
+      "answer": "Excess leave balances are visually highlighted for annual leave and long service leave, and the trigger for excess indication can be configured by duration or amount for each leave type."
+    },
+    {
+      "question": "How is leave in advance requested and processed?",
+      "answer": "Leave in advance is requested in UKG Dimensions with a separate pay code and request subtype, processed to Employee Central payroll nightly if the leave starts within 3 weeks, and can be requested up to 12 months in advance for a duration of up to 3 months."
+    },
+    {
+      "question": "What is the process for cashing out leave?",
+      "answer": "Employees can request to cash out eligible leave types in SuccessFactors Employee Central using a PeopleForms Leave Cash Out form, which undergoes balance validation and workflow approval before creating a quota compensation record in payroll."
+    },
+    {
+      "question": "Which leave types are eligible for cash out?",
+      "answer": "Only a subset of leave types, such as annual leave, long service leave, and ADO, are eligible for cash out, depending on award, HSP, and employment type."
+    },
+    {
+      "question": "How is the workflow approval level determined for leave cash out requests?",
+      "answer": "The delegation level for workflow approval is determined dynamically based on the leave type, award, and HSP."
+    },
+    {
+      "question": "What determines the delegation level for workflow in the leave management process?",
+      "answer": "The delegation level for workflow is determined dynamically based on the leave type and award/HSP."
+    },
+    {
+      "question": "What systems are involved in the LEAVEVALIDATION method for leave requests?",
+      "answer": "UKG Dimensions holds all future dated approved leave, and Employee Central Payroll holds the balance information; both are used in the LEAVEVALIDATION method."
+    },
+    {
+      "question": "What record is created upon approval of a leave form?",
+      "answer": "A time quota compensation record (infotype 0416) is created upon approval of the leave form."
+    },
+    {
+      "question": "How many weeks of purchased leave can an employee request, and what does it depend on?",
+      "answer": "Leave can be purchased in weekly blocks up to a maximum of 10 weeks, depending on the award conditions."
+    },
+    {
+      "question": "What options does an employee have for the recovery timeframe when purchasing leave?",
+      "answer": "The employee can define the recovery timeframe as 3, 6, or 12 months."
+    },
+    {
+      "question": "What happens if purchased leave is not taken at the end of the period?",
+      "answer": "Any purchased leave not taken at the end of the period will be repaid based on the award agreement."
+    },
+    {
+      "question": "How is deferred leave requested and processed?",
+      "answer": "Deferred leave is requested via employee central using a PeopleForms form, and upon approval, the compensation record is adjusted with an additional wagetype 1050 containing the percentage value."
+    },
+    {
+      "question": "What triggers the overnight leave validation report after HR events?",
+      "answer": "The report is triggered by HR events such as change in contracted hours, change in award, or change in position."
+    },
+    {
+      "question": "What happens if leave validation fails for an open leave request after an HR event?",
+      "answer": "If leave validation fails for an open leave request, the request gets rejected."
+    },
+    {
+      "question": "How are leave anniversary dates updated for certain leave types?",
+      "answer": "An overnight report checks for relevant leave taken and updates the leave anniversary dates in employee central payroll according to the ruleset by leave type and award."
+    },
+    {
+      "question": "What is the potential issue with JMO rosters and future leave requests?",
+      "answer": "A JMO may apply for leave in a future period with no roster, and after the roster is assigned, the employee could have both leave and a roster for the same period."
+    },
+    {
+      "question": "What should happen to a roster when leave is approved for a JMO in a period where a roster is later assigned?",
+      "answer": "The roster should be tagged with the original shift assignee and released from the doctor, creating an open shift for a replacement to be assigned."
+    },
+    {
+      "question": "What happens if a JMO applies for leave in a future period without a roster being assigned and the leave is approved?",
+      "answer": "The JMO will have 8 hours a day of leave assigned Monday to Friday in that period."
+    },
+    {
+      "question": "How often does the interface that adjusts JMOs' leave and roster run?",
+      "answer": "The interface runs once a day in the evening outside of main business hours."
+    },
+    {
+      "question": "What are mashups in the context of Employee Central Payroll?",
+      "answer": "Mashups are direct updates to employee central payroll info types without going through the replication process."
+    },
+    {
+      "question": "Which components make up the Enterprise Structure in Employee Central Payroll?",
+      "answer": "The Enterprise Structure is comprised of Company Code, Personnel Area, Personnel Subarea, Employee Group, and Employee Subgroup."
+    },
+    {
+      "question": "What is the purpose of the custom location field in Employee Central?",
+      "answer": "The custom location field is used to determine the correct leave accrual for an employee, such as eligibility for Northwest leave."
+    },
+    {
+      "question": "What information is captured in Date Specifications for employment details?",
+      "answer": "Date Specifications capture the hire date and applicable anniversary dates, which are used for processing and calculations like long service leave entitlement."
+    },
+    {
+      "question": "How is an employee transfer handled in the HRMIS system?",
+      "answer": "A transfer is facilitated using an event in Employee Central, and the leave accrual ID is defaulted based on the employee's award and a custom table, with accrual conditions updated automatically."
+    },
+    {
+      "question": "What happens to leave balances that an employee is not entitled to after transferring to a new position?",
+      "answer": "Such leave balances can be paid out using the cash out of leave process."
+    },
+    {
+      "question": "What is the purpose of the Leave Management component in the HRMIS for WA Health?",
+      "answer": "The Leave Management component aims to streamline HR processes, enhance user accessibility, and support better workforce planning and reporting by replacing legacy HR and payroll systems with a modern, integrated solution."
+    },
+    {
+      "question": "How does HRMIS handle employees with concurrent employment within WA Health?",
+      "answer": "HRMIS allows employees to have more than one employment within or across Health Service Providers, with each assignment linked to the employee's Person ID and certain personal data shared across assignments."
+    },
+    {
+      "question": "At what level are work schedules, absences, and attendance hours stored for employees with concurrent employment?",
+      "answer": "Work schedules, absences, and attendance hours are stored at the assignment level and are not shared across assignments."
+    },
+    {
+      "question": "How is time data captured and processed in HRMIS?",
+      "answer": "Time data is captured through positive time recording in UKG Dimensions, and time entries are sent to employee central payroll for processing and leave accrual calculation."
+    },
+    {
+      "question": "How are public holidays managed in HRMIS?",
+      "answer": "Public holidays are managed in UKG Dimensions for award interpretation, and no public holidays are maintained in employee central or employee central payroll."
+    },
+    {
+      "question": "Where do employees apply for leave in the HRMIS Program?",
+      "answer": "Employees apply for leave in UKG Dimensions, and approved absences are interfaced directly to employee central payroll."
+    },
+    {
+      "question": "What is the function of the Leave Accrual ID in HRMIS?",
+      "answer": "The Leave Accrual ID determines the leave accruals for an employee based on business requirements and is replicated from employee central Job Info."
+    },
+    {
+      "question": "What is the purpose of the Leave Management component in the HRMIS for WA Health?",
+      "answer": "The Leave Management component aims to streamline HR processes, enhance user accessibility, and support better workforce planning and reporting by replacing legacy HR and payroll systems with a modern, integrated solution."
+    },
+    {
+      "question": "How are leave accrual IDs used in the system?",
+      "answer": "Leave accrual IDs are set up to match specific contracts or employee groups 1:1, determining how leave is accrued for each group."
+    },
+    {
+      "question": "How is Ceremonial Leave for Aboriginal and Torres Strait Islanders managed?",
+      "answer": "A specific time type is created when the relevant field is triggered in Employee Central, which accrues Ceremonial Leave without requiring a separate Leave Accrual ID."
+    },
+    {
+      "question": "In what unit are all leave quota types stored?",
+      "answer": "All leave quota types are stored in hours."
+    },
+    {
+      "question": "What happens when an employee applies for Personal Leave?",
+      "answer": "The non-cumulative balance is used up first before the cumulative balance is deducted from."
+    },
+    {
+      "question": "How does the system handle periods of leave without pay (LWOP) that include public holidays?",
+      "answer": "The solution validates that the entire period, including the public holiday, is considered as LWOP, which influences whether leave accruals are stopped."
+    },
+    {
+      "question": "How are leave accruals calculated for employees?",
+      "answer": "Leave accruals are calculated by multiplying hours sent from UKG Dimensions by the accrual rate for each leave type."
+    },
+    {
+      "question": "What impact does changing from full-time to part-time (or vice versa) have on leave accrual?",
+      "answer": "The accrual will automatically adjust up or down based on the change in hours coming from UKG Dimensions."
+    },
+    {
+      "question": "How often is time evaluation scheduled to run?",
+      "answer": "Time evaluation is scheduled to run daily after the UKG Dimensions interface imports the latest updates."
+    },
+    {
+      "question": "How are future leave balances projected in the system?",
+      "answer": "Future leave balances are projected by multiplying contracted hours per week by the leave accrual rate, as no future timesheet entries are available."
+    },
+    {
+      "question": "How are future leave balances projected when no future timesheet entries are available?",
+      "answer": "Future leave balances are projected by multiplying the contracted hours per week by the leave accrual rate per hour."
+    },
+    {
+      "question": "What functionality does the Quota Overview provide to administrators?",
+      "answer": "The Quota Overview allows administrators to view leave accrual details for each day and leave type, check leave balances, and project leave balances to a specific date."
+    },
+    {
+      "question": "Where can historic leave balances be found?",
+      "answer": "Historic leave balances can be found on payslips, as a snapshot of all leave balances is taken and stored at the end of each pay period."
+    },
+    {
+      "question": "What is the purpose of leave corrections in EC Payroll?",
+      "answer": "Leave corrections allow updates to leave balances in case adjustments are required, including increasing, decreasing, or replacing leave balances."
+    },
+    {
+      "question": "How is leave paid in advance handled for employees with multiple bank accounts?",
+      "answer": "Payments to additional bank accounts are included as part of the regular pay run during the employee\u2019s absence when leave is paid in advance."
+    },
+    {
+      "question": "What are the three scenarios for cashing out leave?",
+      "answer": "The three scenarios are: an employee with excess leave balance, an employee transferring to a different position or award, and financial hardship."
+    },
+    {
+      "question": "What is the difference between the 'Cash-out' and 'Transfer' compensation methods for leave cash out?",
+      "answer": "The 'Cash-out' method is superable except for ADO, while the 'Transfer' method is used for terminations and is not superable."
+    },
+    {
+      "question": "Which systems provide leave reporting and payroll-related leave reporting?",
+      "answer": "Leave reporting comes from UKG Dimensions, while payroll-related leave reporting comes from EC Payroll."
+    },
+    {
+      "question": "What is Infotype 0007 and what information does it contain?",
+      "answer": "Infotype 0007 is the Planned Working Time infotype, containing information about an employee\u2019s work schedule, daily and weekly working hours, and workdays."
+    },
+    {
+      "question": "What does the Capacity Utilization Level field in Infotype 0008 represent?",
+      "answer": "The Capacity Utilization Level field defines the percentage of an employee\u2019s standard working time, with 100% for full-time and a lower percentage for part-time employees."
+    },
+    {
+      "question": "What is the purpose of Infotype 0041 Date Specifications in HRMIS?",
+      "answer": "Infotype 0041 stores significant date and leave anniversary date information for each employee."
+    },
+    {
+      "question": "How is the Time Quota Compensation infotype (0416) used in HRMIS?",
+      "answer": "It is used for paying leave balances when leave hasn\u2019t been taken but needs to be paid, such as during leave cash out or employee termination."
+    },
+    {
+      "question": "What does Infotype 2001 Absences record in HRMIS?",
+      "answer": "It records any time off as an absence, created by the UKG Dimensions interface whenever an employee is on leave."
+    },
+    {
+      "question": "What is the function of Infotype 2003 Substitutions?",
+      "answer": "It overrides the employee\u2019s planned working time to allow accurate deduction from the leave balance when the employee is on leave."
+    },
+    {
+      "question": "How is the Absence Quota infotype (2006) created and updated?",
+      "answer": "It is automatically created and updated when time evaluation runs and updates leave accruals for an employee."
+    },
+    {
+      "question": "What information does Infotype 2010 Employee Remuneration Info store?",
+      "answer": "It stores all time and payment related information from the timesheet or interface, including attendances, allowances, and penalties."
+    },
+    {
+      "question": "How does HRMIS use Infotype 2012 Time Transfer Specifications?",
+      "answer": "It is used for accrual of Cultural Leave for Aboriginal and Torres Strait Islanders, updating time transfer type ZATI and the value of 1.00 hours."
+    },
+    {
+      "question": "What is the purpose of Infotype 2013 Quota Corrections?",
+      "answer": "It is used to directly adjust an employee\u2019s leave entitlement and is evaluated as part of Time Evaluation."
+    },
+    {
+      "question": "Which infotype allows for direct allocation of Absence Quota accruals?",
+      "answer": "Infotype 3355 Absence Quota Group."
+    },
+    {
+      "question": "What does the audit trail in HRMIS track regarding infotypes?",
+      "answer": "It tracks any changes (add, modify, delete) to data in an infotype, including when, who, and what data was changed."
+    },
+    {
+      "question": "What requirement does HP-439 specify for the leave management system?",
+      "answer": "The system will allow certain approved leave types to be paid in advance."
+    },
+    {
+      "question": "How does the system handle corrections, reversals, and cancellations of leave bookings?",
+      "answer": "It recalculates or reinstates employee entitlements, such as substitution of annual leave by sick leave."
+    },
+    {
+      "question": "What does HP-468 require regarding leave changes?",
+      "answer": "The system will date time stamp the leave changes and keep a history."
+    },
+    {
+      "question": "How does the system support flexible leave arrangements like purchased or deferred leave?",
+      "answer": "It processes arrangements where the employee forgoes a percentage or fixed dollar amount of their salary for extra leave bought."
+    },
+    {
+      "question": "What capability does HP-1035 require for the system regarding leave types?",
+      "answer": "The system must record all relevant planned and unplanned leave types, such as annual leave, sick leave, and parental leave."
+    },
+    {
+      "question": "What facility does the system provide for employees and managers to view leave information?",
+      "answer": "The system provides a secure self-service facility that allows employees and managers/supervisors to view leave information including current entitlements, leave history, and forecasted leave entitlements at a particular future date."
+    },
+    {
+      "question": "How does the system handle leave applications and approvals?",
+      "answer": "The system allows employees to submit leave applications to a manager/supervisor for approval, and approved transactions are passed electronically to the system for processing following a configured workflow."
+    },
+    {
+      "question": "Can the system display excessive or low/negative leave balances?",
+      "answer": "Yes, the system will show excessive or low/negative leave balances based on user-defined limits."
+    },
+    {
+      "question": "What audit and record-keeping features does the system have for online transactions?",
+      "answer": "The system retains appropriate logs and records of all online transactions to satisfy standard audit tests and record-keeping standards."
+    },
+    {
+      "question": "Does the system allow employees to book multiple types of leave for the same date?",
+      "answer": "Yes, the system allows employees to record multiple types of leave for the same date to cover the employee's full working day."
+    },
+    {
+      "question": "How does the system handle leave that has been approved or cancelled in the rostering system?",
+      "answer": "Approved leave will replace the employee's working shift on the published roster and flag the shift as vacant; if leave is cancelled, the system removes the leave from the roster and flags the employee as underutilised."
+    },
+    {
+      "question": "What reporting capabilities does the system provide regarding leave?",
+      "answer": "The system provides a suite of standard reports that can be configured to run automatically or on demand, including leave liability and leave clearances by leave type at various organizational levels."
+    },
+    {
+      "question": "Can the system configure rules for leave accruals for employees on workers compensation?",
+      "answer": "Yes, the system provides a facility to configure leave rules for employees on workers compensation, such as freezing leave accruals after a certain period."
+    },
+    {
+      "question": "What facility does the system provide for recording standard shift lengths for different groups of employees?",
+      "answer": "The system provides a facility to record standard shift lengths for different groups of employees, which is used for calculating applicable leave types such as TOIL."
+    },
+    {
+      "question": "How does the system handle ineligible leave types for leave credit?",
+      "answer": "The system provides a facility to record ineligible leave types for leave credit, ensuring that employees taking certain types of leave, such as unpaid leave on public holidays, are not eligible for TOIL leave credit."
+    },
+    {
+      "question": "What capability does the system have regarding the administration of leave rules?",
+      "answer": "The system enables the administration and application of different leave rules and their associated algorithms in accordance with awards, agreements, and legislations."
+    },
+    {
+      "question": "How does the system manage public holidays in relation to leave processing?",
+      "answer": "The system provides a facility to configure public holidays universally and, where appropriate, specific to the work location, which are taken into account when processing leave rules."
+    },
+    {
+      "question": "Can the system calculate pro-rata leave entitlements?",
+      "answer": "Yes, the system has the ability to calculate pro-rata leave entitlements."
+    },
+    {
+      "question": "How does the system handle the transfer of leave accrued by an employee who moves to a different position?",
+      "answer": "The system provides a facility to move leave accrued by an employee from one position to another, depending on configured conditions, without having to rekey or recreate the leave details."
+    },
+    {
+      "question": "What functionality does the system offer for entering leave details for new or returning employees?",
+      "answer": "The system allows approved users to enter leave details such as balances, entitlements, and anniversary dates from another source, and to manually override system dates or accruals."
+    },
+    {
+      "question": "How does the system support different leave accrual intervals?",
+      "answer": "The system provides for a variety of leave accrual intervals as defined by the super/admin user, including hourly, daily, monthly, fortnightly, annually, and specified dates."
+    },
+    {
+      "question": "How are leave entitlements adjusted when employees take leave at half pay or double pay?",
+      "answer": "The system can automatically adjust appropriate leave entitlements when employees take leave at half pay or double pay."
+    },
+    {
+      "question": "What process does the system use to update leave records?",
+      "answer": "The system uses a leave calculation process to update leave records at a user-determined frequency, such as daily, weekly, or fortnightly."
+    },
+    {
+      "question": "How does the system handle leave clearances that affect the due date for other employee-related events such as increments?",
+      "answer": "The system recognises leave clearances that affect the due date for other employee-related events and provides a facility to configure rules on events affected by the leave clearances, such as delaying increment due dates."
+    },
+    {
+      "question": "How are leave bookings integrated with the rostering system?",
+      "answer": "Leave bookings are reflected on the rostering system to assist the WA Health Rostering team in allocating resources to shifts correctly."
+    },
+    {
+      "question": "What happens when employees cash out leave in the system?",
+      "answer": "The system automatically adjusts the leave balance or the next accrual date, depending on the awards/agreements, for employees who cash out leave."
+    },
+    {
+      "question": "How does the system process the cash out of leave in terms of taxation and records?",
+      "answer": "The system automatically processes the cash out leave at the correct tax rate and the adjustments are shown on the employee's leave records."
+    },
+    {
+      "question": "What reporting capabilities does the system provide for leave types such as purchased or deferred leave?",
+      "answer": "The system provides a facility to report on the transactions and activities of leave types within a user-defined period, showing details such as money paid per period, hours of deferred leave accrued, leave taken, and the cost of leave."
+    },
+    {
+      "question": "How does the system handle Commonwealth Paid Parental Leave payments?",
+      "answer": "The system can process and pay Commonwealth Paid Parental Leave with no effect on other entitlements or salary payments."
+    },
+    {
+      "question": "Can the system import Parental Leave data from external sources?",
+      "answer": "Yes, the system provides a facility to load Parental Leave data or files from the Department of Human Services."
+    },
+    {
+      "question": "Is it possible to change leave types for a position in the system?",
+      "answer": "Yes, approved operators can change leave types for a position, end date the previous leave type, and start a new leave type."
+    },
+    {
+      "question": "How does the system treat leave bookings around public holidays?",
+      "answer": "The system recognises leave bookings created separately around public holidays as one continuous leave booking, which affects leave accrual calculations."
+    },
+    {
+      "question": "What information does the system provide regarding leave accrual for public holidays?",
+      "answer": "The system provides information on leave accrual, such as showing how much TOIL leave is accrued for a public holiday."
+    },
+    {
+      "question": "How does the system manage access control to leave information?",
+      "answer": "The system allows super/admin users to define access control to leave information in self-service, enabling managers to view excessive leave data for direct reports and employees to update booked leave."
+    },
+    {
+      "question": "What reporting options are available in the system?",
+      "answer": "The system provides a suite of standard reports that can be configured to run automatically or on demand."
+    },
+    {
+      "question": "Are employees with contract end dates restricted from booking leave?",
+      "answer": "Yes, the system restricts employees with a contract end date from booking leave for dates past their end date."
+    },
+    {
+      "question": "What does the acronym HRMIS stand for?",
+      "answer": "HRMIS stands for Human Resource Management Information System."
+    },
+    {
+      "question": "What is the meaning of LSL in the context of the document?",
+      "answer": "LSL stands for Long Service Leave."
+    }
+  ]
+}

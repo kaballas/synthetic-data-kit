@@ -1,0 +1,64 @@
+{
+  "summary": "The document summarizes that the Manage Languages tool is a localization management system and describes the Norsk (no_NO), Svenska (sv_SE), and Tagalog (tl_PH) locales (language/region codes, formatting rules, and UI localization roles). It reports those locales entered End of Development on Nov 17, 2023 and were deleted from the tool on May 16, 2025 after usage and cost analyses. It also outlines user impacts (loss of direct language support), mitigation options (fallback locales, migration tools, communications), and recommended best practices for locale lifecycle management.",
+  "cot_examples": [
+    {
+      "question": "Generation checklist for producing each reasoning example",
+      "reasoning": "- Extract key facts and dates from the input text.\n- Formulate a challenging, text-relevant question that requires multi-step resolution.\n- Produce a concise, non-sensitive stepwise summary of the logical approach (not internal chain-of-thought).\n- Perform deterministic calculations or structured decisions where required.\n- Provide a short, unambiguous final answer derived from the steps above.",
+      "answer": "Checklist provided."
+    },
+    {
+      "question": "How many days elapsed between the End of Development (November 17, 2023) and the deletion from the Manage Languages tool (May 16, 2025)?",
+      "reasoning": "Step 1: Count the full-year interval from 2023-11-17 to 2024-11-17. 2024 is a leap year, so that interval is 366 days.\nStep 2: Count days from 2024-11-17 to 2025-05-16 by summing remaining days of November 2024 and full months through May 16, 2025: Nov 18\u201330 = 13 days, Dec = 31, Jan = 31, Feb = 28, Mar = 31, Apr = 30, May 1\u201316 = 16. Total = 180 days.\nStep 3: Sum the two intervals: 366 + 180 = 546 days.",
+      "answer": "546 days elapsed between November 17, 2023 and May 16, 2025."
+    },
+    {
+      "question": "What prioritized migration plan (with concrete steps) will minimize user impact when Norsk (no_NO), Svenska (sv_SE), and Tagalog (tl_PH) are deleted from the Manage Languages tool?",
+      "reasoning": "Step 1 \u2014 Assess: Inventory users, assets, and features that depend on each locale; quantify active user counts and critical UI flows.\nStep 2 \u2014 Select fallbacks: For no_NO and sv_SE recommend nearest regional variants or English variants; for tl_PH recommend Filipino (fil_PH) or en_PH; document formatting differences to reconcile.\nStep 3 \u2014 Map assets: Create automated mapping rules to remap locale tags and translation keys to chosen fallbacks and mark language-specific formatting changes.\nStep 4 \u2014 Prepare translations: Export current translations, identify untranslated or custom strings, and prepare migration scripts to preserve context/comments.\nStep 5 \u2014 Communicate and schedule: Publish timeline, provide migration guides and opt-in rollback window; notify high-impact customers and support teams.\nStep 6 \u2014 Test & deploy: Run a staged rollout with QA on remapped locales, validate UI, dates/numbers/currency, and accessibility; fix issues.\nStep 7 \u2014 Monitor & support: Monitor usage and error rates, offer helpdesk support and a post-migration review to capture remaining gaps.",
+      "answer": "A prioritized 7-step plan: Assess \u2192 Select fallbacks \u2192 Map assets \u2192 Prepare translations \u2192 Communicate & schedule \u2192 Test & deploy \u2192 Monitor & support; implement automated remapping and staged rollout to minimize user impact."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Generation checklist for producing each reasoning example"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Extract key facts and dates from the input text.\n- Formulate a challenging, text-relevant question that requires multi-step resolution.\n- Produce a concise, non-sensitive stepwise summary of the logical approach (not internal chain-of-thought).\n- Perform deterministic calculations or structured decisions where required.\n- Provide a short, unambiguous final answer derived from the steps above.\n\nSo the answer is: Checklist provided."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "How many days elapsed between the End of Development (November 17, 2023) and the deletion from the Manage Languages tool (May 16, 2025)?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nStep 1: Count the full-year interval from 2023-11-17 to 2024-11-17. 2024 is a leap year, so that interval is 366 days.\nStep 2: Count days from 2024-11-17 to 2025-05-16 by summing remaining days of November 2024 and full months through May 16, 2025: Nov 18\u201330 = 13 days, Dec = 31, Jan = 31, Feb = 28, Mar = 31, Apr = 30, May 1\u201316 = 16. Total = 180 days.\nStep 3: Sum the two intervals: 366 + 180 = 546 days.\n\nSo the answer is: 546 days elapsed between November 17, 2023 and May 16, 2025."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "What prioritized migration plan (with concrete steps) will minimize user impact when Norsk (no_NO), Svenska (sv_SE), and Tagalog (tl_PH) are deleted from the Manage Languages tool?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nStep 1 \u2014 Assess: Inventory users, assets, and features that depend on each locale; quantify active user counts and critical UI flows.\nStep 2 \u2014 Select fallbacks: For no_NO and sv_SE recommend nearest regional variants or English variants; for tl_PH recommend Filipino (fil_PH) or en_PH; document formatting differences to reconcile.\nStep 3 \u2014 Map assets: Create automated mapping rules to remap locale tags and translation keys to chosen fallbacks and mark language-specific formatting changes.\nStep 4 \u2014 Prepare translations: Export current translations, identify untranslated or custom strings, and prepare migration scripts to preserve context/comments.\nStep 5 \u2014 Communicate and schedule: Publish timeline, provide migration guides and opt-in rollback window; notify high-impact customers and support teams.\nStep 6 \u2014 Test & deploy: Run a staged rollout with QA on remapped locales, validate UI, dates/numbers/currency, and accessibility; fix issues.\nStep 7 \u2014 Monitor & support: Monitor usage and error rates, offer helpdesk support and a post-migration review to capture remaining gaps.\n\nSo the answer is: A prioritized 7-step plan: Assess \u2192 Select fallbacks \u2192 Map assets \u2192 Prepare translations \u2192 Communicate & schedule \u2192 Test & deploy \u2192 Monitor & support; implement automated remapping and staged rollout to minimize user impact."
+      }
+    ]
+  ]
+}

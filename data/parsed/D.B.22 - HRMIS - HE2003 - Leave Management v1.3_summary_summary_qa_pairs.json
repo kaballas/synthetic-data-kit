@@ -1,0 +1,493 @@
+{
+  "summary": "The document is a technical specification for enhancements to the HRplus HE2003 Leave Management system as of May 2023. It outlines the system's context, purpose, and related documentation, and provides detailed descriptions of data flows, solution architecture, and enhancement overviews. Key concepts include the structure and definitions of data tables, classes, function modules, web services, and exception handling mechanisms. The document also covers business logic for leave processing, balance validation, workflow delegation, and integration with external systems. Overall, it serves as a comprehensive reference for developers and stakeholders involved in the enhancement and maintenance of the leave management solution.",
+  "qa_pairs": [
+    {
+      "question": "What is the main purpose of the HRplus HE2003 Leave Management Technical Specification Document?",
+      "answer": "The document outlines enhancements to the HRplus HE2003 Leave Management system, providing detailed descriptions of data flows, solution architecture, and enhancement overviews for developers and stakeholders."
+    },
+    {
+      "question": "Which key system concepts are described in the document?",
+      "answer": "The document describes the structure and definitions of data tables, classes, function modules, web services, and exception handling mechanisms."
+    },
+    {
+      "question": "What business logic areas are covered in the specification?",
+      "answer": "The business logic covers leave processing, balance validation, workflow delegation, and integration with external systems."
+    },
+    {
+      "question": "What is the purpose of the data dictionary (DDIC) objects listed in the document?",
+      "answer": "The DDIC objects define the structure and attributes of data elements, domains, and tables used in the leave management system."
+    },
+    {
+      "question": "How does the document support integration with external systems?",
+      "answer": "It details ECP inbound and outbound web services, CPI services, and OData services for leave balance overview."
+    },
+    {
+      "question": "What exception handling mechanisms are mentioned?",
+      "answer": "The document covers the Business Application Log (BAL) and message classes for exception handling."
+    },
+    {
+      "question": "What is the function of the ZECP_LM_C_WF_DEL table?",
+      "answer": "ZECP_LM_C_WF_DEL is used for workflow delegation in the leave management system."
+    },
+    {
+      "question": "What does the enhancement overview section provide?",
+      "answer": "It gives a summary of the new features and improvements made to the leave management solution."
+    },
+    {
+      "question": "What is the main purpose of the HRplus HE2003 Leave Management system technical specification document?",
+      "answer": "The document details the technical specification for enhancements to the HRplus HE2003 Leave Management system, including system context, purpose, data flows, solution architecture, and enhancement overviews."
+    },
+    {
+      "question": "Who leads the implementation and delivery of the HRMIS Program?",
+      "answer": "The implementation and delivery of the HRMIS Program is led by Health Support Services (HSS) in partnership with Deloitte on behalf of the WA health system."
+    },
+    {
+      "question": "What are the five discrete stages of the HRMIS Program implementation?",
+      "answer": "The five discrete stages are Mobilisation, Design, Build, Test, and Deployment."
+    },
+    {
+      "question": "What is the implementation strategy for the HRMIS Program?",
+      "answer": "The implementation strategy is solution-driven, focusing on business objectives and scope, using commercial-off-the-shelf software with limited customisations and relying on configurations and base product functionality."
+    },
+    {
+      "question": "What does the Build Stage of the HRMIS Program deliver?",
+      "answer": "The Build Stage delivers the end-to-end technical solution, integration points, user experience, business processes, change management, data migration, industrial agreement modelling, test strategy, and a detailed Deployment Plan."
+    },
+    {
+      "question": "What is the purpose of revision tracking in the technical specification document?",
+      "answer": "Revision tracking is used to identify changes post approval and maintain an accurate record of the HRMIS system setup."
+    },
+    {
+      "question": "What are some key concepts covered in the technical specification document?",
+      "answer": "Key concepts include the structure and definitions of data tables, classes, function modules, web services, exception handling mechanisms, business logic for leave processing, balance validation, workflow delegation, and integration with external systems."
+    },
+    {
+      "question": "What is the new name for the HRMIS solution according to the program naming conventions?",
+      "answer": "The new name for the HRMIS solution is HRplus solution."
+    },
+    {
+      "question": "What is the purpose of revision tracking in the HRplus HE2003 Leave Management technical specification document?",
+      "answer": "Revision tracking is used to identify changes made to the document after approval."
+    },
+    {
+      "question": "Which system is the system of record for leave requests in the HRMIS solution?",
+      "answer": "UKG Dimensions is the system of record for leave requests."
+    },
+    {
+      "question": "What is the role of SAP SuccessFactors Employee Central Payroll (ECP) in leave management?",
+      "answer": "ECP processes approved time off as part of payroll, manages leave balances and accruals, and projects these into the future."
+    },
+    {
+      "question": "What is the function of PeopleForms in the leave management process?",
+      "answer": "PeopleForms provides custom forms for validation, evidence collection, and workflow processing for leave requests that cannot be handled by standard SAP/UKGD functionality."
+    },
+    {
+      "question": "What technology is used to develop dialog reports in the custom leave application?",
+      "answer": "Dialog reports are developed using dynpro technology."
+    },
+    {
+      "question": "How are externally called methods and actions in the custom leave application exposed?",
+      "answer": "They are exposed as a web service."
+    },
+    {
+      "question": "Which document contains full functional details of the leave solution?",
+      "answer": "The leave solution blueprint contains full functional details."
+    },
+    {
+      "question": "What is the main repository for employee and organisational master data in the HRMIS solution?",
+      "answer": "SAP SuccessFactors Employee Central (EC) is the main repository for employee and organisational master data."
+    },
+    {
+      "question": "What are the four leave-related forms provided by PeopleForms?",
+      "answer": "The four forms are: leave of absence (parental leave) process, cash-out of leave process, purchase of leave request, and deferred leave request."
+    },
+    {
+      "question": "What is the role of the custom leave application in the HRMIS solution?",
+      "answer": "The custom leave application acts as a middleman between different solutions to provide a seamless leave application process."
+    },
+    {
+      "question": "What is the purpose of the ZECP_LM_C_WF_DEL table in the HRplus HE2003 Leave Management system?",
+      "answer": "ZECP_LM_C_WF_DEL is a workflow delegation configuration table that defines the rules regarding which leave type requires which delegation level to derive workflow participants later in the process."
+    },
+    {
+      "question": "How does the system determine if a UKG Dimensions leave request has already been processed?",
+      "answer": "The system validates each leave request ID from UKG Dimensions against the master data table ZECP_LM_CASES; if an entry is found, the request has already been processed and is skipped."
+    },
+    {
+      "question": "What happens if a leave request fails validation in the leave case management process?",
+      "answer": "If a leave request fails validation, a rejection is sent to UKG Dimensions and the case is set to completed, rejected status."
+    },
+    {
+      "question": "How are excess leave balances highlighted in the Leave Balance Overview UI?",
+      "answer": "Excess leave balances are visually highlighted for annual leave and long service leave, and the trigger for excess indication can be configured by duration or amount for each leave type."
+    },
+    {
+      "question": "Which table maintains the list of leave types available for display in the Leave Balance Overview UI?",
+      "answer": "The list of leave types available for the overview is maintained in the custom configuration table ZECP_LM_C_BALANC."
+    },
+    {
+      "question": "Can the excess leave validation be configured for individual users?",
+      "answer": "No, the excess leave customizing table allows for differentiation based on HSP or award, but does not allow for user-specific configuration."
+    },
+    {
+      "question": "What technology is used to realize the Leave Balance Overview UI?",
+      "answer": "The Overview UI is realized as a custom Fiori application on employee central payroll utilizing UI5 for a consistent look and feel."
+    },
+    {
+      "question": "What is the default value for the 'valid from' date in the Leave Balance Overview UI?",
+      "answer": "The default value for the 'valid from' date is the current date."
+    },
+    {
+      "question": "What is the main purpose of the technical specification document for the HRplus HE2003 Leave Management system?",
+      "answer": "The document outlines enhancements to the Leave Management system, providing detailed descriptions of data flows, solution architecture, and enhancement overviews for developers and stakeholders."
+    },
+    {
+      "question": "Which programming language is primarily used for the development of the leave management solution?",
+      "answer": "ABAP is mainly used for the development."
+    },
+    {
+      "question": "What is the name of the development package for the custom leave solution?",
+      "answer": "The development package is called ZECPY_LM."
+    },
+    {
+      "question": "What is the purpose of the ZECP_LM_C_WF_DEL table?",
+      "answer": "It defines the rules on what leave type requires which delegation level to derive workflow participants."
+    },
+    {
+      "question": "How does the system determine when evidence is required for a leave request?",
+      "answer": "The ZECP_LM_C_EVIDEN table defines the rules for evidence requirements, including the duration from which evidence becomes required, based on leave type, HSP, and award."
+    },
+    {
+      "question": "What does the ZECP_LM_C_EXCESS table configure?",
+      "answer": "It configures the rules on what quota type can trigger an Excess leave indicator and the rules around it, including the trigger value."
+    },
+    {
+      "question": "Which table defines the leave types available for cash out requests?",
+      "answer": "The ZECP_LM_C_CASHO table defines the leave types available for cash out requests."
+    },
+    {
+      "question": "What is the function of the ZECP_LM_C_BALANCE table?",
+      "answer": "It defines what balance types are available to be displayed on the Balance Overview UI, specified by HSP and Award."
+    },
+    {
+      "question": "What does the ZECP_LM_C_MINBAL table define?",
+      "answer": "It defines the minimum balance per quota types for cash-out leave."
+    },
+    {
+      "question": "What is the data type and length of the Leave case start date field?",
+      "answer": "The Leave case start date field uses the predefined data type DATS with a length of 8."
+    },
+    {
+      "question": "What is the data type and length of the ZECP_D_LM_EXCESS_TYPE domain?",
+      "answer": "The data type is CHAR and the length is 2."
+    },
+    {
+      "question": "What does the ZECP_LM_STATUS domain define?",
+      "answer": "It defines leave case statuses such as New, Approved, Rejected, Withdrawn, Cancelled, and Deleted, with specific codes for each status."
+    },
+    {
+      "question": "What is the purpose of the CASE_READ method in the case management class?",
+      "answer": "The CASE_READ method reads the table ZECP_LM_CASES for a given case id and supplies all case details."
+    },
+    {
+      "question": "What is the function of the PROCESS_LEAVE_REQUESTS method?",
+      "answer": "It processes each received leave request entry from UKGD, determines if the request was already processed, and performs balance validation for new requests."
+    },
+    {
+      "question": "What is the data type and length of the Employee Comment field (ZECP_DE_LM_COMMENT)?",
+      "answer": "The data type is CHAR and the length is 1024."
+    },
+    {
+      "question": "What are the possible values for Workflow approval level in ZECP_LM_APPROVAL_LEVEL?",
+      "answer": "Possible values are 01 for First Level Approver, 02 for Second Level Approver, and 03 for Third Level Approver."
+    },
+    {
+      "question": "What does the ZECP_LM_T_WF_PART table type define?",
+      "answer": "It defines the table type for workflow approvers, including level and escalation."
+    },
+    {
+      "question": "What is the output type of the CASE_DELETE method?",
+      "answer": "The output type is BAL_S_MSG."
+    },
+    {
+      "question": "What is the purpose of the VALIDATE_BALANCE method in the HRplus HE2003 Leave Management system?",
+      "answer": "The VALIDATE_BALANCE method validates if the user has sufficient balance for the requested leave type and leave duration at the time of the leave request starting."
+    },
+    {
+      "question": "What happens if a leave case has a status of Validation Failed?",
+      "answer": "If a leave case has a status of Validation Failed, a Refused status is sent to UKGD."
+    },
+    {
+      "question": "Which method is used to submit a new Leave Approval Form to PeopleForms?",
+      "answer": "The PF_FORM_CREATE method is used to submit a new Leave Approval Form to PeopleForms."
+    },
+    {
+      "question": "What is the formula used to calculate available leave balance?",
+      "answer": "Available = Current Balance \u2013 Future Taken \u2013 Requested"
+    },
+    {
+      "question": "What does the UKG_CHANGE_STATUS method do?",
+      "answer": "The UKG_CHANGE_STATUS method sets the UKGD leave request to status approved and passes any additional information, such as the reason for rejection, in the comment field."
+    },
+    {
+      "question": "Which method is responsible for initiating the cancellation of an approved leave in PeopleForms?",
+      "answer": "The CANCEL_APPR_PF_FORM method is responsible for initiating the cancellation of an approved leave in PeopleForms."
+    },
+    {
+      "question": "How does the system check if the start date of leave is in a grace period?",
+      "answer": "The IS_LEAVE_IN_GRACE_PER method checks if the start date of leave is in a grace period."
+    },
+    {
+      "question": "What does the GET_EE_WORKING_TIME method return?",
+      "answer": "The GET_EE_WORKING_TIME method returns the employee\u2019s working time information from IT0007."
+    },
+    {
+      "question": "Which method is used to get all the details of specified leave cases?",
+      "answer": "The GET_CASE_DETAILS method is used to get all the details of specified leave cases from the ZECP_LM_CASES table."
+    },
+    {
+      "question": "What is the purpose of the UKG_REJECT_LEAVE method?",
+      "answer": "The UKG_REJECT_LEAVE method sends a response back to UKGD if a case has failed leave processing on ECP."
+    },
+    {
+      "question": "What is the purpose of the GET_EMPLOYEE_DETAILS method in the HE2003 Leave Management system?",
+      "answer": "The GET_EMPLOYEE_DETAILS method retrieves an employee\u2019s PA0001 details."
+    },
+    {
+      "question": "Which method determines if evidence is required for a leave type?",
+      "answer": "The IS_EVIDENCE_REQUIRED method determines if evidence is required for a leave type."
+    },
+    {
+      "question": "What does the CREATE_CASE_RECORDS method do?",
+      "answer": "The CREATE_CASE_RECORDS method creates a record on ZECP_LM_CASES for the case details passed from the parameter."
+    },
+    {
+      "question": "Which method is used to validate the requested quota against the available quota in ECP?",
+      "answer": "The DO_BALANCE_CHECK method validates the requested quota against the available quota in ECP."
+    },
+    {
+      "question": "What is the function of the GET_CASE_HISTORY method?",
+      "answer": "The GET_CASE_HISTORY method retrieves the case history for a leave case from ZECP_LM_CASEHIST."
+    },
+    {
+      "question": "Which method sends case status data to CPI to be sent to UKGD?",
+      "answer": "The SEND_CASE_STATUS_TO_CPI method sends case status data to CPI to be sent to UKGD."
+    },
+    {
+      "question": "What does the PF_AUTHENTICATE method do?",
+      "answer": "The PF_AUTHENTICATE method authenticates the connection to PeopleForms."
+    },
+    {
+      "question": "What is the purpose of the HRplus HE2003 Leave Management system enhancements described in the document?",
+      "answer": "The enhancements aim to improve leave processing, balance validation, workflow delegation, and integration with external systems in the HRplus HE2003 Leave Management system."
+    },
+    {
+      "question": "What is the function of the class ZCL_ECP_LM_WEB_SERVICES?",
+      "answer": "ZCL_ECP_LM_WEB_SERVICES provides utility methods for web services related to leave management, such as getting leave balances, validating leave, and retrieving leave types."
+    },
+    {
+      "question": "What is the role of the function group ZECP_LM_UTIL?",
+      "answer": "ZECP_LM_UTIL is a function group created to contain RFC-enabled function modules for use in web service generation."
+    },
+    {
+      "question": "How does the web service router class handle incoming requests?",
+      "answer": "The router class directs incoming requests to the appropriate web service handler class based on the sub service specified in the request."
+    },
+    {
+      "question": "What is the purpose of the ZUKGLeaveRequestsIn SOAP service?",
+      "answer": "ZUKGLeaveRequestsIn is an inbound SOAP service that receives leave requests from UKGD, stores them in a staging table, validates them, and logs them for further processing."
+    },
+    {
+      "question": "What event is raised after processing leave cases in the background?",
+      "answer": "The event ZECP_LM_START_PROCESSING is raised to initiate further processing of recorded leave cases, including the backlog."
+    },
+    {
+      "question": "What happens if employee or leave type validation fails during leave request processing?",
+      "answer": "If validation fails, the corresponding failure status is updated: N3 for employee check failure and N4 for leave validation failure."
+    },
+    {
+      "question": "What is the function of the ZECPLeaveMngWS/balanceCheck REST service?",
+      "answer": "ZECPLeaveMngWS/balanceCheck validates the overwritten duration against the available leave balance for a given leave case and returns the response directly to the caller."
+    },
+    {
+      "question": "What is the purpose of the ZECPLeaveMngWS/getParentalLeaveType service?",
+      "answer": "It retrieves a list of parental leave types applicable to the form initiator based on their award."
+    },
+    {
+      "question": "Which custom table maintains the entries for parental leave types?",
+      "answer": "The custom table ZECP_LM_C_PARENT maintains the entries for parental leave types."
+    },
+    {
+      "question": "What does the ZECPLeaveMngWS/getParentalBalance service provide?",
+      "answer": "It provides the requested quota balance for parental leave as at the current date."
+    },
+    {
+      "question": "Which function module is called to determine the current balance available for parental leave?",
+      "answer": "The function module Z_HCM_WFD_QUOTA_BALANCES_GET is called to determine the current balance available."
+    },
+    {
+      "question": "What is the function of the ZECPLeaveMngWS/doValidations service?",
+      "answer": "It performs validations on the leave request entries."
+    },
+    {
+      "question": "Which custom table maintains the entries for cash out leave quota types?",
+      "answer": "The custom table ZECP_LM_C_CASHO maintains the entries for cash out leave quota types."
+    },
+    {
+      "question": "What does the ZECPLeaveMngWS/quotaBalance service do?",
+      "answer": "It retrieves the requested quota balance for the cash out leave form as at the current date."
+    },
+    {
+      "question": "What is created by the ZECPLeaveMngWS/createQuotaComp service?",
+      "answer": "It creates a time quota compensation record IT0416 in ECP."
+    },
+    {
+      "question": "What is the purpose of the ZECPLeaveMngWS/changeStatus service?",
+      "answer": "It updates the status of the provided UKGD Leave Id in the ECP Leave Cases table and simple flow steps."
+    },
+    {
+      "question": "What is the purpose of the HE2003 Leave Management system enhancements described in the document?",
+      "answer": "The enhancements aim to improve the HRplus HE2003 Leave Management system by detailing data flows, solution architecture, and integration with external systems, serving as a comprehensive reference for developers and stakeholders."
+    },
+    {
+      "question": "Which middleware is used to facilitate UKGD interactions in the system?",
+      "answer": "SAP CPI middleware is used to facilitate UKGD interactions."
+    },
+    {
+      "question": "What is the first step in creating a PeopleForms instance for a given ECP Case Id?",
+      "answer": "The first step is to obtain the access token from the token server via a call to the PF_AUTHENTICATE method."
+    },
+    {
+      "question": "What happens after a successful PeopleForms creation?",
+      "answer": "PeopleForms returns the Form Id, which is updated into the Cases table, and the status is set to 'I' for the Case Id."
+    },
+    {
+      "question": "How are errors and successes logged during PeopleForms interactions?",
+      "answer": "Successes are logged to DETAIL, while errors are logged to MAIN or CONN types."
+    },
+    {
+      "question": "What StepActionID is used when the Action is 'INIT_CANC' for cancelling approved leave?",
+      "answer": "The StepActionID is set to 5949eec3-c6e4-483a-adfe-097b515abfde."
+    },
+    {
+      "question": "How often does the UKGD Fetch Leave Request Delta service run?",
+      "answer": "It is scheduled to run every 1 minute."
+    },
+    {
+      "question": "What protocol is used for the UKGD Fetch Leave Request Delta service?",
+      "answer": "The protocol used is SOAP."
+    },
+    {
+      "question": "How does the system handle errors in the UKGD Fetch Leave Request Delta process?",
+      "answer": "All errors are handled by the standard exception handling process to send errors to HPSM."
+    },
+    {
+      "question": "What is the purpose of the XSLT mapping in the UKGD Fetch Leave Request Delta process?",
+      "answer": "The XSLT mapping is used to merge leave requests into the required output to be sent to ECP."
+    },
+    {
+      "question": "What is the purpose of the UKGD Fetch Leave Requests Sync Trigger?",
+      "answer": "It enables fetching all leave requests from UKGD that are raised or changed status within the last 365 days."
+    },
+    {
+      "question": "What protocol is used by the ECPUKGLeaveChangeStatus service to update the status of a UKGD Leave Id?",
+      "answer": "REST protocol is used."
+    },
+    {
+      "question": "What happens if there is no new duration within the incoming payload for a leave request?",
+      "answer": "Only the status of the leave request will be changed in UKGD."
+    },
+    {
+      "question": "What is the function of the 'Enable Payload Logging' configuration parameter?",
+      "answer": "It determines whether payload logging is enabled (TRUE) or disabled (FALSE)."
+    },
+    {
+      "question": "How often is the HE2003 Fetch UKGD Leave Requests Sync Trigger scheduled to run?",
+      "answer": "Every 1 minute."
+    },
+    {
+      "question": "What is the data type of the 'AssignmentId' property in the Assignments OData entity?",
+      "answer": "PERSNO."
+    },
+    {
+      "question": "What is the purpose of the 'AssignmentsToBalances' association in the OData service?",
+      "answer": "It links the Assignments entity to the Balances entity, allowing navigation between them."
+    },
+    {
+      "question": "What must the OData service for Leave Balance Overview support in terms of user identification?",
+      "answer": "It must resolve the SSO userid and support passing in the HE# for fetching Assignment Ids."
+    },
+    {
+      "question": "What is the purpose of the OData service in the HRplus HE2003 Leave Management system?",
+      "answer": "The OData service is called by the UI and provides two entity sets, AssignmentsSet and BalancesSet, to retrieve personnel assignments and leave balances for SAP users."
+    },
+    {
+      "question": "How does the AssignmentsSet entity set retrieve personnel assignments?",
+      "answer": "AssignmentsSet retrieves personnel assignments of an SAP user id, which can be passed via filter or defaults to the sy-uname if not specified."
+    },
+    {
+      "question": "What does the BalancesSet entity set return?",
+      "answer": "BalancesSet returns the leave balances of a corresponding assignment using a 'valid from' date as the key date, and can filter whether to display leave types with zero balances."
+    },
+    {
+      "question": "How is authorization checked when accessing AssignmentsSet or BalancesSet?",
+      "answer": "Authorization is checked using the authorization object 'S_BTCH_ADM'; if the user does not have the required authorization, an exception is raised."
+    },
+    {
+      "question": "What is the function of the 'ZeroNoDisplay' flag in BalancesSet?",
+      "answer": "The 'ZeroNoDisplay' flag indicates whether leave types with zero remaining balances should be displayed; true means zero balances are displayed, and the default is false."
+    },
+    {
+      "question": "What report serves as the interaction layer over the master data table for leave cases?",
+      "answer": "The report ZHE2003_ECP_LM_LEAVE_CASES_UI serves as the interaction layer over the master data table for leave cases."
+    },
+    {
+      "question": "What are the two supported views in the ZHE2003_ECP_LM_LEAVE_CASES_UI report?",
+      "answer": "The two supported views are administrator and payroll view."
+    },
+    {
+      "question": "What is the output format of the ZHE2003_ECP_LM_LEAVE_CASES_UI report?",
+      "answer": "The output is ALV-based using the structure ZECP_LM_S_CASES_ALV_UI, allowing sorting, filtering, and save-as-excel."
+    },
+    {
+      "question": "What key functionality does the ZHE2003_ECP_LM_LEAVE_CASES_UI report provide?",
+      "answer": "It displays staged leave cases and provides backend processing options for cases that await further processing, and can be scheduled as a background job."
+    },
+    {
+      "question": "How does the system prevent unauthorized users from calling the OData service on behalf of someone else?",
+      "answer": "The SAP user id (SY-UNAME) is validated against the authorization object S_BTCH_ADM, ensuring only authorized users can call the service for other users."
+    },
+    {
+      "question": "What is the purpose of the Business Application Log (BAL) in the HE2003 Leave Management system?",
+      "answer": "The Business Application Log (BAL) is used to record program run details and individual leave record process messages, including success, warning, error, or exception, using a standardized exception handling process."
+    },
+    {
+      "question": "Which database table is checked for approved leaves whose start date is in the past?",
+      "answer": "The ZECP_LM_CASES database table is checked for approved leaves whose start date is in the past."
+    },
+    {
+      "question": "What are the three application log sub-objects created for the leave solution?",
+      "answer": "The three application log sub-objects are HE2003_CONN (Leave Management Communication Error), HE2003_DETAIL (Leave Management Data & Validation Error), and HE2003_MAIN (Leave Management Program Error)."
+    },
+    {
+      "question": "What is the transaction code for calling the leave cases report in display mode?",
+      "answer": "The transaction code ZECP_LM_LEAVE_CASES calls the report ZECP_LM_LEAVE_CASES_UI in display mode."
+    },
+    {
+      "question": "What message is shown when a leave request is rejected due to insufficient available balance?",
+      "answer": "The message shown is: 'Leave request rejected. &1 hours requested, available balance for &2 is &3.'"
+    },
+    {
+      "question": "What does the message class ZECP_LM_CASE_MGMNT define?",
+      "answer": "The message class ZECP_LM_CASE_MGMNT defines backend messaging for technical errors, leave request rejections, case status updates, and other leave management process messages."
+    },
+    {
+      "question": "What does the acronym ECP stand for in the context of this document?",
+      "answer": "ECP stands for Employee Central Payroll."
+    },
+    {
+      "question": "What happens if a leave is not in the grace period during processing of approved cases?",
+      "answer": "If a leave is not in the grace period, the PeopleForm is closed to prevent future actions by calling the method zcl_ecp_lm_case_management=>pf_form_close."
+    }
+  ]
+}

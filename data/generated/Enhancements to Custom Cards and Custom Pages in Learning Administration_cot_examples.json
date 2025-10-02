@@ -1,0 +1,64 @@
+{
+  "summary": "Custom Cards and Custom Pages in SAP Learning Administration provide configurable, media-rich tiles and landing pages on the Learning home page that admins can target by organization/user group, time window, and content type (HTML, video, iFrame, JS, links), with limits on counts (e.g., up to 100 cards, pages with up to 5 banners and 6 sections). Recent 1H 2025 enhancements (filtering by target/active period, expiration indicators, UI and drag\u2011and\u2011drop improvements) improve manageability and lifecycle control while integrations (LinkedIn Learning, SharePoint, partner embeds) and platform constraints shape strategic use and customization.",
+  "cot_examples": [
+    {
+      "question": "Given platform limits of up to 100 custom cards total, up to 5 pages, each page supporting up to 6 sections and each section up to 8 cards, what is the minimum number of custom pages required to place all 100 cards without exceeding per-page or per-section limits? Show calculation.",
+      "reasoning": "- Identify relevant numeric constraints from the text.\n- Compute per-page card capacity from sections \u00d7 cards per section.\n- Divide total cards by per-page capacity and round up.\n- Verify against maximum allowed pages and report leftover capacity.\n\nStep 1: Extract constraints: total cards = 100, sections per page = 6, cards per section = 8, max pages allowed = 5.\nStep 2: Compute capacity per page = 6 sections \u00d7 8 cards = 48 cards per page.\nStep 3: Compute pages required = ceil(100 / 48) = ceil(2.0833...) = 3 pages.\nStep 4: Verify platform limit: required 3 pages \u2264 allowed 5 pages, so feasible.\nStep 5: Compute leftover capacity if using 3 pages = 3 \u00d7 48 \u2212 100 = 144 \u2212 100 = 44 unused slots.\n\nFinal concise conclusion derived from the above steps.",
+      "answer": "3 pages (3 \u00d7 48 capacity = 144 slots; fits the 100 cards with 44 slots unused; within the 5-page limit)."
+    },
+    {
+      "question": "An administrator needs to create department-specific sections for 12 departments, each department receiving its own section containing up to 8 cards. Given pages support up to 6 sections each, up to 5 pages total, and a global card cap of 100, is this configuration feasible? Provide the configuration plan and resource usage.",
+      "reasoning": "- List constraints: sections/page, pages available, cards per section, total card cap.\n- Calculate departments supported per page and pages needed.\n- Calculate total cards required and compare to global cap.\n- Check per-page capacity and overall feasibility, then state configuration plan.\n\nStep 1: Extract constraints: sections per page = 6, pages max = 5, cards per section = 8, total card cap = 100.\nStep 2: Departments per page = 6 sections \u2192 6 departments per page.\nStep 3: Pages needed for 12 departments = ceil(12 / 6) = 2 pages.\nStep 4: Total cards required = 12 departments \u00d7 8 cards = 96 cards.\nStep 5: Compare to global cap: 96 \u2264 100, so within limit.\nStep 6: Per-page card load: each page would host 6 \u00d7 8 = 48 cards; two pages \u2192 96 cards total; this fits the per-page and global constraints.\nStep 7: Configuration plan: create 2 custom pages, each with 6 sections targeted to 6 departments, place up to 8 cards per section; use targeting to scope each section to its department and use expiration/filters to manage lifecycle.\n\nFinal concise conclusion based on calculations.",
+      "answer": "Yes \u2014 feasible using 2 pages (each with 6 sections \u00d7 8 cards = 48 cards per page). Total required = 96 cards \u2264 100 cap; fits within the 5-page limit."
+    },
+    {
+      "question": "A learner can see up to 8 custom cards filtered by date/status/org, but an administrator has 30 active targeted cards for that learner. How can the administrator ensure that three specific high-priority cards always appear among the 8 shown? Provide a step-by-step operational approach.",
+      "reasoning": "- Identify display constraint (max 8 visible) and goal (3 priority cards must appear).\n- Use targeting and ordering controls to increase priority visibility.\n- Use scheduling and content lifecycle controls to reduce competing cards.\n- Validate via preview/testing and adjust.\n\nStep 1: Confirm constraint: learner view displays maximum 8 cards selected by filters (date, status, org membership).\nStep 2: Narrow visibility for non-priority cards: apply tighter targeting or stagger active periods so fewer non-priority cards coincide with priority cards' active windows.\nStep 3: Prioritize ordering: place the three high-priority cards in top positions using drag-and-drop or the move-in-list function so they appear before lower-priority cards when the system selects the set to display.\nStep 4: Use section/page placement: position priority cards in sections or pages that are shown earlier on the home page and ensure those sections target the learner\u2019s org/user group.\nStep 5: Use expiration and filters: mark low-value cards with shorter active periods and use the expiration indicator to retire outdated items, keeping competing active cards under control.\nStep 6: Test and verify: preview as a sample learner or role, confirm the three priority cards appear among the 8, then iterate if needed.\n\nConcise operational approach derived from the above steps.",
+      "answer": "Use tighter targeting and staggered active periods to reduce competing active cards, place the three priority cards at top positions via drag-and-drop or move-in-list, position them in early sections/pages targeted to the learner, expire low-priority cards, and verify with preview; this ensures the three priorities appear among the 8 shown."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Given platform limits of up to 100 custom cards total, up to 5 pages, each page supporting up to 6 sections and each section up to 8 cards, what is the minimum number of custom pages required to place all 100 cards without exceeding per-page or per-section limits? Show calculation."
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Identify relevant numeric constraints from the text.\n- Compute per-page card capacity from sections \u00d7 cards per section.\n- Divide total cards by per-page capacity and round up.\n- Verify against maximum allowed pages and report leftover capacity.\n\nStep 1: Extract constraints: total cards = 100, sections per page = 6, cards per section = 8, max pages allowed = 5.\nStep 2: Compute capacity per page = 6 sections \u00d7 8 cards = 48 cards per page.\nStep 3: Compute pages required = ceil(100 / 48) = ceil(2.0833...) = 3 pages.\nStep 4: Verify platform limit: required 3 pages \u2264 allowed 5 pages, so feasible.\nStep 5: Compute leftover capacity if using 3 pages = 3 \u00d7 48 \u2212 100 = 144 \u2212 100 = 44 unused slots.\n\nFinal concise conclusion derived from the above steps.\n\nSo the answer is: 3 pages (3 \u00d7 48 capacity = 144 slots; fits the 100 cards with 44 slots unused; within the 5-page limit)."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "An administrator needs to create department-specific sections for 12 departments, each department receiving its own section containing up to 8 cards. Given pages support up to 6 sections each, up to 5 pages total, and a global card cap of 100, is this configuration feasible? Provide the configuration plan and resource usage."
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- List constraints: sections/page, pages available, cards per section, total card cap.\n- Calculate departments supported per page and pages needed.\n- Calculate total cards required and compare to global cap.\n- Check per-page capacity and overall feasibility, then state configuration plan.\n\nStep 1: Extract constraints: sections per page = 6, pages max = 5, cards per section = 8, total card cap = 100.\nStep 2: Departments per page = 6 sections \u2192 6 departments per page.\nStep 3: Pages needed for 12 departments = ceil(12 / 6) = 2 pages.\nStep 4: Total cards required = 12 departments \u00d7 8 cards = 96 cards.\nStep 5: Compare to global cap: 96 \u2264 100, so within limit.\nStep 6: Per-page card load: each page would host 6 \u00d7 8 = 48 cards; two pages \u2192 96 cards total; this fits the per-page and global constraints.\nStep 7: Configuration plan: create 2 custom pages, each with 6 sections targeted to 6 departments, place up to 8 cards per section; use targeting to scope each section to its department and use expiration/filters to manage lifecycle.\n\nFinal concise conclusion based on calculations.\n\nSo the answer is: Yes \u2014 feasible using 2 pages (each with 6 sections \u00d7 8 cards = 48 cards per page). Total required = 96 cards \u2264 100 cap; fits within the 5-page limit."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "A learner can see up to 8 custom cards filtered by date/status/org, but an administrator has 30 active targeted cards for that learner. How can the administrator ensure that three specific high-priority cards always appear among the 8 shown? Provide a step-by-step operational approach."
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Identify display constraint (max 8 visible) and goal (3 priority cards must appear).\n- Use targeting and ordering controls to increase priority visibility.\n- Use scheduling and content lifecycle controls to reduce competing cards.\n- Validate via preview/testing and adjust.\n\nStep 1: Confirm constraint: learner view displays maximum 8 cards selected by filters (date, status, org membership).\nStep 2: Narrow visibility for non-priority cards: apply tighter targeting or stagger active periods so fewer non-priority cards coincide with priority cards' active windows.\nStep 3: Prioritize ordering: place the three high-priority cards in top positions using drag-and-drop or the move-in-list function so they appear before lower-priority cards when the system selects the set to display.\nStep 4: Use section/page placement: position priority cards in sections or pages that are shown earlier on the home page and ensure those sections target the learner\u2019s org/user group.\nStep 5: Use expiration and filters: mark low-value cards with shorter active periods and use the expiration indicator to retire outdated items, keeping competing active cards under control.\nStep 6: Test and verify: preview as a sample learner or role, confirm the three priority cards appear among the 8, then iterate if needed.\n\nConcise operational approach derived from the above steps.\n\nSo the answer is: Use tighter targeting and staggered active periods to reduce competing active cards, place the three priority cards at top positions via drag-and-drop or move-in-list, position them in early sections/pages targeted to the learner, expire low-priority cards, and verify with preview; this ensures the three priorities appear among the 8 shown."
+      }
+    ]
+  ]
+}

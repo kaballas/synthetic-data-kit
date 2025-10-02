@@ -1,0 +1,45 @@
+{
+  "summary": "The document summarizes SAP\u2019s enhancements to the Advanced Search \u201cSelect All\u201d for Goal Management \u2014 including expanded selection capacity (up to 500 recipients), persistent cross-page selections, clearer UI feedback, backend optimizations, and tighter integration with bulk goal actions. It also evaluates usability gains (faster workflows, fewer errors), recommends best practices (transparent selection state, confirmations, accessibility), and notes trade-offs such as implementation complexity and selection caps.",
+  "cot_examples": [
+    {
+      "question": "An advanced search returns 12,000 goals. SAP's enhanced Select All permits selecting up to 500 items per operation. What is the minimum number of Select All operations required to select all goals, what will the final (partial) batch contain, and how does that compare if the results are instead filtered into 30 evenly sized departments?",
+      "reasoning": "- Identify total items and the Select All cap.\n- Compute full batches and remainder.\n- Compare with an alternative partitioning (30 equal departments).\nStep 1: Total items = 12,000. Select All cap per operation = 500.\nStep 2: Compute number of full batches = 12,000 \u00f7 500 = 24 exactly, remainder = 0.\nStep 3: Therefore minimum operations = 24; final partial batch size = 0 (all batches full).\nStep 4: If partitioned into 30 equal departments: items per department = 12,000 \u00f7 30 = 400.\nStep 5: Since 400 \u2264 500, each department can be selected with one operation \u2192 30 operations total.\nStep 6: Compare: 24 operations (no partitioning) vs. 30 operations (30-way partition) \u2014 partitioning into 30 equal groups increases the number of operations in this case.",
+      "answer": "Minimum operations = 24; final partial batch = 0 items (all full). With 30 evenly sized departments you would need 30 operations, which is worse than 24."
+    },
+    {
+      "question": "A manager repeatedly selects 500 items for bulk goal updates. Previously they selected items page-by-page: page size = 20 items, so 25 pages; each page-select click took 2 seconds. After the enhancement, Select All is a single click (2 seconds) plus a 3-second confirmation dialog. How much time is saved per 500-item batch, and how much time is saved per day if the manager performs 8 such batches?",
+      "reasoning": "- Determine page count from page size and batch size.\n- Compute time spent before the enhancement.\n- Compute time spent after the enhancement.\n- Subtract to get time saved per batch and multiply for daily total.\nStep 1: Batch size = 500, page size = 20 \u21d2 pages = 500 \u00f7 20 = 25 pages.\nStep 2: Before enhancement: 25 page-select clicks \u00d7 2 s/click = 50 s.\nStep 3: After enhancement: 1 Select All click (2 s) + confirmation (3 s) = 5 s.\nStep 4: Time saved per batch = 50 s \u2212 5 s = 45 s.\nStep 5: For 8 batches per day: 45 s \u00d7 8 = 360 s = 6 minutes per day.",
+      "answer": "Time saved per 500-item batch = 45 seconds. Time saved for 8 batches/day = 360 seconds = 6 minutes per day."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "An advanced search returns 12,000 goals. SAP's enhanced Select All permits selecting up to 500 items per operation. What is the minimum number of Select All operations required to select all goals, what will the final (partial) batch contain, and how does that compare if the results are instead filtered into 30 evenly sized departments?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Identify total items and the Select All cap.\n- Compute full batches and remainder.\n- Compare with an alternative partitioning (30 equal departments).\nStep 1: Total items = 12,000. Select All cap per operation = 500.\nStep 2: Compute number of full batches = 12,000 \u00f7 500 = 24 exactly, remainder = 0.\nStep 3: Therefore minimum operations = 24; final partial batch size = 0 (all batches full).\nStep 4: If partitioned into 30 equal departments: items per department = 12,000 \u00f7 30 = 400.\nStep 5: Since 400 \u2264 500, each department can be selected with one operation \u2192 30 operations total.\nStep 6: Compare: 24 operations (no partitioning) vs. 30 operations (30-way partition) \u2014 partitioning into 30 equal groups increases the number of operations in this case.\n\nSo the answer is: Minimum operations = 24; final partial batch = 0 items (all full). With 30 evenly sized departments you would need 30 operations, which is worse than 24."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "A manager repeatedly selects 500 items for bulk goal updates. Previously they selected items page-by-page: page size = 20 items, so 25 pages; each page-select click took 2 seconds. After the enhancement, Select All is a single click (2 seconds) plus a 3-second confirmation dialog. How much time is saved per 500-item batch, and how much time is saved per day if the manager performs 8 such batches?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Determine page count from page size and batch size.\n- Compute time spent before the enhancement.\n- Compute time spent after the enhancement.\n- Subtract to get time saved per batch and multiply for daily total.\nStep 1: Batch size = 500, page size = 20 \u21d2 pages = 500 \u00f7 20 = 25 pages.\nStep 2: Before enhancement: 25 page-select clicks \u00d7 2 s/click = 50 s.\nStep 3: After enhancement: 1 Select All click (2 s) + confirmation (3 s) = 5 s.\nStep 4: Time saved per batch = 50 s \u2212 5 s = 45 s.\nStep 5: For 8 batches per day: 45 s \u00d7 8 = 360 s = 6 minutes per day.\n\nSo the answer is: Time saved per 500-item batch = 45 seconds. Time saved for 8 batches/day = 360 seconds = 6 minutes per day."
+      }
+    ]
+  ]
+}

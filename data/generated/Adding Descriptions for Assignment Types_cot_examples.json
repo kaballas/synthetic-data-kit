@@ -1,0 +1,64 @@
+{
+  "summary": "The Configure Assignments feature in SAP Opportunity Marketplace lets administrators create, edit, and localize assignment types (name, status, max duration, default image, and descriptive help text) that are transportable via unique IDs and appear during assignment creation and application. These descriptions and metadata integrate with SuccessFactors modules (LMS, recruiting, capability portfolios) to improve searchability, recommendations, UX, and workforce planning; administrators should keep descriptions clear, consistent, translated, and regularly reviewed to maximize engagement and alignment with talent development goals.",
+  "cot_examples": [
+    {
+      "question": "If a development instance has 5 assignment types (A\u2013E) where A and B are active and C, D, E are inactive, and the admin transports all types to production which currently has no assignment types, will end users be able to create assignments immediately after transport? If not, what must be done pre-transport to ensure creation is possible?",
+      "reasoning": "- Checklist of steps I'll follow:\n  - Identify active/inactive statuses and business rule requirements.\n  - Determine what status values are transported.\n  - Evaluate post-transport state against the \"at least one active\" creation constraint.\n  - State the minimal pre-transport action required.\nStep 1: Note the business rule: at least one assignment type must be active for users to create assignments.\nStep 2: Transport moves configuration metadata (including active/inactive flags and unique IDs) from Dev to Prod.\nStep 3: After transport, production will have the same active statuses as the source (A and B active; C, D, E inactive).\nStep 4: Because A and B are active in the transported set, production will have at least one active type and users can create assignments immediately.\nStep 5: If instead all transported types had been inactive, the required pre-transport action would be to activate at least one type in the source before transporting (or activate one in production post-transport using an admin role).\n",
+      "answer": "Yes \u2014 because A and B are active, production will have at least one active type after transport and users can create assignments. If no types were active, the admin must activate at least one type before (or immediately after) transport."
+    },
+    {
+      "question": "An organization supports 3 languages and has 8 assignment types. They currently have translations for type names in 2 languages and descriptions in 1 language. For full multilingual coverage of both names and descriptions across all languages, how many total translated strings are required, how many are already in place, and how many additional translations are needed?",
+      "reasoning": "- Checklist of steps I'll follow:\n  - Define the fields needing translation and count languages.\n  - Compute total required translations by multiplication.\n  - Compute existing translations and subtract to find the gap.\nStep 1: Fields requiring translation per type: name and description = 2 fields.\nStep 2: Languages supported = 3; types = 8.\nStep 3: Total required translations = 8 types * 2 fields * 3 languages = 48 strings.\nStep 4: Existing translations: names in 2 languages = 8 * 2 = 16; descriptions in 1 language = 8 * 1 = 8; total existing = 16 + 8 = 24.\nStep 5: Additional translations needed = 48 total required \u2212 24 existing = 24 strings.\n",
+      "answer": "Total required: 48 translated strings. Already in place: 24 strings. Additional translations needed: 24 strings."
+    },
+    {
+      "question": "An employee completes three assignments across modules that should add capabilities to their Capability Portfolio. Describe the concise sequence of checks an admin should perform to verify capabilities synchronized correctly and the minimal corrective actions if capabilities are missing.",
+      "reasoning": "- Checklist of steps I'll follow:\n  - Identify integration touchpoints that record capabilities.\n  - Verify data flow and mapping between modules and Capability Portfolio.\n  - Inspect logs and recent transactions for failures.\n  - Recommend minimal corrective actions based on the failure mode.\nStep 1: Confirm the assignment types are configured to publish capability outcomes (check the assignment type metadata and mapping settings).\nStep 2: Verify integration links are enabled between Opportunity Marketplace and the Capability Portfolio (integration endpoints, permissions, and scheduled jobs).\nStep 3: Check transaction/audit logs or Configuration Transport Center logs for any transport or sync errors at the timestamps when assignments completed.\nStep 4: Validate that capability mappings are correct (field-to-field mapping) and that unique IDs referenced by mappings match source records.\nStep 5: If capabilities are missing and logs show sync failures, restart or re-run the sync job and monitor; if mappings are incorrect, correct the mapping and reprocess the affected records.\nStep 6: If permissions or role-based access blocked writes, adjust roles temporarily to allow the system account to update the Capability Portfolio and reapply changes.\n",
+      "answer": "Checks: confirm assignment-to-capability mapping, verify integration endpoints and jobs, inspect logs for sync errors, validate ID/mapping consistency, and confirm permissions. Corrections: re-run sync jobs or reprocess records for sync failures; fix mappings and reapply if mapping errors; adjust permissions if access blocked."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "If a development instance has 5 assignment types (A\u2013E) where A and B are active and C, D, E are inactive, and the admin transports all types to production which currently has no assignment types, will end users be able to create assignments immediately after transport? If not, what must be done pre-transport to ensure creation is possible?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Checklist of steps I'll follow:\n  - Identify active/inactive statuses and business rule requirements.\n  - Determine what status values are transported.\n  - Evaluate post-transport state against the \"at least one active\" creation constraint.\n  - State the minimal pre-transport action required.\nStep 1: Note the business rule: at least one assignment type must be active for users to create assignments.\nStep 2: Transport moves configuration metadata (including active/inactive flags and unique IDs) from Dev to Prod.\nStep 3: After transport, production will have the same active statuses as the source (A and B active; C, D, E inactive).\nStep 4: Because A and B are active in the transported set, production will have at least one active type and users can create assignments immediately.\nStep 5: If instead all transported types had been inactive, the required pre-transport action would be to activate at least one type in the source before transporting (or activate one in production post-transport using an admin role).\n\n\nSo the answer is: Yes \u2014 because A and B are active, production will have at least one active type after transport and users can create assignments. If no types were active, the admin must activate at least one type before (or immediately after) transport."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "An organization supports 3 languages and has 8 assignment types. They currently have translations for type names in 2 languages and descriptions in 1 language. For full multilingual coverage of both names and descriptions across all languages, how many total translated strings are required, how many are already in place, and how many additional translations are needed?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Checklist of steps I'll follow:\n  - Define the fields needing translation and count languages.\n  - Compute total required translations by multiplication.\n  - Compute existing translations and subtract to find the gap.\nStep 1: Fields requiring translation per type: name and description = 2 fields.\nStep 2: Languages supported = 3; types = 8.\nStep 3: Total required translations = 8 types * 2 fields * 3 languages = 48 strings.\nStep 4: Existing translations: names in 2 languages = 8 * 2 = 16; descriptions in 1 language = 8 * 1 = 8; total existing = 16 + 8 = 24.\nStep 5: Additional translations needed = 48 total required \u2212 24 existing = 24 strings.\n\n\nSo the answer is: Total required: 48 translated strings. Already in place: 24 strings. Additional translations needed: 24 strings."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "An employee completes three assignments across modules that should add capabilities to their Capability Portfolio. Describe the concise sequence of checks an admin should perform to verify capabilities synchronized correctly and the minimal corrective actions if capabilities are missing."
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Checklist of steps I'll follow:\n  - Identify integration touchpoints that record capabilities.\n  - Verify data flow and mapping between modules and Capability Portfolio.\n  - Inspect logs and recent transactions for failures.\n  - Recommend minimal corrective actions based on the failure mode.\nStep 1: Confirm the assignment types are configured to publish capability outcomes (check the assignment type metadata and mapping settings).\nStep 2: Verify integration links are enabled between Opportunity Marketplace and the Capability Portfolio (integration endpoints, permissions, and scheduled jobs).\nStep 3: Check transaction/audit logs or Configuration Transport Center logs for any transport or sync errors at the timestamps when assignments completed.\nStep 4: Validate that capability mappings are correct (field-to-field mapping) and that unique IDs referenced by mappings match source records.\nStep 5: If capabilities are missing and logs show sync failures, restart or re-run the sync job and monitor; if mappings are incorrect, correct the mapping and reprocess the affected records.\nStep 6: If permissions or role-based access blocked writes, adjust roles temporarily to allow the system account to update the Capability Portfolio and reapply changes.\n\n\nSo the answer is: Checks: confirm assignment-to-capability mapping, verify integration endpoints and jobs, inspect logs for sync errors, validate ID/mapping consistency, and confirm permissions. Corrections: re-run sync jobs or reprocess records for sync failures; fix mappings and reapply if mapping errors; adjust permissions if access blocked."
+      }
+    ]
+  ]
+}

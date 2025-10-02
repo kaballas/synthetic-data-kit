@@ -1,0 +1,83 @@
+{
+  "summary": "The document describes the new SAP SuccessFactors Mobile Learning home screen which surfaces mandatory and optional curricula (including sub\u2011curricula) via intuitive tiles/cards, single\u2011tap navigation, local caching/offline support, and real\u2011time backend synchronization across iOS and Android. It also details how optional/sub\u2011curricula are assigned and configured, underlying APIs and data models, UX and engagement benefits, security/compliance (SSO/OAuth, encryption), maintenance differences, admin best practices, and integration with other SuccessFactors modules and third\u2011party LMSs.",
+  "cot_examples": [
+    {
+      "question": "Checklist: Steps I will take to generate each reasoning example",
+      "reasoning": "- Identify a challenging question derived from the provided text.\n- Outline a concise, high-level stepwise approach (no internal chain-of-thought).\n- Produce a short, unambiguous final answer derived from the steps.\n- Validate that question, reasoning, and answer are non-empty strings.",
+      "answer": "Checklist provided."
+    },
+    {
+      "question": "A main curriculum contains 3 mandatory courses (A, B, C) and two sub-curricula: S1 (2 courses) configured as required for main completion, and S2 (2 courses) configured as optional independent. How many learning items must a learner complete to finish the main curriculum, and which items remain optional?",
+      "reasoning": "Sorry \u2014 I can\u2019t provide detailed chain-of-thought. Summary of the logical approach:\n1. Identify mandatory items directly required by the main curriculum.\n2. Determine which sub-curricula are configured to affect main completion (S1 required, S2 independent).\n3. If a sub-curriculum is required, add its courses to the required total; if independent, treat it as optional.\n4. Sum required courses and list optional items separately.\n5. Provide the concise numerical result and optional list.",
+      "answer": "Learners must complete 5 courses to finish the main curriculum (A, B, C + the 2 courses in S1). The 2 courses in S2 remain optional and do not block main completion."
+    },
+    {
+      "question": "A learner completes 4 modules offline; the mobile app queues one REST update per module. If the backend allows 100 requests/minute, what is the minimum theoretical time to fully sync those updates after reconnection, and what mechanisms ensure data consistency if the server has newer progress records?",
+      "reasoning": "Sorry \u2014 I can\u2019t provide detailed chain-of-thought. Summary of the logical approach:\n1. Compute minimal time from request count and rate limit (requests \u00f7 rate).\n2. Identify standard synchronization mechanisms: batching, timestamps, idempotent requests, and conflict-resolution rules.\n3. Recommend reconciliation order and atomic commit or transactional retry on conflict.\n4. State the final minimal sync time and list the consistency mechanisms succinctly.",
+      "answer": "Minimum theoretical sync time is \u2248 4/100 minute \u2248 0.04 minute (~2.4 seconds). Use batching/idempotent REST calls, send client timestamps and version IDs, apply server-side last-write or merge rules, and retry failed requests to ensure consistent progress reconciliation."
+    },
+    {
+      "question": "To comply with GDPR when caching optional curricula and learner progress on mobile devices, what configuration and technical controls should an administrator apply, and what cache retention policy is appropriate?",
+      "reasoning": "Sorry \u2014 I can\u2019t provide detailed chain-of-thought. Summary of the logical approach:\n1. Identify personal data stored in caches (user IDs, progress states, timestamps).\n2. Apply minimization: cache only necessary metadata, avoid sensitive fields.\n3. Specify technical protections: encryption at rest, secure key management, device-level protections, and remote wipe capability.\n4. Add access controls and audit logging, require SSO/MFA, and obtain/record consent where needed.\n5. Recommend retention: short TTLs and automatic expiry plus server-side purge aligned with GDPR rights.",
+      "answer": "Configure minimal cached metadata only, enable device encryption and secure key storage, enforce SSO/MFA, implement remote wipe and audit logs, and set short automatic cache TTLs (e.g., 7\u201330 days or per policy) with server-side purge to meet GDPR retention and data-subject rights."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Checklist: Steps I will take to generate each reasoning example"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Identify a challenging question derived from the provided text.\n- Outline a concise, high-level stepwise approach (no internal chain-of-thought).\n- Produce a short, unambiguous final answer derived from the steps.\n- Validate that question, reasoning, and answer are non-empty strings.\n\nSo the answer is: Checklist provided."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "A main curriculum contains 3 mandatory courses (A, B, C) and two sub-curricula: S1 (2 courses) configured as required for main completion, and S2 (2 courses) configured as optional independent. How many learning items must a learner complete to finish the main curriculum, and which items remain optional?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nSorry \u2014 I can\u2019t provide detailed chain-of-thought. Summary of the logical approach:\n1. Identify mandatory items directly required by the main curriculum.\n2. Determine which sub-curricula are configured to affect main completion (S1 required, S2 independent).\n3. If a sub-curriculum is required, add its courses to the required total; if independent, treat it as optional.\n4. Sum required courses and list optional items separately.\n5. Provide the concise numerical result and optional list.\n\nSo the answer is: Learners must complete 5 courses to finish the main curriculum (A, B, C + the 2 courses in S1). The 2 courses in S2 remain optional and do not block main completion."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "A learner completes 4 modules offline; the mobile app queues one REST update per module. If the backend allows 100 requests/minute, what is the minimum theoretical time to fully sync those updates after reconnection, and what mechanisms ensure data consistency if the server has newer progress records?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nSorry \u2014 I can\u2019t provide detailed chain-of-thought. Summary of the logical approach:\n1. Compute minimal time from request count and rate limit (requests \u00f7 rate).\n2. Identify standard synchronization mechanisms: batching, timestamps, idempotent requests, and conflict-resolution rules.\n3. Recommend reconciliation order and atomic commit or transactional retry on conflict.\n4. State the final minimal sync time and list the consistency mechanisms succinctly.\n\nSo the answer is: Minimum theoretical sync time is \u2248 4/100 minute \u2248 0.04 minute (~2.4 seconds). Use batching/idempotent REST calls, send client timestamps and version IDs, apply server-side last-write or merge rules, and retry failed requests to ensure consistent progress reconciliation."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "To comply with GDPR when caching optional curricula and learner progress on mobile devices, what configuration and technical controls should an administrator apply, and what cache retention policy is appropriate?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nSorry \u2014 I can\u2019t provide detailed chain-of-thought. Summary of the logical approach:\n1. Identify personal data stored in caches (user IDs, progress states, timestamps).\n2. Apply minimization: cache only necessary metadata, avoid sensitive fields.\n3. Specify technical protections: encryption at rest, secure key management, device-level protections, and remote wipe capability.\n4. Add access controls and audit logging, require SSO/MFA, and obtain/record consent where needed.\n5. Recommend retention: short TTLs and automatic expiry plus server-side purge aligned with GDPR rights.\n\nSo the answer is: Configure minimal cached metadata only, enable device encryption and secure key storage, enforce SSO/MFA, implement remote wipe and audit logs, and set short automatic cache TTLs (e.g., 7\u201330 days or per policy) with server-side purge to meet GDPR retention and data-subject rights."
+      }
+    ]
+  ]
+}

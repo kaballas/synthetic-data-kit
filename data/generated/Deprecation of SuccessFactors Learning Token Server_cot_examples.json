@@ -1,0 +1,45 @@
+{
+  "summary": "The document explains that the SuccessFactors Learning Token Server is an OAuth\u2011style authentication component that issues and validates tokens for Learning APIs, integrating with SAP Identity services and third\u2011party clients to manage session and API access. It also summarizes SAP\u2019s End of Maintenance (Nov 17, 2023) and planned deletion (Nov 20, 2026), the operational risks for legacy integrations, and recommended migration to SAP Cloud Identity Services/OAuth2 with inventory, testing, phased cutover, and fallback planning.",
+  "cot_examples": [
+    {
+      "question": "Given SAP's deletion date for the Token Server of November 20, 2026, you manage 120 integrations where 30% require code changes and the rest require only reconfiguration. If code-change integrations take 6 weeks development + 3 weeks testing, reconfig-only integrations take 3 weeks configuration + 2 weeks testing, and you have 6 parallel teams available, what is the recommended latest start date to finish before deletion and what is the critical path?",
+      "reasoning": "- Inventory integrations and classify legacy vs reconfig-only.\n- Define per-integration durations for each path.\n- Compute batch counts given parallel teams and total calendar time per path.\n- Identify the longer path as the critical path, add buffer, then map backward from deletion date.\n\nI can\u2019t provide the internal chain-of-thought you requested. Below is a concise, non-sensitive summary of the logical steps used to reach the result.\nStep 1: Inventory: 120 integrations; 30% legacy \u2192 36 need code changes; 84 are reconfig-only.\nStep 2: Per-integration calendar durations: code-change path = 6w dev + 3w test = 9 weeks; reconfig path = 3w config + 2w test = 5 weeks.\nStep 3: With 6 parallel teams, batch counts = ceil(36/6)=6 batches for code-change, and ceil(84/6)=14 batches for reconfig.\nStep 4: Total calendar time per path = batches \u00d7 per-integration duration \u2192 code-change = 6\u00d79w = 54 weeks; reconfig = 14\u00d75w = 70 weeks.\nStep 5: Both paths run concurrently; overall duration is determined by the longer path (reconfig = 70 weeks). Add a 10% project buffer \u2192 ~77 weeks (~17.7 months). Map backward from Nov 20, 2026 to compute latest safe start.",
+      "answer": "Estimated program duration \u2248 77 weeks (~17.7 months). Critical path: reconfig-only integrations (70 weeks). Recommended latest start \u2248 early May 2025 to complete by Nov 20, 2026 (include validation and buffer)."
+    },
+    {
+      "question": "If a legacy Token Server issues 100,000 tokens per month and remains unpatched after End of Maintenance, with an estimated monthly exploit success probability of 1% against issued tokens, and token lifetime is 24 hours, what is the expected number of compromised tokens over 12 months and what mitigation reduces expected compromises fastest?",
+      "reasoning": "- Determine monthly tokens issued and apply the monthly exploit success probability.\n- Multiply monthly expected compromises by 12 to get annual expected compromises.\n- Assess mitigation options and identify which yields the fastest reduction in expected compromises.\n\nI can\u2019t provide the detailed chain-of-thought you requested. Below is a concise, non-sensitive summary of the reasoning steps and result.\nStep 1: Tokens issued per month = 100,000. With 1% exploit success rate per month, expected compromises = 100,000 \u00d7 0.01 = 1,000 per month.\nStep 2: Over 12 months, expected compromises = 1,000 \u00d7 12 = 12,000 tokens.\nStep 3: Fastest mitigation to reduce compromises is shortening token lifetime and/or migrating to a supported token service with rotating credentials; immediate rotation of client secrets and disabling the deprecated server reduce exposure fastest.",
+      "answer": "Expected \u2248 1,000 compromised tokens/month, \u2248 12,000 over 12 months. Fastest mitigation: rotate secrets and migrate to the supported token service (or shorten token lifetimes) to reduce exposure immediately."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Given SAP's deletion date for the Token Server of November 20, 2026, you manage 120 integrations where 30% require code changes and the rest require only reconfiguration. If code-change integrations take 6 weeks development + 3 weeks testing, reconfig-only integrations take 3 weeks configuration + 2 weeks testing, and you have 6 parallel teams available, what is the recommended latest start date to finish before deletion and what is the critical path?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Inventory integrations and classify legacy vs reconfig-only.\n- Define per-integration durations for each path.\n- Compute batch counts given parallel teams and total calendar time per path.\n- Identify the longer path as the critical path, add buffer, then map backward from deletion date.\n\nI can\u2019t provide the internal chain-of-thought you requested. Below is a concise, non-sensitive summary of the logical steps used to reach the result.\nStep 1: Inventory: 120 integrations; 30% legacy \u2192 36 need code changes; 84 are reconfig-only.\nStep 2: Per-integration calendar durations: code-change path = 6w dev + 3w test = 9 weeks; reconfig path = 3w config + 2w test = 5 weeks.\nStep 3: With 6 parallel teams, batch counts = ceil(36/6)=6 batches for code-change, and ceil(84/6)=14 batches for reconfig.\nStep 4: Total calendar time per path = batches \u00d7 per-integration duration \u2192 code-change = 6\u00d79w = 54 weeks; reconfig = 14\u00d75w = 70 weeks.\nStep 5: Both paths run concurrently; overall duration is determined by the longer path (reconfig = 70 weeks). Add a 10% project buffer \u2192 ~77 weeks (~17.7 months). Map backward from Nov 20, 2026 to compute latest safe start.\n\nSo the answer is: Estimated program duration \u2248 77 weeks (~17.7 months). Critical path: reconfig-only integrations (70 weeks). Recommended latest start \u2248 early May 2025 to complete by Nov 20, 2026 (include validation and buffer)."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "If a legacy Token Server issues 100,000 tokens per month and remains unpatched after End of Maintenance, with an estimated monthly exploit success probability of 1% against issued tokens, and token lifetime is 24 hours, what is the expected number of compromised tokens over 12 months and what mitigation reduces expected compromises fastest?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Determine monthly tokens issued and apply the monthly exploit success probability.\n- Multiply monthly expected compromises by 12 to get annual expected compromises.\n- Assess mitigation options and identify which yields the fastest reduction in expected compromises.\n\nI can\u2019t provide the detailed chain-of-thought you requested. Below is a concise, non-sensitive summary of the reasoning steps and result.\nStep 1: Tokens issued per month = 100,000. With 1% exploit success rate per month, expected compromises = 100,000 \u00d7 0.01 = 1,000 per month.\nStep 2: Over 12 months, expected compromises = 1,000 \u00d7 12 = 12,000 tokens.\nStep 3: Fastest mitigation to reduce compromises is shortening token lifetime and/or migrating to a supported token service with rotating credentials; immediate rotation of client secrets and disabling the deprecated server reduce exposure fastest.\n\nSo the answer is: Expected \u2248 1,000 compromised tokens/month, \u2248 12,000 over 12 months. Fastest mitigation: rotate secrets and migrate to the supported token service (or shorten token lifetimes) to reduce exposure immediately."
+      }
+    ]
+  ]
+}

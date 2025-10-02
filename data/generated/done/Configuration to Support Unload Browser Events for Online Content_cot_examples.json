@@ -1,0 +1,102 @@
+{
+  "summary": "The document explains that Chrome's unload lifecycle is governed mainly by the cancellable beforeunload (used to prompt about unsaved changes via event.preventDefault()/returnValue) and the less-reliable unload (used for cleanup), and that modern browsers impose strict timing, security, and visibility constraints on these handlers. It summarizes historical flags and changes (e.g., bfcache incompatibility and chrome://flags/#back-forward-cache), notes deprecation trends, and highlights a shift toward safer alternatives like the Page Lifecycle API, visibilitychange, and platform-specific patterns referenced by sources such as SAP Learning.",
+  "cot_examples": [
+    {
+      "question": "Given a learning platform with 60% mobile users and 40% desktop users: before the Chrome extended unload configuration the save-on-unload success rates were 60% on mobile and 95% on desktop. After enabling the extended unload configuration the success rates became 85% on mobile and 96% on desktop. What are the overall save-on-unload success rates before and after, and what are the absolute and relative improvements?",
+      "reasoning": "- Identify user distribution and per-platform success rates.\n- Compute weighted overall success before the configuration.\n- Compute weighted overall success after the configuration.\n- Calculate absolute improvement (percentage points) and relative improvement (percent).\nStep 1: Previous overall success = 0.6*0.60 + 0.4*0.95 = 0.36 + 0.38 = 0.74 (74%).\nStep 2: New overall success = 0.6*0.85 + 0.4*0.96 = 0.51 + 0.384 = 0.894 (89.4%).\nStep 3: Absolute improvement = 89.4% - 74% = 15.4 percentage points.\nStep 4: Relative improvement = 15.4 / 74 \u2248 0.208 = 20.8%.",
+      "answer": "Previous overall: 74%. New overall: 89.4%. Absolute improvement: 15.4 percentage points. Relative improvement: \u224820.8%."
+    },
+    {
+      "question": "If a baseline async save during unload completes with probability 60% when the allowed completion window is 1.0 s, and empirical tuning shows each additional 0.5 s of allowed time raises completion probability by 12 percentage points (capped at 95%), what minimum additional time is required to reach at least 90% completion probability?",
+      "reasoning": "- Note baseline probability and per-increment improvement.\n- Determine required increase in probability to reach the target.\n- Compute number of 0.5 s increments needed and check cap.\nStep 1: Baseline p0 = 60%.\nStep 2: Target = 90%; required increase = 30 percentage points.\nStep 3: Each 0.5 s adds 12 points \u21d2 increments needed = 30 / 12 = 2.5 \u21d2 round up to 3 increments.\nStep 4: 3 increments * 0.5 s = 1.5 s additional. Resulting probability = 60% + 3*12% = 96% but capped at 95% (still \u2265 90%).\nStep 5: Therefore minimal additional time to meet or exceed 90% is 1.5 s.",
+      "answer": "Add 1.5 seconds (three 0.5 s increments). The post-tuning probability reaches the 95% cap, which exceeds the 90% target."
+    },
+    {
+      "question": "A platform uses periodic autosave and an unload save. Assume an autosave occurs periodically and, under realistic assumptions, the chance an autosave runs before a random user close is 50%. If the unload save succeeds with probability 85% when it runs, what is the probability that a random close preserves the latest unsaved progress (i.e., either autosave already saved it or unload saves it)?",
+      "reasoning": "- Define events: A = autosave occurred before close (assume 50%), U = unload save succeeds (85%).\n- The progress is preserved if A occurs, or if A does not occur and U succeeds.\n- Compute combined probability = P(A) + P(not A)*P(U).\nStep 1: P(A) = 0.5 (assumption stated).\nStep 2: P(U) = 0.85.\nStep 3: Combined preserved probability = 0.5 + (1 - 0.5)*0.85 = 0.5 + 0.5*0.85 = 0.5 + 0.425 = 0.925 (92.5%).",
+      "answer": "Approximately 92.5% chance the latest unsaved progress is preserved."
+    },
+    {
+      "question": "Given telemetry that 95% of unload handlers complete within 3 seconds and 99% within 6 seconds, and that increasing the unload timeout beyond 2 seconds incurs a platform performance penalty of 0.5% per extra second, what timeout should you choose to guarantee at least 99% reliability while keeping performance penalty at or below 2%? Explain the decision step by step.",
+      "reasoning": "- Checklist of steps I will take:\n  - Use provided telemetry percentiles to map reliability to a timeout.\n  - Translate timeout into expected performance penalty using the given linear model.\n  - Check constraints (>=99% reliability and <=2% penalty).\n  - Recommend timeout and mitigation actions.\n\nStep 1: Map reliability requirement to telemetry. The telemetry states 99% of unload handlers finish within 6 s, so achieving >=99% reliability requires a timeout of at least 6 s.\nStep 2: Compute performance penalty using the linear model. The penalty applies to seconds beyond 2 s. For a 6 s timeout, extra seconds = 6 - 2 = 4 s. Penalty = 4 s * 0.5%/s = 2.0%.\nStep 3: Compare to constraints. Reliability = 99% (meets >=99% requirement). Performance penalty = 2.0% (meets <=2% requirement, exactly at the limit).\nStep 4: Operational recommendation. Select a 6 s timeout to satisfy both constraints, but monitor telemetry after rollout and consider progressive rollouts or adaptive timeouts (e.g., shorter timeouts for low-risk flows) to reduce user-impact if measured penalty is worse in practice.\n\nConcise justification: choose 6 s because it maps to the 99th-percentile completion and yields a 2% performance penalty under the stated model.",
+      "answer": "Set the unload timeout to 6 seconds \u2014 it yields ~99% reliability and a 2% performance penalty (meets both constraints)."
+    },
+    {
+      "question": "Design a prioritized fallback procedure to preserve user data when Chrome's unload events fail (for an online learning platform). Provide a sequence of technically feasible steps that minimizes data loss and can be validated with telemetry.",
+      "reasoning": "- Checklist of steps I will take:\n  - Identify critical data and persistence layers.\n  - Prioritize fail-safe local persistence first, then background upload.\n  - Use browser APIs that are robust if unload fails.\n  - Add detection, session-recovery UX, and telemetry for validation.\n\nStep 1: Classify critical vs non-critical data. Treat graded answers and progress checkpoints as highest priority; UI state and analytics as lower priority.\nStep 2: Implement continuous local autosave. Persist critical data frequently (e.g., every 5\u201330s or on change) to an on-device store (IndexedDB or localStorage) so data survives abrupt unloads.\nStep 3: Queue writes for background upload. When network is available, queue local changes and use Service Worker + Background Sync (or fetch with keepalive/beacon when supported) to upload without relying on unload.\nStep 4: Use navigator.sendBeacon or keepalive fetch during unload as an additional best-effort path, but do not rely on it solely; treat it as opportunistic.\nStep 5: Detect failed uploads on next session. On next load, check local store for unsynced items, validate integrity (checksums/timestamps), and surface a minimal recovery UI letting the user confirm restore or retry upload.\nStep 6: Add telemetry and health checks. Record rates of unsynced data, failed unload sends, and success of background sync; use this to adjust autosave frequency and timeout tradeoffs.\nStep 7: Test and validate. Run fault-injection tests (simulate unload failures and network drops), monitor telemetry, and iterate on timing and UX to minimize friction.\n\nConcise rationale: layered persistence (local autosave \u2192 queued background sync \u2192 best-effort unload send \u2192 session recovery) gives the highest protection against unload failures while remaining verifiable via telemetry.",
+      "answer": "Use a layered fallback: (1) frequent local autosave (IndexedDB), (2) queue and upload via Service Worker/Background Sync, (3) best-effort beacon/keepalive on unload, (4) next-session recovery UI with integrity checks, and (5) telemetry-driven tuning and testing."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Given a learning platform with 60% mobile users and 40% desktop users: before the Chrome extended unload configuration the save-on-unload success rates were 60% on mobile and 95% on desktop. After enabling the extended unload configuration the success rates became 85% on mobile and 96% on desktop. What are the overall save-on-unload success rates before and after, and what are the absolute and relative improvements?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Identify user distribution and per-platform success rates.\n- Compute weighted overall success before the configuration.\n- Compute weighted overall success after the configuration.\n- Calculate absolute improvement (percentage points) and relative improvement (percent).\nStep 1: Previous overall success = 0.6*0.60 + 0.4*0.95 = 0.36 + 0.38 = 0.74 (74%).\nStep 2: New overall success = 0.6*0.85 + 0.4*0.96 = 0.51 + 0.384 = 0.894 (89.4%).\nStep 3: Absolute improvement = 89.4% - 74% = 15.4 percentage points.\nStep 4: Relative improvement = 15.4 / 74 \u2248 0.208 = 20.8%.\n\nSo the answer is: Previous overall: 74%. New overall: 89.4%. Absolute improvement: 15.4 percentage points. Relative improvement: \u224820.8%."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "If a baseline async save during unload completes with probability 60% when the allowed completion window is 1.0 s, and empirical tuning shows each additional 0.5 s of allowed time raises completion probability by 12 percentage points (capped at 95%), what minimum additional time is required to reach at least 90% completion probability?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Note baseline probability and per-increment improvement.\n- Determine required increase in probability to reach the target.\n- Compute number of 0.5 s increments needed and check cap.\nStep 1: Baseline p0 = 60%.\nStep 2: Target = 90%; required increase = 30 percentage points.\nStep 3: Each 0.5 s adds 12 points \u21d2 increments needed = 30 / 12 = 2.5 \u21d2 round up to 3 increments.\nStep 4: 3 increments * 0.5 s = 1.5 s additional. Resulting probability = 60% + 3*12% = 96% but capped at 95% (still \u2265 90%).\nStep 5: Therefore minimal additional time to meet or exceed 90% is 1.5 s.\n\nSo the answer is: Add 1.5 seconds (three 0.5 s increments). The post-tuning probability reaches the 95% cap, which exceeds the 90% target."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "A platform uses periodic autosave and an unload save. Assume an autosave occurs periodically and, under realistic assumptions, the chance an autosave runs before a random user close is 50%. If the unload save succeeds with probability 85% when it runs, what is the probability that a random close preserves the latest unsaved progress (i.e., either autosave already saved it or unload saves it)?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Define events: A = autosave occurred before close (assume 50%), U = unload save succeeds (85%).\n- The progress is preserved if A occurs, or if A does not occur and U succeeds.\n- Compute combined probability = P(A) + P(not A)*P(U).\nStep 1: P(A) = 0.5 (assumption stated).\nStep 2: P(U) = 0.85.\nStep 3: Combined preserved probability = 0.5 + (1 - 0.5)*0.85 = 0.5 + 0.5*0.85 = 0.5 + 0.425 = 0.925 (92.5%).\n\nSo the answer is: Approximately 92.5% chance the latest unsaved progress is preserved."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Given telemetry that 95% of unload handlers complete within 3 seconds and 99% within 6 seconds, and that increasing the unload timeout beyond 2 seconds incurs a platform performance penalty of 0.5% per extra second, what timeout should you choose to guarantee at least 99% reliability while keeping performance penalty at or below 2%? Explain the decision step by step."
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Checklist of steps I will take:\n  - Use provided telemetry percentiles to map reliability to a timeout.\n  - Translate timeout into expected performance penalty using the given linear model.\n  - Check constraints (>=99% reliability and <=2% penalty).\n  - Recommend timeout and mitigation actions.\n\nStep 1: Map reliability requirement to telemetry. The telemetry states 99% of unload handlers finish within 6 s, so achieving >=99% reliability requires a timeout of at least 6 s.\nStep 2: Compute performance penalty using the linear model. The penalty applies to seconds beyond 2 s. For a 6 s timeout, extra seconds = 6 - 2 = 4 s. Penalty = 4 s * 0.5%/s = 2.0%.\nStep 3: Compare to constraints. Reliability = 99% (meets >=99% requirement). Performance penalty = 2.0% (meets <=2% requirement, exactly at the limit).\nStep 4: Operational recommendation. Select a 6 s timeout to satisfy both constraints, but monitor telemetry after rollout and consider progressive rollouts or adaptive timeouts (e.g., shorter timeouts for low-risk flows) to reduce user-impact if measured penalty is worse in practice.\n\nConcise justification: choose 6 s because it maps to the 99th-percentile completion and yields a 2% performance penalty under the stated model.\n\nSo the answer is: Set the unload timeout to 6 seconds \u2014 it yields ~99% reliability and a 2% performance penalty (meets both constraints)."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Design a prioritized fallback procedure to preserve user data when Chrome's unload events fail (for an online learning platform). Provide a sequence of technically feasible steps that minimizes data loss and can be validated with telemetry."
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Checklist of steps I will take:\n  - Identify critical data and persistence layers.\n  - Prioritize fail-safe local persistence first, then background upload.\n  - Use browser APIs that are robust if unload fails.\n  - Add detection, session-recovery UX, and telemetry for validation.\n\nStep 1: Classify critical vs non-critical data. Treat graded answers and progress checkpoints as highest priority; UI state and analytics as lower priority.\nStep 2: Implement continuous local autosave. Persist critical data frequently (e.g., every 5\u201330s or on change) to an on-device store (IndexedDB or localStorage) so data survives abrupt unloads.\nStep 3: Queue writes for background upload. When network is available, queue local changes and use Service Worker + Background Sync (or fetch with keepalive/beacon when supported) to upload without relying on unload.\nStep 4: Use navigator.sendBeacon or keepalive fetch during unload as an additional best-effort path, but do not rely on it solely; treat it as opportunistic.\nStep 5: Detect failed uploads on next session. On next load, check local store for unsynced items, validate integrity (checksums/timestamps), and surface a minimal recovery UI letting the user confirm restore or retry upload.\nStep 6: Add telemetry and health checks. Record rates of unsynced data, failed unload sends, and success of background sync; use this to adjust autosave frequency and timeout tradeoffs.\nStep 7: Test and validate. Run fault-injection tests (simulate unload failures and network drops), monitor telemetry, and iterate on timing and UX to minimize friction.\n\nConcise rationale: layered persistence (local autosave \u2192 queued background sync \u2192 best-effort unload send \u2192 session recovery) gives the highest protection against unload failures while remaining verifiable via telemetry.\n\nSo the answer is: Use a layered fallback: (1) frequent local autosave (IndexedDB), (2) queue and upload via Service Worker/Background Sync, (3) best-effort beacon/keepalive on unload, (4) next-session recovery UI with integrity checks, and (5) telemetry-driven tuning and testing."
+      }
+    ]
+  ]
+}

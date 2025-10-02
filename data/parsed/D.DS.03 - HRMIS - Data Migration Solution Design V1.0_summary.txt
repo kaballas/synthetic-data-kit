@@ -1,0 +1,573 @@
+Human Resources Management Information System (HRMIS) Data Migration Solution Design July 2022 Our vision: Great services, valued partner, healthy Western AustraliansData Migration Solution Design Document Control and Approval Version Date Author Comments File Ref 0.1 15.04.2022 Olivier De Bie Initial document 0.2 27.05.2022 Olivier De Bie Checkpoint 2 version 0.3 01.07.2022 Olivier De Bie Checkpoint 3 version Reference Documentation Document Description URL/Location Design Decisions Project Decisions https://hrmisprogram.atlassian.net/jira/dashboards/10013 Requirements Requirements https://hrmisprogram.atlassian.net/jira/dashboards/10021 Traceability Matrix Acknowledgement of Country Health Support Services acknowledges the traditional custodians throughout Western Australia and their continuing connection to the land, waters and community.
+We pay our respects to all members of Aboriginal communities and their cultures, and acknowledge the wisdom of Elders both past and present.
+Use of the Term – Aboriginal Aboriginal and Torres Strait Islander may be referred to in the national context and ‘Indigenous’ may be referred to in the international context.
+Within Western Australia, the term Aboriginal is used in preference to Aboriginal and Torres Strait Islander, in recognition that Aboriginal people are the original inhabitants of Western Australia.
+No disrespect is intended to our Torres Strait Islander colleagues and community.
+V1.0 Page i of 69Data Migration Solution Design
+1 Introduction 1 1.1 HRMIS Program Context 1 1.2 Document purpose 2 1.3 Related Documents 2 1.4 Assumptions 5 1.5 Data Migration Guiding Principles 5 1.6 Data Migration Solution High-level Requirements 5 2 Solution Overview 7 2.1 High level overview 7 2.2 DataRemedy 7 2.3 DataRemedy Example Jobs 9 2.4 DataRemedy Generic Jobs 10 2.5 Metadata framework control tables 12 2.6 Technical Architecture 13 3 Solution Details 17 3.1 DataRemedy Solution 17 3.2 DataRemedy Process flow 19 3.3 DataRemedy Data flow 21 3.4 Audit job runs 24 4 Data Sourcing 26 4.1 Overview of the sources 26 4.2 Data Ingestion types 26 4.3 Data Ingestion Orchestration 27 5 Data Loading 29 5.1 Overview of the Target Systems 29 5.2 Data Integration and Loading Mechanism 29 5.3 Load Sequencing and orchestration 30 5.4 Data loading across environments 31 5.5 Data Load Flow using DataRemedy 32 5.6 Data Loading in Deployment Phase 35 5.7 Error Handling 36 6 Data Quality Uplift 37 6.1 Remediation types 37 6.2 Identified data quality issues 38 7 Position 1:1 Transformations 40 7.1 Overview 40 7.2 Data in Scope 40 7.3 Transformation Rules 40 8 Data Security and Scrambling 42 8.1 Data Security 42 8.2 Data Scrambling 45 9 Data Validation 47 9.1 Overview of data validation 47 9.2 Data Migration Readiness 47 9.3 Data Migration Monitoring 49 10 Appendix 52 10.1 Glossary 52 10.2 Appendix A – Loading templates & dependencies 54 10.3 Appendix B – Data Scrambling Approach 58 V1.0 Page ii of 69Data Migration Solution Design 10.4 Appendix C – Port requirements for VM’s needed for each environment 60 V1.0 Page iii of 69Data Migration Solution Design
+Table 1 - HRMIS Design Documents 4 Table 2 - HRMIS Supporting Plans 4 Table 3 - Assumptions 5 Table 4 - DataRemedy Components 9 Table 5 - DataRemedy generic job breakdown 12 Table 6 - Components per environment (TEST or PROD) required by DataRemedy 15 Table 7 - DataRemedy layers 18 Table 8 - DataRemedy process flow steps 20 Table 9 - Overview of the HRMIS data sources 26 Table 10 - Load orchestration step by step 31 Table 11 - Data loading scenarios in production environment 35 Table 12 - Connection security protocols 44 Table 13 - Data-at-rest and Data-in-transit security protocols 45 Table 14 - Roles and responsibilities for DataRemedy 45 Table 15 - Data Migration Readiness KPIs 49 Table 16 - Data Migration Monitoring KPIs 51 Table 17 - Glossary 53 Table 18 - Loading templates & dependencies 57 Table 19 – Data Scrambling Approach – sensitive data replaced with a default value 58 Table 20 - Data Scrambling Approach – sensitive data to be deleted 59 Table 21 - Data Scrambling Approach – mixed approached non-sensitive data will be left unscrambled and sensitive data will be deleted 59 Table 22 – Data Scrambling Approach – Data determined as either not sensitive or required unscrambled for system testing 60 Table 23 – Data Scrambling Approach – Port requirements for VM’s needed for each environment 62
+Figure 1 - HRMIS Data Migration Overview using DataRemedy 7 Figure 2 - Sample master job passing active objects to a child job 9 Figure 3 - Sample child job running source to landing jobs based on source type 9 Figure 4 - DataRemedy generic jobs overview 10 Figure 5 - Metadata table overview for DataRemedy 13 Figure 6 - Architecture overview of DataRemedy 14 Figure 7 - DataRemedy high level overview of data flow between the layers 17 Figure 8 - DataRemedy process flow explaining the different steps and decisions 19 Figure 9 - DataRemedy General Flow 21 Figure 10 - Auto Remediation Flow 22 Figure 11 - Manual Remediation Flow 23 Figure 12 - Transformation Flow 24 Figure 13 - Mapping Flow 24 Figure 14 - Overview of the different flows for the different data source types 27 Figure 15 - Overview of the data ingestion orchestration 27 Figure 16 - Overview of target system integration with data loading orchestration 31 Figure 17 - Overview of data loading across various environment 32 Figure 18 - Overview of data load flow via API 34 Figure 19 – Overview of data migration tracking into target systems 36 Figure 20 - Talend Data Stewardship interface example 37 V1.0 Page iv of 69Data Migration Solution Design Figure 21 - Identified DQ Issues 38 Figure 22 - Approved Data Quality Uplift Approach 39 Figure 23 - Position 1:1 Scenarios 41 Figure 24 - Data Migration Development approach 42 Figure 25 - Overview of groups that have access to DataRemedy 43 Figure 26 - Source to solution loading scenario 46 Figure 27 - Data scrambling process within DataRemedy 46 Figure 28 - Data Validation Migration Process 47 V1.0 Page v of 69Data Migration Solution Design
+The Human Resources Management Information System (HRMIS) Program is a WA Health system-wide, ICT-enabled transformation program to replace the legacy HR/payroll system, the rostering system and nurse placement service with a single, reliable, accessible, and contemporary solution.
+This document forms part of a suite of documents which is a deliverable of the Program’s Design stage of Phase 2, Implementation and Delivery.
+1.1 HRMIS Program Context The HRMIS Program implementation and delivery is led by Health Support Services (HSS) in partnership with Deloitte on behalf of the WA health system from 2022 to 2025.
+The delivery team comprises HSS, Deloitte and Subject Matter Experts (SMEs) from across the WA health system.
+The Program is being implemented over five discrete stages (Mobilisation, Design, Build, Test and Deployment).
+1.1.1 Program Objectives The objectives of the HRMIS Program are to implement a solution that will: • allow HSS to deliver a more reliable and efficient service to its customers; • be user friendly and accessible for staff when it suits them; • support WA Health system-wide workforce reporting, planning and decision-making; and • reduce administrative burden and support health entities to better allocate staff where they are needed most.
+1.1.2 Implementation & Delivery The implementation strategy is solution-driven, focusing on business objectives and scope.
+This means the HRMIS Program intends to use commercial-off-the-shelf software with limited customisations, relying on configurations and using base product functionality.
+Additionally, the implementation will not automatically carry over old processes.
+The HRMIS represents a significant shift in software capabilities over the legacy systems.
+This requires changes to existing business processes with the expectation that WA Health can adopt more efficient and effective workflows enabled by the software.
+This investment implements a new HR service delivery model, which involves new structures, capabilities, processes, and technology needed for the effective delivery of HR services to WA health system entities.
+The redesigned HR service delivery model will provide HR functional support to the roll out and, in part, build the capability of the HSS workforce teams during deployment.
+1.1.3 Implementation & Delivery - Design Stage The Design Stage of the HRMIS Program and service delivery model has delivered the design of the end-to-end technical solution, integration points, user experience, business processes, change management, data migration and test strategy.
+In Design, SMEs from across the WA health system participated in a series of workshops.
+They focussed on how WA Health’s requirements and an optimal user experience could be achieved through system configuration, business process design and custom development (where necessary), to realise the intended benefits of the HRMIS Program.
+V1.0 Page 1 of 69Data Migration Solution Design The delivery team captured the outputs of workshops as a specification in a suite of Design Documents (including workbooks and other artefacts) that will form the basis of the Build Stage.
+1.2 Document purpose This document outlines the end-to-end HRMIS Data Migration and Reconciliation solution design, from source to target, including the platform architecture and infrastructure for DataRemedy, data quality remediation framework, and validation reports.
+This document specifically covers the following topics: 1.
+Data Migration Solution Architecture – Provides an overview of the overall architecture of the data migration solution, including the core DataRemedy toolset, its environments and relationship to other components of the HSS system landscape and the HRMIS solution.
+2.
+Data Ingestion Design – A comprehensive design for the sourcing and data ingestion from in-scope source systems into DataRemedy (excluding the datasets that will be manually migrated).
+3.
+Data Loading – For datasets that will be migrated through DataRemedy, a detailed design on how DataRemedy will load data by consuming SAP SuccessFactors and UKG Dimensions APIs (excluding the datasets that will be generated via DataRemedy, but manually loaded).
+4.
+Data Quality Uplift – Definition on the two types of remediation used by DataRemedy and early profiling results for mapped source data fields.
+5.
+Data Validation – The approach to, and the technical design for, verifying and validating migrated data, including supporting reports, the overall data validation process, queries that need to be executed, as well as success criteria for data validation.
+This also includes the design for dashboards and reports to monitor data quality uplift progress.
+This Data Migration Solution Design document should be considered in conjunction with the HRMIS Data Migration Approach and Plan document, which articulates the intended approach and plan for the Data Migration required by the HRMIS Program.
+1.3 Related Documents This document is one of a suite of HRMIS Design documents listed below.
+Ref Title Stream Objective Ref 1 Solution Architecture All [TBC by HSS] 2 Technical Architecture All 3 SAP SuccessFactors EC Core HR - Core HR Blueprint 4 SAP SuccessFactors EC Core HR - Core HR Platform Workbook 5 SAP SuccessFactors EC Core HR - Core HR Foundation Workbook V1.0 Page 2 of 69Data Migration Solution Design 6 SAP SuccessFactors EC Core HR - Core HR Employee Workbooks 7 SAP SuccessFactors EC Core HR - Core HR Events & Workflow Workbook 8 SAP SuccessFactors EC Core HR - Core HR RBP Workbook 9 SAP SuccessFactors EC Core HR - Core HR EC Reporting Workbook 10 SAP SuccessFactors EC Core HR - Core HR EC Document Gen. Workbook 11 Kronos/UKG Dimensions Global Time & Attendance Blueprint 12 Kronos/UKG Timekeeping Blueprint Time & Attendance 13 Kronos/UKG Scheduling Blueprint Time & Attendance 14 Kronos/UKG UX Blueprint Time & Attendance 15 Kronos/UKG Leave Blueprint Time & Attendance 16 Kronos/UKG ESS Blueprint Time & Attendance 17 Kronos/UKG - Timekeeping Time & Attendance Workbook 18 Kronos/UKG - Scheduling Time & Attendance Workbook 19 Kronos/UKG - UX Workbook Time & Attendance 20 Kronos/UKG/ EC Payroll Workbook Payroll - Leave Workbook 21 SAP SuccessFactors EC Payroll - Payroll Blueprint 22 SAP SuccessFactors EC Payroll - Payroll Wage Type Workbook 23 SAP SuccessFactors EC Payroll - Payroll Configuration Document 24 SAP SuccessFactors EC Payroll - Payroll Absence Quota Workbook 25 SAP SuccessFactors EC Payroll - Payroll Security Workbook 26 SAP SuccessFactors EC Payroll - Payroll General Ledger Workbook 27 WebPAS Integration Blueprint WebPAS Integration 28 Approved WRICEF List Integration 29 Integrations - Functional Integration Specifications V1.0 Page 3 of 69Data Migration Solution Design 30 Custom Solutions - Functional Integration Specifications 31 Reports - Functional Specifications Data 32 Data - Solution Design Document Data 33 Requirements Traceability Matrix All
+Table 1 - HRMIS Design Documents Ref Title Stream Objective Ref 1 Documented Business Processes Process [TBC by HSS] to Level 3 2 PPR Test Strategy Testing 3 Environment Management Plan Environment 4 Data Migration - Approach & Plan Data Migration Document 5 Data Migration - Solution Design Data Migration Document 6 Data Migration - Mapping and Data Migration Transformation Rules Document (Initial Version) 7 Initial Change and Transformation Change Management Strategy and Plan 8 Initial Communications Strategy & Change Management Plan 9 Initial Training Strategy & Approach Change Management 10 Initial User Stories & Journey Maps Change Management 11 Initial Change Impact Assessment Change Management 12 Validation of Industrial Agreements Workplace Integrity Team 13 Industrial Instrument Analytical Workplace Integrity Model Design Document Team Table 2 - HRMIS Supporting Plans V1.0 Page 4 of 69Data Migration Solution Design 1.4 Assumptions The following assumptions underpin the design of the HRMIS solution.
+These assumptions will be carried into Build and converted into design decisions when they have been confirmed.
+Ref Assumption JIRA Ref A1 Legacy Systems Data Archival Assumption HP-7025 A2 New Credentialing solution replacing CredWA HP-7102 A3 Historical Data to support HE# for rehires Assumption HP-6952 Table 3 - Assumptions 1.5 Data Migration Guiding Principles This section outlines the ideologies adopted in developing the overall Data Migration approach.
+These are also outlined in the Data Migration Approach and Plan document.
+These guiding principles should be applied throughout the Data Migration design, build and implementation to ensure consistency and a firm adherence to leading practices.
+The HRMIS Data Migration Guiding Principles are: • Data Migration – sourcing, quality uplift, transformations, mapping & loading – should be automated where possible, to keep the amount of data loaded using manual templates to a minimum • Data should be sourced from the HRIS Data Warehouse where possible • Data Migration should remain focused on the requirements of the target systems • In addition to data migrated for WA Health employees, basic user data should be migrated for as many of the non-employee workforce as practically possible • Migration pipelines should be designed to be easily repeatable and adaptable to accommodate any changes required • Manual data cleansing should only be performed for critical data where auto remediation is not possible 1.6 Data Migration Solution High-level Requirements The Data Migration Solution design described in this document has been developed to: • Align with the guiding principles outlined in section 1.5 • Enable HRMIS data migration in accordance with the approach and plan outlined in the Data Migration Approach and Plan document, in particular: o To enable the sourcing of data from the specific data sources listed in section 3.2.2 of the Data Migration Approach and Plan document, considering source systems’ technology platforms, data interface capabilities and any other relevant technical characteristics o To enable the loading of data into the target systems listed in section 3.2.1 of the Data Migration Approach and Plan document, considering target systems’ technology platforms, data interface capabilities and any other relevant technical characteristics V1.0 Page 5 of 69Data Migration Solution Design o To enable data quality uplift activities aimed at improving the overall quality of data being migrated as outlined in section 3.3.3 of the Data Migration Approach and Plan document o To support the adherence to the HRMIS data migration schedule described in section 4 of the Data Migration Approach and Plan document o To align to the relevant WA Health, Australian and International guidelines and policies listed in section 6 of the Data Migration Approach and Plan document, such as the Data Quality Policy, Cloud Policy and Information Security Policy • Meet data format, structure and dependency requirements of the target systems as articulated in the HRMIS data loading templates listed in Appendix A – Loading templates & dependencies • Enable repeatable, configurable, and automatable cohort-by-cohort deployment required for the HRMIS solution, with the total expected number of data loads during the Deploy stage estimated to reach more than 2000 loads (including the anticipated regular update loads during the Interim Period in the Deploy stage).
+V1.0 Page 6 of 69Data Migration Solution Design
+2.1 High level overview The HRMIS Program will replace WA Health’s legacy HR, payroll and rostering systems and nurse placement service with an integrated and contemporary system.
+The primary objective of Data Migration is to migrate data from the legacy systems into the new HRMIS target systems.
+Therefore, the current assumption is that the Data Migration solution will reach the end of its life at the completion of the Deploy stage of the HRMIS Program.
+For information regarding the integrations to enable on-going data flows between the HRMIS and other key WA Health systems, please see the HRMIS Solution Architecture and HRMIS Technical Architecture documents.
+The HRMIS Data Migration involves four key processes – Data Sourcing, Data Quality Uplift, Data Mapping & Transformation and Data Loading – and uses the DataRemedy tool as depicted below, in Figure 1.
+Figure 1 - HRMIS Data Migration Overview using DataRemedy 2.2 DataRemedy DataRemedy is a solution built primarily using Talend as its underlying ETL technology for data integration.
+The solution comprises: • Metadata framework and built-in data models for a quick and easy way to connect to source systems accelerating data ingestion • Business and cleansing rules to identify erroneous data, and applicable pipelines to remediate the data issues • ETL and migration pipelines to accelerate data remediation and migration for large scale system implementations • Dashboards that display KPIs depicting the data flow through DataRemedy for reporting and monitoring of data quality and the overall data migration progress V1.0 Page 7 of 69Data Migration Solution Design This accelerator vastly reduces the foundational setup time which allows for data quality quick wins and increased focus on data transformation business rules.
+The DataRemedy solution is set up to act as the “in between” for source and target systems, as shown by its position in Figure 1.
+The individual components within DataRemedy are as follows: Component Description Design & Modelling • The ETL, migration and data quality pipelines are designed and created in Talend Studio • Jobs are created to carry out the above-mentioned actions on the data, jobs mainly consist of master jobs which may trigger other child jobs to work on the data Operations • The Talend Management Console is where jobs can be managed, planned, and launched on execution engines, either in the cloud, or on premises through a remote engine • It is also where the administrating of the project takes place and users can be created and assigned certain roles Data Store • The metadata framework that underpins DataRemedy is housed in a relational database held in a data store • The data store is also where all data is brought in from source into landing and subsequently where the data is worked on and prepped through jobs in Talend for loading into the target system Data Quality • The data quality is handled by numerous jobs prebuilt in Talend.
+The jobs can utilise preconfigured business rules identifying and remediating common quality issues with the data.
+Additional business rules and remediation pipelines can be custom built to suit customisation needs • Where data needs to be remediated manually Talend Data Stewardship is used.
+Talend Data Stewardship is a collaborative tool that allows ‘Data Stewards’ to clean, certify, reconcile data, and delegate tasks to the people who know the data best Compute • Virtual machines are utilised for the compute power of the Talend components within DataRemedy • Talend Remote engines are used to run scheduled jobs.
+This remote engine harnesses the compute of the VM to execute the jobs whilst keeping the data within the secure environment Version control • Version control is used to track and manage any changes and further development of jobs as needed for custom cases • A repository is created in the version control tool of choice which in the case of WA health is Azure DevOps V1.0 Page 8 of 69Data Migration Solution Design Table 4 - DataRemedy Components 2.3 DataRemedy Example Jobs As mentioned in the Design & Modelling component in section 2.2 the pipelines are structured in Talend in a master to child job format.
+With master jobs such as the one depicted in Figure 2 below, mainly used for orchestration purposes passing on variables to child jobs in an iterative manner to carry out bulk tasks.
+Figure 2 - Sample master job passing active objects to a child job The master job in Figure 2 is taking active objects from the relevant table, and in an iterative manner sending variables required by the child job to carry out source to landing tasks as part of ingestion.
+The child job can then execute the relevant pipeline dependent on source type variables received from the master as shown in the sample child job in Figure 3 below.
+Figure 3 - Sample child job running source to landing jobs based on source type V1.0 Page 9 of 69Data Migration Solution Design 2.4 DataRemedy Generic Jobs As mentioned in section 2.3 the pipelines are structured in Talend and are built in a Master and Child Job structure.
+Figure 4 and Table 5 describe the list of jobs that are currently designed for DataRemedy to form the basis for the Data Migration Solution.
+These jobs are subject to change and customisation as required.
+Figure 4 - DataRemedy generic jobs overview No.
+Job type Job Description 1 Master Job Ingestion This master orchestration job runs Orchestration ingestion orchestration jobs extracting data from source bringing it into landing, staging and remediation tables ready for identification and auto remediation 2 Master Job Source to landing This job is used to run the source to orchestration landing pipelines in sequence to extract data from sources to bring into landing.
+This master job passes on the connection details to a child job and points to the relevant source to load data into landing tables.
+3 Child Job Table check This is a generic job used throughout (Generic) pipeline ingestion and is called multiple times.
+It checks if the table exists and sends the values to the relevant child jobs to create the table, truncates the table or update the table design - for staging this job does not truncate the table as staging captures the history of the data V1.0 Page 10 of 69Data Migration Solution Design 4 Child Job Table create query This is a generic job used throughout (Generic) ingestion and is called multiple times.
+The job is used to create the SQL create table statement.
+And creates the table afterwards.
+5 Master Job Landing to staging This job is used to run the Landing to orchestration staging pipelines in sequence to extract data from landing to bring into staging 6 Master Job Staging to This job is used to run the staging to Remediation remediation pipelines in sequence to orchestration extract data from staging to bring into remediation 7 Master Job Identification and This job orchestrates the identification remediation and remediation pipelines, it is used to run the identification pipelines on the remediation table to identify the issues that are linked to DQ rules.
+After identification, if the issues are linked to an auto remediation child job they are automatically remediated else they are pushed to the manual remediation child job, and pulls from stewardship to get any values that have already been remediated 8 Child Job Identification jobs These are reusable custom jobs used to (Custom) identify DQ issues based on data quality rules 9 Master Job Auto remediation These multiple jobs are reusable custom child jobs jobs used to auto remediate DQ issues that have been identified.
+10 Child Job Manual remediation Part of the jobs pushes issues that (Custom) jobs cannot be auto remediated into data stewardship ready to be manually remediated.
+The other part of the jobs pulls issues that have been manually remediated from stewardship back into the relevant remediation tables and updates the relevant metadata tables 11 Master Job Transformation This job orchestrates the transformation orchestration child jobs which are iterated through to carry out transformation on the remediated data 12 Child Job Transformation jobs These are custom jobs built to transform (Custom) remediated data to suit the target state V1.0 Page 11 of 69Data Migration Solution Design 13 Master Job Mapping This job orchestrates the mapping child orchestration jobs which are iterated through to carry out data mappings to form the target state templates ready for loading 14 Child Job Mapping jobs These are custom jobs built to map (custom) transformed data to form the final target templates ready for loading 15 Master Job Load Data This job orchestrates the data loading Orchestration child jobs that identify the template order of loading and load type to load data into the target system through the specified load method 16 Child Job Template This child job iterates through the active (Generic) orchestration target templates sorting them in the order to load.
+The job sends API details to a child job, and it runs through the templates in order loading them into target environment.
+17 Child Job Template API This job receives details from the (Generic) orchestration template orchestration and it runs through getting the relevant API details for load.
+The job also handles any feedback received from the API load Table 5 - DataRemedy generic job breakdown 2.5 Metadata framework control tables The metadata framework consists of database tables used to configure Talend jobs relating to the different layers within DataRemedy described in section 3.1.
+By using configurable, metadata-driven jobs (such as those shown in Figure 2 and Figure 3) DataRemedy reduces the need for custom jobs, thus cutting down on development time.
+Throughout this document, references are made to the following two metadata tables: 1.
+Job_control_config: • This is the main table housing the business rules and linking the relevant jobs used to identify data quality issues.
+• This is also where the remediation controls for the identified issues is placed.
+The table contains information around whether the erroneous data can be auto or manually remediated.
+2.
+DQ_issue_register: • This table is used as a log, and it holds the actual issue upon identification • This table is used to track an issue’s process as it makes its way through the remediation process.
+It captures the issue and subsequently its remediated value.
+At high level the following metadata tables are utilised by DataRemedy, Figure 5 shows the metadata tables utilised by the many layers within DataRemedy, a short description is provided for each.
+The figure shows how the tables stand currently and are subject to change as we progress through the build phase.
+V1.0 Page 12 of 69Data Migration Solution Design Below is a preliminary overview of the metadata tables throughout DataRemedy.
+Figure 5 - Metadata table overview for DataRemedy 2.6 Technical Architecture Figure 6 below depicts 3 tenancies 1.
+Talend Cloud resides on an AWS server in Australia and is used to manage operations in all DataRemedy environments.
+It is also where licensing and user access is managed.
+2.
+WA Health Azure Cloud interacts via the firewall through DPC with Talend Cloud only through metadata to carry out the above-mentioned operations.
+No source system or HRMIS business data leaves the WA Health Cloud.
+The WA Health Azure Cloud refers to the Azure Cloud environment of WA Health, managed by WA Health (Package B).
+3.
+WA Health DPC interacts with Talend Cloud only through metadata to carry out the above-mentioned operations.
+No source system or HRMIS business data leaves the WA Health DPC.
+The WA Health DPC refers to the on prem environment of WA Health, managed by Atos (Package C).
+The different tenancies (cloud and DPC) communicate to each other by opening certain ports and URL / IPs in the firewall of WA Health DPC both outbound and inbound to Talend Cloud (refer to Appendix C – Port requirements for VM’s needed for each environment).
+V1.0 Page 13 of 69Data Migration Solution Design Figure 6 - Architecture overview of DataRemedy V1.0 Page 14 of 69Data Migration Solution Design DataRemedy has two environments, TEST and PROD, to better align with the HRMIS solution environments utilised throughout the migration and to allow for segregation when interacting with the data that is being migrated, as well as to enable data migration DevOps activities.
+Both these environments contain three Virtual Machines (VM).
+Each VM is configured to allow interactions with the other VMs and Talend Cloud and comprises the following key components: No.
+Component Description Infrastructure Specifications 1 Windows VM This is the compute behind OS: Windows 10 the jobs which allow the (Windows server 2019) ability to run tasks that use RAM: 64 GB on-premises applications CPU: 16 cores and databases.
+Needs Internet It needs to be on its own VM connection as jobs run on this will be compute intensive and other applications may interfere with execution 2 Linux VM Talend Data Stewardship OS: Linux (Red Hat will be used for manual Enterprise Linux Server remediation of data as 8 or CentOS 8 or Ubuntu required.
+20.04) Data Stewardship requires RAM: 32 GB the following dependencies: CPU: 8 cores • Talend Dictionary Needs Internet Service connection • Mongo DB • Kafka • A Linux VM is required for this due to Kafka not being compatible on windows 3 Windows VM with This SQL Server is where OS: Windows 10 MS SQL Server DataRemedy’s metadata and (Windows server 2019) worktables will sit.
+It will also RAM: 64 GB serve as the landing zone for CPU: 16 cores data sources.
+250 GB storage minimum Table 6 - Components per environment (TEST or PROD) required by DataRemedy Other components that play a role in the architecture include a SFTP location, that connect to the remote engines.
+The SFTP location is where data sources that are provided in CSV format are stored and accessed by DataRemedy and is also the place where target templates that cannot be supplied to the target via API are dropped.
+The DataRemedy jobs are configured and developed in Talend studio.
+The jobs are then published to Talend Cloud Management Console, where they are scheduled and then run on the remote engine of the respective environment (TEST or PROD).
+The development of V1.0 Page 15 of 69Data Migration Solution Design these jobs is version controlled on DevOps where the source repository is held and continuous integration / continuous delivery (CI/CD) initiated.
+Developers access Talend Studio through laptops provided by WA Health.
+Power BI connects to the relevant SQL databases to reflect dashboards with the agreed data migration and quality KPIs throughout the migration.
+On the Prod environment, the connection needs a database gateway to connect to Power BI online.
+Port and URL configurations required for Talend components within the VM’s can be found in 10.4 Appendix C. V1.0 Page 16 of 69Data Migration Solution Design
+3.1 DataRemedy Solution The DataRemedy solution fulfills two main goals: uplift the data quality and migrate the data into the target application.
+For an overview of these and other high-level solution requirements please refer to section 1.6 Data Migration Solution High-level Requirements.
+To accomplish these goals, DataRemedy moves source data through sets of relational tables grouped into logical ‘layers’ to keep track of the changes to, and transformations of, the data.
+Figure 7 provides a representation of the data flow from source to target through the different DataRemedy layers.
+Figure 7 - DataRemedy high level overview of data flow between the layers Layers Description Landing The landing layer stores the data that is retrieved from the data source in the most recent extraction run.
+Depending on the source table, the data can represent a full, periodic, or incremental load.
+Staging The staging layer is updated from the landing layer and keeps track of historical records.
+The staging tables have an active flag indicating rows which are present (i.e., have not been deleted) in the data source.
+Only these active rows will be transferred to the next layers.
+Remediation The remediation layer is the main layer for data quality uplift.
+The tables in the remediation layer contain the full dataset that needs to be migrated with the remediated values.
+A flag will be used to indicate if the full row of the table is remediated and ready for migration.
+Transformation The transformation layer is an optional layer to store tables that need structural changes reflecting the template structures accepted by the target systems.
+Mapping The mapping layer stores the tables to be loaded into the target systems, with structures as defined in the templates provided by the SAP and UKG teams.
+The mapping layer contains the complete data set required to be loaded into the target systems.
+V1.0 Page 17 of 69Data Migration Solution Design Metadata The metadata layer contains two types of tables: The first type is to support data-driven Talend jobs, allowing DataRemedy to use generic jobs multiple times instead of specific jobs.
+This increases the efficiency and scalability of DataRemedy.
+The second type is audit tables to log the status and errors of data moving through DataRemedy.
+Table 7 - DataRemedy layers V1.0 Page 18 of 69Data Migration Solution Design 3.2 DataRemedy Process flow Figure 8 - DataRemedy process flow explaining the different steps and decisions V1.0 Page 19 of 69Data Migration Solution Design Step Description Extract data from Data is extracted from the different sources using a metadata object Sources and source table.
+This is explained in more detail in the Data Sourcing section Data load in Before data can be loaded in the LANDING layer, a check needs to be LANDING made to confirm the table exists in the landing schema.
+If not, the table is created using the datatypes defined in the metadata layer.
+Once the existence of the table is confirmed the data can be loaded into the landing layer.
+Data load in Before data can be loaded in the STAGING layer, a check needs to be STAGING made to confirm the table exists in the staging schema.
+If not, the table is created using the datatypes defined in the metadata layer.
+Once the existence of the table is confirmed the data can be loaded into the staging layer.
+This layer tracks the slowly changing history of the source data and will essentially be the record of data ingested over time, if the table already exists, the relevant row will be appended or made inactive if no longer required.
+Data load in Before data can be loaded in the REMEDATION layer, a check needs REMEDIATION to be made to confirm the table exists in the remediation schema.
+If not, the table is created using the datatypes defined in the metadata layer.
+Once the existence of the table is confirmed the data can be loaded into the remediation layer.
+Auto remediation Once the data is in the remediation layer, DataRemedy will run through a list of identification jobs to identify any issues in the column fields and remediate those issues immediately using defined remediation rules.
+The updated values are stored back again into the remediation table.
+Manual Remediation Manual remediation is a 3-step process where DataRemedy will first identify the issue and add the field to the Talend Data Stewardship list ready to be manually remediated.
+Once in the list and available in Data Stewardship a team member of the Data Migration team or Data Cleansing team can adjust the values.
+When the new value is submitted, DataRemedy can pick it up again and updates the values in the remediation table.
+Transformation Some of the source tables will need restructuring so they fit the target requirements.
+Data load in Before data can be loaded in the MAPPING layer, a check needs to be MAPPING made to confirm the table exists in the mapping schema.
+If not, the table is created using the datatypes defined in the metadata layer.
+Once the existence of the table is confirmed the data can be loaded into the mapping layer using a mapping metadata table to translate the remediated and transformed tables into the right structure.
+Migration to Target Data is migrated from the mapping layer to the target solution systems in a specific environment and in a specific order.
+Table 8 - DataRemedy process flow steps V1.0 Page 20 of 69Data Migration Solution Design 3.3 DataRemedy Data flow Figure 9 depicts the general flow of data as it makes its way through DataRemedy.
+Each layer is separated by a vertical line.
+Figure 9 - DataRemedy General Flow V1.0 Page 21 of 69Data Migration Solution Design 3.3.1 Data Sourcing See Section 4 Data Sourcing for details on the ingestion flow.
+3.3.2 Auto remediation Figure 10 shows the process flow as data makes its way through the auto remediation section of the remediation layer in DataRemedy.
+Figure 10 - Auto Remediation Flow The steps that make up the auto remediation flow are as follows: 1.
+Iterate through fields: A master job runs through the rows of the ‘Job_Control_DQ_Config’ metadata table that contains the data issue identification jobs and potential auto remediation job for each column in a certain table.
+The master job iterates through the columns identified in the metadata table.
+In this step only the fields where an auto remediation job is identified in the ‘Job_Control_DQ_Config’ are be used.
+2.
+Identify Issues: A child job is launched using the issue identification job from the ‘Job_Control_DQ_Config’ table.
+This job identifies the issues for the specified table column.
+The identified issues are stored in the ‘DQ_Issue_Register’, which holds the identified field, the data quality rule used to remediate and the original value.
+3.
+Auto remediate values: Once the issues are identified, the auto remediation child job related to that issue is launched.
+This child job is defined in the ‘Job_Control_DQ_Config’ table.
+The auto remediation job remediates the value that was just identified as an issue in the ‘DQ_Issue_Register’.
+After auto remediation is complete, the valid fields are used to update the remediation table and the ‘DQ_Issue_Register’, with the issue now listed as resolved.
+3.3.3 Manual remediation Figure 11 shows the process flow as data makes its way through the manual remediation section of the remediation layer in DataRemedy.
+V1.0 Page 22 of 69Data Migration Solution Design Figure 11 - Manual Remediation Flow The steps that make up the manual remediation flow are as follows: 1.
+Iterate through fields: A master job will run through the rows of the ‘Job_Control_DQ_Config’ metadata table that contains the data issue identification jobs and potential auto remediation job for each column in a certain table.
+The master job will iterate through the columns identified in the metadata table.
+In this step only the fields where an auto remediation job is not identified in the ‘Job_Control_DQ_Config’ will be used.
+2.
+Identify Issues: A child job is launched using the issue identification job from ‘Job_Control_DQ_Config’ table.
+This job identifies the issues for the specified table column.
+The results of these issues are stored in the ‘DQ_Issue_Register’ identifying the field, the data quality rule used and the original value.
+3.
+Talend Stewardship: Once the issues are identified, the issues in need of manual remediation are sent to Talend Stewardship.
+In Stewardship designated persons can update the fields with the issues.
+4.
+Update values: After manually remediating the values in Talend Stewardship the data is extracted from Stewardship to be updated in the remediation table and added in the ‘DQ_Issue_Register’.
+3.3.4 Remediated values When the issues that have been identified and remediated through the methods mentioned in section 6.1 , the dq_issue_register tracks the issue’s progress to full remediation.
+Once all issues in the table row are remediated, that row will be tracked as complete in the remediation table.
+The respective table is fully remediated once all issues in a row and all rows are fully remediated.
+3.3.5 Transformation Figure 12 - Transformation shows the process flow as data makes its way through transformation layer in DataRemedy.
+V1.0 Page 23 of 69Data Migration Solution Design Figure 12 - Transformation Flow A master job runs through the ‘Job_Control_Transfrom_Config’ table to launch the corresponding transformation jobs in a specified order (based on configuration metadata).
+These custom-built jobs transform the data to match the schemas expected by the target systems.
+The transformations may include but are not limited to: • Joins • Value lookups • In-field value replacements • Data type or data format changes 3.3.6 Mapping Figure 13 shows the process flow as data makes its way through the mapping layer in DataRemedy.
+Figure 13 - Mapping Flow A master job runs through the ‘Job_Control_Mapping_Config’ metadata table that contains the original table and column and map this to a target table and column in the mapping layer.
+The master job iterates through the target tables and launches a child job to create and update the mapping table with the refreshed data.
+3.3.7 Loading See Section Overview of the Target Systems 3.4 Audit job runs Every Talend job has a generic execution log joblet that captures stats and logs metadata about the job run in a separate table.
+The metadata includes, but is not limited to: V1.0 Page 24 of 69Data Migration Solution Design • Job name • Job version • Job repository • Start time • End time • Processing time and date • Duration of the job • Job run status • Error message Depending on the need of the DataRemedy audit log, new fields can be added to enrich the audit metadata and support faster error analysis and resolution.
+V1.0 Page 25 of 69Data Migration Solution Design
+4.1 Overview of the sources Below is an overview of the source systems in the HSS environment containing data covering employee, payroll, rostering and timesheet.
+A full list of the sources and the descriptions can be found in the HRMIS Data Migration Approach and Plan.
+Source name Source connection type Instances HRISDW Database 1 Lattice Automatic CSV extract to a blob storage 4 Ascender Automatic CSV extract to a blob storage 1 RoStar DW Database 1 Active Directory API connection using Microsoft Graph 1 CredWA TBC 1 LMS C Automatic CSV extract to a blob storage SV 1 Externally generated Manually created CSV files Multiple static data Table 9 - Overview of the HRMIS data sources 4.2 Data Ingestion types The following are the three ways in which the data will be ingested, in greater details: 1.
+Periodic: • Data is ingested in batches with data imported in discrete chunks at periodic intervals, so data is taken over a specified interval of time (e.g. weeks, months, years) 2.
+Incremental: • this is where only new or modified data is taken in 3.
+Full: • this is where the data will be ingested in full, irrespective of date The above types are accommodated within DataRemedy through the ability to apply custom filters and clauses to the data at the point of ingestion.
+Additionally there are three connection types that DataRemedy needs to handle: 1.
+Database connection 2.
+CSV extracts into a blob storage 3.
+API using Microsoft Graph V1.0 Page 26 of 69Data Migration Solution Design Figure 14 - Overview of the different flows for the different data source types 4.3 Data Ingestion Orchestration Figure 15 - Overview of the data ingestion orchestration 1.
+Source to landing layer: a. Iterate through the objects A source to landing master job runs through the rows of the ‘Object’ metadata table containing the datasets DataRemedy needs to ingest.
+The master job iterates through the objects one by one.
+b.
+Extract data from source and ingest into landing A child job is launched from the master job to extract the data from the source, and it stores it into the corresponding landing table.
+The source is defined in a separate metadata table that contains all the necessary parameters to make the specific connection.
+Before the data is inserted into the landing the table, the full table is truncated meaning the records are deleted but not the table structure.
+V1.0 Page 27 of 69Data Migration Solution Design 2.
+Landing layer to staging layer: a. Iterate through the objects A landing to staging master job runs through the rows of the ‘Object’ metadata table.
+The master job iterates through the objects one by one.
+b.
+Extract data from landing and update or insert into landing A child job is launched from the master job to extract the data from the landing table and updates or inserts the data into the corresponding staging table.
+As mentioned before, the staging tables are tracking historical data load meaning the data is never deleted.
+Based on a comparison of primary business keys between the landing and the staging table, the child job either inserts, updates, or deactivates the data row in the staging table.
+3.
+Staging layer to remediation layer: a. Iterate through the objects A staging to remediation master job will run through the rows of the ‘Object’ metadata table.
+The master job will iterate through the objects one by one.
+b.
+Extract data from staging and update or insert into remediation A child job is launched from the master job to extract the active rows from the staging table and updates, inserts, or deletes the data in the corresponding remediation table.
+Based on a comparison of primary business keys between the staging and the remediation table, the child job will either insert, update, or delete row in the staging table.
+V1.0 Page 28 of 69Data Migration Solution Design
+This section describes the various components of the data loading process into the HRMIS system.
+It includes the general data load orchestration between the systems, technical details on data loading using DataRemedy as well as various loading scenarios that are likely to be encountered during the deployment stages of the HRMIS system.
+5.1 Overview of the Target Systems Three specific modules in HRMIS have been identified as target systems and are in scope: • SAP SuccessFactors Employee Central (EC) • SAP SuccessFactors Employee Central Payroll (ECP) • UKG Dimensions (UKG) SuccessFactors EC supports key HR operations and contains HR master data like employee name, identification, username etc.
+ECP helps effective payroll administration via automated payroll processes and calculations.
+UKG is a suite of workforce management solutions for time and attendance, absence management and scheduling.
+For detailed information on the target systems, please refer to the Solution Design Document.
+5.2 Data Integration and Loading Mechanism This section aims to cover the integration and the different data load types per target system.
+5.2.1 Employee Central Data is loaded into EC via manual or automated (API-based) interfaces, depending on the nature of the specific data set being loaded.
+5.2.1.1 Manual data loading Manual data loading in bulk is carried out with imports in a CSV (comma separated values) file format.
+EC supports two types of loads: ‘Full’ and ‘Incremental’.
+Detailed explanation of the terminologies can be found in Table 17.
+5.2.1.2 Automated Data Loading (Via API) The Employee Central API allows various data manipulation and query operations on EC entities.
+Data loading into EC for the HRMIS project is done via SuccessFactors OData API.
+Data manipulation and retrieval operations for each entity is supported via insert, update, upsert, and delete operations.
+5.2.2 Employee Central Payroll For a subset of data sets, ECP is auto synced when the data is loaded into Employee Central.
+After EC data is ready to be replicated to ECP, point to point (P2P) integration layer handles the flow between the Employee Central and Employee Central Payroll.
+For other data sets, data is loaded directly into ECP via either manual or automated (API-based) interfaces.
+5.2.2.1 Manual data loading If required, data can directly be loaded into ECP.
+Legacy System Migration Workbench (LSMW) tool can be used to import data into the common interfaces of the SAP ECP.
+LSMW comes configured with the system and CSVs can be loaded manually via LSMW.
+V1.0 Page 29 of 69Data Migration Solution Design 5.2.2.2 Automated Data Loading (Via API) Employee Central Payroll does not support direct web-based APIs for data loading purposes “out of the box”.
+However, for ease of integration and data load sequencing, the HRMIS data migration solution scope includes the development of OData APIs to load data directly into ECP.
+The API integration supports insert, update, upsert and delete operations.
+5.2.3 UKG Dimensions Workforce Central Similarly, to ECP, data is loaded into UKG Dimensions via a combination of point-to-point interfaces and direct data loads, both manual and automated.
+5.2.3.1 Manual / Automated Data Loading Employee Central seamlessly integrates with UKG using direct API integration, or with a pre-built flat file template approach.
+UKG provides pre-packaged scheduled integration for payroll data, via file transfer from SAP Time Management to ECP.
+UKG also supports REST APIs with OAuth 2.0 (protocol for authorization) for direct data loading from the source.
+For the current HRMIS project, most of the data will be loaded into UKG via APIs.
+5.2.3.2 Data loading from 3rd party systems Data integrations using the Dell Boomi tool can transform or map data into UKG.
+It can run on-demand or can be scheduled as per the requirements.
+5.3 Load Sequencing and orchestration Data migration into the HRMIS system during the deployment phase has dependencies on the individual target systems e.g., EC, ECP and UKG.
+The overall data migration approach and mechanism are dependent on the timing and nature of integration between the target systems.
+This is also reliant on the order of specific data templates to be loaded in a target system.
+In general, for each deployment window, the following data migration steps are followed: 1.
+After several foundation templates are configured in the system as ‘system templates’, all foundation templates except ‘position’ template are loaded into EC.
+2.
+Position template followed by all employee master data templates are loaded into EC via API integration using the DataRemedy solution 3.
+After data is loaded into EC, it is replicated to ECP and UKG via PTP (point to point) integration between the systems (See Table 10) 4.
+The data templates that are identified as relevant and were not replicated through PTP are loaded into ECP via API integration using the DataRemedy solution 5.
+The data templates that are identified as relevant and were not replicated through PTP are loaded into UKG via API integration using the DataRemedy solution.
+The steps identified as part of the data loading orchestration are illustrated in Figure 16 below, which captures the PTP, manual, and automatic loading approaches both for the initial and sequential (incremental refresh) load.
+In general, initial data load constitutes all data type including the primary objects and data that is used in employee records (e.g., Foundation Objects).
+After the initial load, the systems are integrated and become functional.
+During the sequential load, data that change with time for the users as well as V1.0 Page 30 of 69Data Migration Solution Design other transactional data are updated.
+The steps involved in the loading orchestration1 are summarised in Table 10.
+For loading characteristics of each template and its dependencies, see Appendix A – Loading templates & dependencies.
+Figure 16 - Overview of target system integration with data loading orchestration Step 0 Step 1 Step 2 Step 3 Step 4 Step 5 Step 6 Initial Load A B (API) C (PTP) D (API) E (API) F (PTP) G (API) (Manual/API/ System configured) Sequential B (API) C (PTP) D (API) E (API) F (PTP) G (API) load Table 10 - Load orchestration step by step 5.4 Data loading across environments Several environments are used for data migration, during various stages across the lifecycle of the project.
+This data migration approach also expands on the protection of sensitive data during various testing cycles by identifying whether sensitive data need to be masked (Figure 17).
+The overall loading process is driven by two DataRemedy environments.
+a. DataRemedy Test environment Data will be loaded into ‘DATA’ environment from Data Remedy ‘Test’ environment.
+This is mainly used as a sandbox environment for the Data Migration Team to test each deployment.
+As the target systems will be managed by the Data Migration Developers team, customer data will be both scrambled and unscrambled during the 1 The loading orchestration for HRMIS might change from the generalised orchestration as described above depending on specific roll out strategy and roll out windows during deployment cycle.
+V1.0 Page 31 of 69Data Migration Solution Design various test migration processes.
+See section 8 for more details on environments and data security approach.
+b. DataRemedy Production environment: The production environment for DataRemedy integrates with four target solution environments i.e., Development, Test, Parallel Payroll Run (PPR) and Production.
+Depending on the environment type, sensitive data is scrambled (see Section 8.2 on data scrambling).
+The data load flow is the same across the environments and is described in section 5.5.
+Figure 17 - Overview of data loading across various environment 5.5 Data Load Flow using DataRemedy During the lifecycle of the project, data loading into target systems is carried out via two methods: manual load of templates into target system and automatic load via REST APIs (Figure 17).
+This includes full load for specific data tables as well as incremental loading of transactional data where applicable, aligned with the stage of the project, data security and environment.
+5.5.1 Manual Loading into Targets The steps for manually loading templates into target systems through DataRemedy are as follows: 1.
+Iterate through the Template type A master job is launched and captures relevant templates to be loaded from the ‘template_metadata’ table.
+In addition, the job looks up the other metadata tables to identify the specific environment and the specific data templates (scrambled or unscrambled data templates) information.
+Additional metadata tables are used to identify the specific HSPs/roll out cohorts to be loaded.
+See section 2.5 for more details.
+2.
+Incremental data load Another job is launched from the master job to extract the loading templates from the SQL database and create templates in ‘CSV’ data format as per the requirement for the specific target type.
+The job looks up the previously loaded templates for the specific target type and creates new incremental data templates as per the schedule.
+The job iterates the process one by one based on the relevant environment, data type (driven by necessary security requirements), and relevant cohorts.
+V1.0 Page 32 of 69Data Migration Solution Design 3.
+Data load into Blob storage Once a template is created, it is pushed into the blob storage by the master job.
+The blob storage has folders identifying the environments, targets, and Specific locations/cohorts.
+The templates are now ready to be picked up manually and loaded into the relevant target system by the SAP/UKG team.
+5.5.2 Automatic Loading into Targets (APIs) The steps for automatically loading templates into target systems through APIs in DataRemedy are as follows: 1.
+Identify the Template to be loaded A master job is launched and captures the relevant templates to be loaded from the ‘template_metadata’ table.
+In addition, the job looks to other metadata tables e.g., env_metadata to identify the specific environment and the specific templates (scrambled or unscrambled data templates depending on the security approach).
+Additional metadata tables e.g., loc_metadata are used to identify the specific locations/roll out cohorts to be loaded.
+For picklist type fields (dropdown) in EC, data is represented by specific numeric id for API inserts.
+Separate mapping tables are configured for each environment and pick list values will be mapped with the system generated ids to avoid any possible data mismatch.
+2.
+Loading of data Data loading into the target system for each template is handled by individual child jobs orchestrated by the master job.
+The child job maps the template data from the mapping table (data tables to be loaded) in the SQL database to the required format (JSON) and pushes the data into the target system in a phased (batch wise load) approach via API call.
+As the number of API calls per day per system is limited, grouping of records in batches is necessary.
+For ‘upsert’, there is a size limit per call depending on the maximum pagination size in the target system.
+Therefore, a request batch size of 500 records for a single API call is applied.
+When pushing to the targets, records are loaded row by row in the target system.
+Once the whole template is loaded, the master job redirects to the next child job based on the order provided in the metadata table.
+Once loaded, the validation of the data load is captured in a log table and load status of the templates will be updated in the metadata table (Figure 18).
+V1.0 Page 33 of 69Data Migration Solution Design Figure 18 - Overview of data load flow via API V1.0 Page 34 of 69Data Migration Solution Design 5.6 Data Loading in Deployment Phase As the HRMIS deployment approach is based on cohorts (e.g., HSP or location-based groups of workforce members) and spans across a long period, several employee and organisational structure changes can occur.
+Examples of these changes include employee movement across locations and position change for managers.
+In addition, depending on the cohorts, the load cycle schedule for a single cohort going live on HRMIS can be 14 week, 12 weeks, or 10 weeks.
+Parallel Payroll Run will also be conducted in separate environments during each deployment roll out.
+For details, please refer to the “Solution Design Document”.
+This in turn creates several additional scenarios for data load apart from the standard phased cohort-based data load.
+Details on currently known data load scenarios are described in Table 11.
+Data loading will be done via APIs; optionally data templates will be prepared in CSV format, ready to be picked and loaded manually in the target systems in the case any specific template could not be loaded properly via APIs because of system/technical failures.
+The mapping of data templates to each of the scenarios is described in Appendix A – Loading templates & dependencies.
+Scenarios Timing Description After passing through the processes inside DataRemedy solution, cleansed data templates are loaded for all non-live HRMIS Baseline ~2 weeks employees.
+These data templates cover Shell Full prior to first HR record for employees who are yet to be Deployment taken in by the HRMIS system.
+Shell HR record for a user covers the foundation data with position attributes in EC that may influence other users if changed with time.
+All EC data templates (organizational data, Employee employee data and positions) for the profile employees in the release are loaded in full via 14, 12 or 10 APIs.
+Standard Roster & weeks UKG data templates (Future Leave, planned Cohort Future depending future rosters) are loaded via API pipelines.
+Deployment Leave on the Future deployment Incremental data (Future leave) is loaded via Leave API pipeline.
+All ECP data templates for the specific cohort Payroll are loaded in full via APIs.
+Incremental Shell HR data for employees who are not active in HRMIS is loaded in a regular Regular interval via API pipelines driven by a metadata Baseline Incremental interval framework.
+This update continues until all the employees are taken in and live in the HRMIS system.
+Depending on specific requirements, data is loaded into the target systems via API ad hoc Ad hoc data loading Arbitrary pipelines.
+This operates on case-by-case basis and cover special scenarios e.g., a data template for an outlier user Table 11 - Data loading scenarios in production environment V1.0 Page 35 of 69Data Migration Solution Design 5.7 Error Handling 5.7.1 Manual loading: Once a specific template is loaded into the target system, the migration team monitors the load status logs from EC, ECP and UKG delivered by the SAP and UKG team.
+The overall architecture for log capture is described in Figure 21.
+In the case of any data related errors, the specific errors are addressed by the Data Migration development team and an updated template is created for reload.
+Please see Section 9.3 and the HRMIS Data Migration Approach and Plan document for additional details.
+5.7.2 API loading Once a specific template is loaded into the target system via API, the Data Migration Development team monitors the load status feedback logs.
+In the case of any data related errors, the specific errors are addressed by the Data Migration Development team and the updated template is passed for reload.
+The loading orchestration continues once the updated template is loaded successfully without any errors.
+Figure 19 – Overview of data migration tracking into target systems V1.0 Page 36 of 69Data Migration Solution Design
+6.1 Remediation types DataRemedy has two data quality uplift categories: auto remediation and manual remediation.
+The process to define which remediation category needs to be applied is described in the HRMIS Approach and Plan document.
+6.1.1 Auto remediation Fields that can be auto-remediated based on defined Data Quality rules (see HRMIS Data Migration Approach and Plan document for more details) are designed to run through the auto-remediation pipelines in Talend.
+These pipelines are created to ensure that the necessary remediations are performed automatically on the data as it travels through the pipeline.
+These pipelines can be customised to fulfil the specific needs of the remediation and allow the development team a wide range of data functions to be applied.
+6.1.2 Manual remediation Fields that are not suitable for auto remediation are manually remediated utilising either Talend Data Stewardship or data cleansing activities in the data source.
+If Talend data stewardship is used, specific data fields are pushed to stewardship using a Talend pipeline.
+In Talend Stewardship a Data Steward can manually remediate the data according to their knowledge.
+Once this data has been manually remediated, it will be pulled from Data Stewardship using another Talend pipeline and be updated in their respective remediation tables.
+Figure 20 shows an example of the Talend Data Stewardship interface.
+Figure 20 - Talend Data Stewardship interface example V1.0 Page 37 of 69Data Migration Solution Design 6.2 Identified data quality issues DQ Workshops and associated data profiling commenced in late May 2022, when the team obtained access to the HRISDW.
+This section provides an overview of the 120 data quality issues that have been identified and reviewed to date, as well as the agreed data quality uplift approach for those that have been finalised.
+As shown in Figure 21, of the issues identified to date, 19 have been reviewed and determined not to be issues.
+69 are still under investigation, or still require an appropriate DQ uplift approach to be determined.
+Three of the issues have been escalated to the EDRG, or pertain to topics currently under review by the EDRG, and 29 have had a Data Quality Uplift approach approved.
+Figure 21 - Identified DQ Issues At this stage the majority of data quality issues with an approved approach will be addressed by DataRemedy, with 15 set to auto-remediation and 12 set to use Stewardship, as shown in Figure 22.
+9 issues have been classified as “Stewardship & Source”, meaning that the issues will be identified by DataRemedy and corrected using the Stewardship Interface – but that the Data Cleansing team will also look to correct these in source, particularly in the period before the Stewardship Interface is available.
+Two issues have been classified as “Cleanse at Data Source”.
+For further detail on the processes involved in identifying and classifying the data quality issues, please see the Data Migration Approach and Plan document.
+For further details on the data quality issues, please see the DQ Register.
+V1.0 Page 38 of 69Data Migration Solution Design Figure 22 - Approved Data Quality Uplift Approach V1.0 Page 39 of 69Data Migration Solution Design
+The migration of legacy data into the new HRMIS solution requires a significant number of data transformations to accommodate the target data model, system requirements and business rules.
+The details of most of these transformations are outside of the scope of this document and are captured in the Data Migration – Mapping and Transformation Rules Document.
+However, the transformation of position and occupancy data into the “1:1 model” is among the most complex and involves some of the most fundamental HRMIS data sets and as such is described in more detail in this section.
+7.1 Overview In the current WA Health HR systems, Lattice and Ascender, there are a number of positions in the organisation with more than one employee assigned per position.
+In HRMIS the intent is to initially have each position contain only one employee, by transforming the data during data migration.
+Once the data is available in HRMIS, it is possible that certain positions may be consolidated in order to support business processes.
+This position consolidation is not in scope for Data Migration and is not discussed in this document.
+This section provides an overview of the rules that are applied during Data Migration to transform the data into the desired one-to-one position model.
+7.2 Data in Scope The following data is required for the position 1:1 transformation: • HRISDW HRM_EMP_EMPLOYEE_DETAILS – Holds the employee details • HRISDW HRM_POSITIONS – Holds the position data • HRISDW HRM_EMP_POSITIONS – Holds the occupancy data, which effectively connects employees to positions 7.3 Transformation Rules The following rules will be applied to the existing WA Health data to create positions and assign employees to positions in accordance with the 1:1 position model.
+1.
+Identify all “active" and "current fortnight terminated" employees 2.
+Identify the active positions that currently have “active” or “current fortnight terminated” employees as occupants.
+3.
+For each of the above identified positions, a.
+Create new positions so that there is a position for each active occupant.
+b.
+If the authorised FTE for the existing position is greater than the number of occupants, create new vacant positions accordingly 4.
+Assign an authorised FTE value to each of the newly created positions, based on the original position’s authorised FTE and the following guidelines (refer Figure 23) a.
+The total authorised FTE value for the new positions must equal to original position’s authorised FTE value b.
+No position should have an authorised FTE value greater than “1” and most positions should have an FTE value of “1” c. Where the original position had an authorised FTE with a part time (or decimal) component, this should be applied to one of the new positions only V1.0 Page 40 of 69Data Migration Solution Design d. Where the number of newly created positions exceeds the original position’s authorised FTE value, an authorised FTE value of “0” should be applied 5.
+Set the other attributes of the newly created positions, based on a.
+The attributes of the original position, where appropriate b.
+The detailed Position 1:1 attribute transformation rules captured in the Data Migration Mapping and Transformation Rules document.
+Figure 23 - Position 1:1 Scenarios Once these rules have been followed, the position records created through the above process will be used to populate the position object within the HRMIS target system.
+Note that for the successful implementation of these rules, Data Cleansing at source will be required.
+For a full list of data quality issues that pertain to the 1:1 position transformations identified to date, see the DQ Register.
+For a full list of data quality issues that pertain to the 1:1 position transformations identified to date, see the DQ Register.
+The above rules may be further refined during Build Iteration 1 V1.0 Page 41 of 69Data Migration Solution Design
+8.1 Data Security Data security and scrambling will form part of every data migration plan where data is being migrated from source environments to target environments.
+The phased approach of migrating data means that at times certain data will need to be scrambled into specific environments so sensitive data can be protected.
+The security of data provided during the HSS migration process will be protected using the following approaches: • Limiting system access to the project team and the HSS team • Scrambling sensitive information where required Development of this approach has been underpinned by the following assumptions: • Deloitte Data Migration Developers have access to unscrambled data and all environments.
+• HSS Data cleansing team will have sufficient clearance to access unscrambled data for cleansing.
+• Business Users will only have access to production and training target environments.
+• DataRemedy will have unscrambled data for testing.
+• Development will only be completed in DataRemedy test and not in production.
+• HMRIS system solution is secure.
+8.1.1 Data Migration Development team approach The HRMIS solution entails the usage of personal and highly sensitive data.
+According to the HSS policies, that data cannot be accessed or processed outside the HSS environment.
+Therefore, the Deloitte Development team will be using HSS Laptops, with a personal HE number, that is setup within the HSS ecosystem to access the data and develop the necessary Talend jobs for DataRemedy.
+This allows HSS to have full control of the data access and the connection security between the systems.
+Figure 24 - Data Migration Development approach V1.0 Page 42 of 69Data Migration Solution Design 8.1.2 Access to DataRemedy The purpose of DataRemedy is to uplift data quality and migrate data to the new HRMIS solution.
+This means that DataRemedy will need to keep and have access to highly sensitive data.
+Therefore, it is important to limit the access to DataRemedy.
+DataRemedy is a solution that consists of multiple components in two environments and can be accessed by a HSS or Deloitte team member (see Figure 25).
+The Test environment is only accessible for the Data Migration Developers.
+The Production environment is accessible for multiple teams.
+More information on the specific architecture setup of DataRemedy can be found in Section 2.6.
+Figure 25 - Overview of groups that have access to DataRemedy Each individual component has a specific access security setup, described in more detail in the next sections.
+8.1.2.1 VM – Remote Engine The Remote Engine VM includes the installation of the Talend Remote Engine to run the Talend jobs.
+The Data Migration Developers team needs access to install and maintain the necessary Talend components and packages for DataRemedy.
+This can be established using temporary admin access.
+8.1.2.2 VM – Talend Data Stewardship Talend Data Stewardship is installed on a VM and has two ways of interacting with the software: 1.
+Directly in the VM The Data Migration Developers team needs to have full access to install and maintain the necessary components for the duration of the project.
+V1.0 Page 43 of 69Data Migration Solution Design 2.
+External portal Talend Stewardship has a portal allowing the team to interact with it over the internet.
+Therefore, certain ports need to be opened in the firewall to allow the Data Migration Developers team and the Data Cleansing team cleansing team to interact with the portal while connected to the WA Health network.
+8.1.2.3 Azure SQL Database The Azure SQL Database holds the data for the HRMIS solutions.
+This includes the remediated, transformed, and mapped data as well as audit and metadata tables for DataRemedy solution.
+The database can only be accessed by the Data Migration Developers team.
+Since only the Data Migration Developers team will be interacting with this data, no masking is required.
+For reporting purposes, some of the reporting views will be made available to Power BI dashboard.
+These will not contain any sensitive details and only show aggregated and summarised information.
+8.1.2.4 Azure Blob Storage The Blob Storage provides a location to store manual or automated CSV extracts, as well as CSV data templates for manual loading into the HRMIS solution.
+Separate folders and access will be created to accommodate for both types of CSV (source and loading).
+The Data Migration HSS and Data Cleansing teams will need access to the source folder, while the SAP team and UKG team will need access to the loading folder.
+The Data Migration Developers team needs access to both.
+8.1.2.5 Power BI Online A validation dashboard will be developed and made available via Power BI Online.
+Therefore, the Data Migration Developers, Data Cleansing, SAP and UKG teams will need to have access to this dashboard and the necessary reporting views in the SQL Database.
+8.1.3 Security Protocols Specific security protocols are applied for each connection type that DataRemedy is using, which is described in Table 12.
+Connection Types Security Protocol (incoming/outgoing) Talend protocol connecting to source databases using JDBC drivers Encrypt source table login information and decrypt when in Database connection Talend Data in transit will be encrypted using Transport Layer Security (TLS)/ Single socket layer (SSL) Azure Active Directory (AD) for identification and access CSV’s / Blob storage management All requests to the storage account are made over HTTPS APIs Authorisation using OAuth 2 and tokens Table 12 - Connection security protocols V1.0 Page 44 of 69Data Migration Solution Design DataRemedy transfers data using Talend and stores data in the SQL database, therefore data will be at rest and in transit.
+In Table 13 the security protocol for both states are defined.
+Data Security Protocol Data at rest Transparent data encryption (encryption-at-rest) Data in transit Transport layer security (TLS)/ Single socket layer (SSL) Table 13 - Data-at-rest and Data-in-transit security protocols 8.1.4 DataRemedy Security Roles Table 14 describes the different roles and the necessary access required.
+These roles can be assigned to the different users defining the security in both Test and Production environment.
+Reporting Manual Cleansing Reporting Manual Cleansing Data Infra Data Dev Dev data Dev Dev User data User User User Remote engine VM Admin Talend stewardship VM Admin Talend stewardship Read/Write Read Blob storage Read/Write Read Power Bi Read/write Read SQL Database Admin Read/Write Read Table 14 - Roles and responsibilities for DataRemedy 8.2 Data Scrambling A data security approach has been developed to provide guidance on how to identify sensitive data and stipulates the process to follow to protect that data.
+8.2.1 Scrambled requirements Data classified as “sensitive” has a requirement to be scrambled into certain target environments and during different migrations events.
+This ensures sensitive data is either protected or inaccessible to individuals not authorised during the building of the solution.
+Sensitive data has been classified as anything that is protected or can identify a person, with examples including personal details and payroll information.
+An approach has been developed that looks at the target systems requirements, timing of each migration and how to identify sensitive information requiring scrambling.
+Scrambling will only be conducted in the building phase except when data is required to test data remediation work flows and business processes.
+8.2.2 Data migration across target environments Data migrated into different target environments have different data scrambling needs.
+An overview can be found in Figure 26 describing the target environment and the need for scrambled or unscrambled data.
+Two environments, Test and Data, have multiple migrations which will require a different approach depending on the timing of the migration event.
+V1.0 Page 45 of 69Data Migration Solution Design Figure 26 - Source to solution loading scenario 8.2.3 Scrambling approach Data will be scrambled within DataRemedy during the loading phase as detailed in Figure 27.
+To load data into the target systems there are two pathways, scrambled and unscrambled, determined by the build timeframes and target system requirements.
+Data requiring scrambling will have one of three rules applied: • Base data – keeping only the baseline information • Delete data – deleting all the data • Default value – using a single predefined value A mapping metadata table containing both default values and procedures will drive the scrambling of the data.
+A detailed list of sensitive data types and the scrambling rule to be applied can be found in Appendix B – Data Scrambling Approach.
+Figure 27 - Data scrambling process within DataRemedy V1.0 Page 46 of 69Data Migration Solution Design
+9.1 Overview of data validation Data migration involves the transfer of data from the old to the new system as well as uplifting the data quality.
+Therefore, gates are set up at key points in the data movement pipeline to control the movement of data and validate that the transfer can commence.
+Figure 28 shows the process of Data Migration using DataRemedy which includes 2 gates (see HRMIS Data Migration Approach and Plan document): Gate Ingestion and Gate Loading.
+These gates are used as key points where decisions need to be made using KPIs before the next process can continue.
+This section covers the split in KPIs to make those decisions and monitor the overall progress of the data migration.
+The KPIs cover two operational areas of interest: Data Migration Readiness and Data Migration Monitoring.
+The Data Migration Readiness score looks at both the data quality and the verification of the data after the transformations.
+This happens before the data is loaded into the target systems and supports the decision to load the data into the target system.
+The Data Migration Monitoring KPIs reflect the status of the migration itself.
+While the data is loaded, the data migration monitoring KPIs show the status of the migration as well as any errors.
+Figure 28 - Data Validation Migration Process These measures are not intended to replace the system and data checks that have been defined in the HRMIS Data Migration Approach and Plan document, such as the post- loading data spot-checks in HRMIS.
+Instead, the KPIs have been set up to help facilitate the Data Migration Development team to make any data migration decisions and allows for the team to monitor the operational progress of data migration.
+Information collected for these KPIs will be stored within DataRemedy and made available to the necessary teams through visualisation in PowerBI dashboards.
+9.2 Data Migration Readiness The main purpose of data migration readiness is to check how ready the data is to migrate into the target system.
+Before migration, it checks the data quality and makes sure the quality is up to standard before transferring data to the target.
+This process is divided into two parts.
+The first part focuses on the level of data quality.
+The second part compares the data V1.0 Page 47 of 69Data Migration Solution Design between the staging and mapping layer, checking if important metrics did not change after remediation and transformation.
+Table 15 covers all KPIs that are used to validate data quality and validate the data after remediation and transformation.
+9.2.1 Validate Data Quality Data quality validation focuses on checking the data quality level.
+This helps in solving the data related issues and the data quality uplift.
+This process occurs in the remediation stage where DataRemedy checks several data related issues and remediates them using auto or manual remediation.
+More details on the process can be found in the HRMIS Data Migration Approach and Plan document.
+Table 15 gives an overview of the KPIs used for the Data Migration Readiness.
+“Operations”, “Identified issues” and “Business rules” focuses on the data quality level.
+The KPIs and other measures are based on data generated throughout the processes of DataRemedy related to issue identification and remediation or metadata tables used during the DataRemedy processes.
+9.2.2 Validate data after remediation and transformation Once the data is remediated and transformed it is sent to the mapping stage.
+This part of the process checks if the data is still valid by comparing the mapping layer with the staging layer after the remediation and transformation process.
+Table 15 shows a more detailed list on the KPIs used to validate the data after remediation and transformation in the section “Transformation”.
+The KPIs uses data in both the staging and mapping layer.
+Monitoring KPI KPI Description Measure Overview Overall Data Quality Percentage that determines the overall data Score quality level.
+How ready is our data to Overall Migration A percentage that determines the overall data migrate?
+Readiness Score migration readiness.
+Open Issues Total issues that are identified but not resolved.
+Open High Priority Total issues that need to be fixed as a priority.
+Issues Record Processed Total records that gone through DataRemedy successfully.
+Business Rules Total business rules that are applied against issues.
+Data Quality Score Representation of data quality score over a Over Time period.
+Successful Total successfully resolved issues from Remediation identified issues.
+Operations Records Processed Total number of records that have been p er table processed successfully through DataRemedy from each table.
+V1.0 Page 48 of 69Data Migration Solution Design What is the Successful Successfully resolved issues from issues status of the Remediation per identified from each table.
+tables that need table to be migrated?
+Migration Readiness Reflects the migration readiness score for all Score per table the tables.
+Records Processed Total number of records (tables/rows) Over Time processed over a period.
+This will track the number of records that we process on daily basis.
+Identified Open Issues per Total remediation issues identified from each Issues table table Open High Priority Total high priority issues identified during What are the Issues per table remediation quality issues Closed Issues per Issues that have been remediated successfully we have?
+table for each table Issues Identified Over Number of issues that are identified over a Time period.
+Data Quality Data Quality Rules The data quality rules that are applied on each Rules p er table table.
+Remediation Type Total number of remediation rules per type ( What is the “Auto” or “Manual”).
+business rule List of data quality Reflects the data quality rules, description, and that we applied rules and description tables that they are assign to.
+to solve an issue?
+Transformation Total HE Numbers Count of total HE numbers (Active+ inactive) Active HE Numbers Count of total active HE numbers in the Is the data still HRMIS solution.
+appropriate Total HSP Count of total HSP (Active+ inactive) after Active HSP Count of total active HSP in the HRMIS remediation and solution.
+transformation?
+Total Hospital/clinic Count of total hospital/clinic etc (Active+ etc inactive) Active Hospital/clinic Count of total active Hospitals/clinics etc in the etc HRMIS solution.
+DataRemedy Aggregated score that represents a Reconciliation Score comparison of the key business entities when brought into DataRemedy and mapping.
+Table 15 - Data Migration Readiness KPIs 9.3 Data Migration Monitoring Data migration monitoring is a set of KPIs to monitor the success of data migration into HRMIS target systems.
+They are designed to reflect key information on the loading process and aid Data Migration Developers in deciding when the migration has been successfully completed.
+Measures are split into four key areas: migration plan, progress, loading errors and tracking as defined in Table 16.
+The migration plan is ingested into metadata tables to display in the dashboard.
+There are two benefits to having this information displayed: firstly, the ability to track against V1.0 Page 49 of 69Data Migration Solution Design timeframes and secondly to provide details of the plan including environments, scrambling requirements and load types.
+KPIs for progress and loading errors track the success of loading.
+Information used to develop these KPIs is collected from the data migration process through error handling as defined in Section 0.
+Errors are displayed in the dashboard so action can be taken by the Data Migration Developers to rectify the issues to ensure successful reload.
+Tracking KPIs provide information on which records have been successfully loaded into each of the HRMIS target system for each planned migration.
+Monitoring KPI KPI Description Measure Overview Overall Data Migration A high-level overview of how the migration is Score progressing, incorporating progress of current What is the migration, loading errors and how the migration progress of is tracking to the plan.
+data Migration Plan Overview of the current plan including number, migration?
+loads, type, and planned systems for loading during each migration.
+Current Migration Progress Overview of loading progress, counting the successful records that have been migrated to the target environments.
+Open Loading Errors Overview of loading errors, counting the number of open errors that are present during each migration.
+Migration Planned data migration Details the current data migration plan Plan details including timeframes and target systems that are used.
+What is the Planned data load and type Details the number and type of loads that are data performed during the migration process.
+migration HE numbers to migrate A list of HE numbers to migrate, provided by plan?
+HSS Details of HSPs, location or A list of HSPs, locations or sites that are site to migrate migrated Scrambled or unscrambled Provide information on the scrambling data requirements of the data being migrated Progress Load completion Percentage of the total attempted loads which were successful.
+Has data Tracking Number of loads Number of data loads for each planned been migration successfully Successful row migrations Successful rows migrated for each planned migrated?
+migration Successful migrations over Successful rows migrated over a given time migration period Successful migrations Successful rows migrated for each data load per load Successful migrations Successful rows migrated for each target per target system system V1.0 Page 50 of 69Data Migration Solution Design Loading Loading Errors Number of loading errors present during data Errors migration Current Errors Errors that are currently present during data What errors migration do we have Past Errors All errors that have occurred over a planned during migration, this can include duplicate row errors.
+loading?
+Open errors over time List of the open errors over a given time Open errors per load List of open errors for the current data load Open errors per target List of open errors per target system system Tracking Data migrated per target Tracks all records that were successfully migrated to the target What Data migrated over time Tracks all migrated records over time per data record do per data load load we have to HE numbers migrated Tracks HE numbers that have been track where successfully migrated.
+data has HSP’s, location and site Tracks hospital locations details that have migrated?
+been successfully migrated.
+Table 16 - Data Migration Monitoring KPIs V1.0 Page 51 of 69Data Migration Solution Design
+10.1 Glossary Term Description EC SAP SuccessFactors Employee Central ECP SAP SuccessFactors Employee Central Payroll system EDRG Establishment Data Reference Group SF SAP SuccessFactors PVT Production Verification Testing LSL Long Service Leave LOA Leave Of Absence SME Subject Matter Expert CSV This is a file type containing Comma Separated Values JSON Java Script Object Notation Master Job Set of subprocesses in one integration task that runs in a specific order.
+Child Job Job triggered from within a job.
+This job most probably gets input/context variables.
+ETL ETL stands for Extract, Transform and Load.
+It is a three-step data management process that extracts data from data sources, transforms it into a format satisfying requirements of the business, and loads it to a target destination.
+Incremental load Incremental loading is the activity of loading only new or updated records from a source into Target systems.
+Incremental loads are useful because they run efficiently when compared to full loads, and particularly for large data sets.
+Full load In a Full Data Load, the complete dataset is entirely overwritten (i.e., deleted and replaced) with the newly updated dataset in the data loading run.
+API Application Programming Interface.
+It is a type of software interface, offering a service to other pieces of software.
+REST Representational state transfer.
+The REST API is a simple and powerful web service that allows interaction with other software.
+CI/CD Continuous Integration / Continuous Delivery.
+CI/CD is a method to frequently deliver apps to customers by introducing automation into the stages of development.
+The main concepts V1.0 Page 52 of 69Data Migration Solution Design attributed to CI/CD are continuous integration, continuous delivery, and continuous deployment EDRG Establishment Data Reference Group The group responsible for creating a standardised Establishment Data and Workforce Framework; reviewing business decisions from the Design and Build stage; and incorporating detailed SME knowledge to inform decision- making.
+The HRMIS EDRG is comprised of representatives from across WA Health and supports Data Migration by providing detailed SME knowledge.
+For further detail, please see the Human Resource Information Management System (HRMIS) Establishment Data Reference Group Terms of Reference.
+Table 17 - Glossary V1.0 Page 53 of 69Data Migration Solution Design 10.2 Appendix A – Loading templates & dependencies Sub Target Grouping Template Orchestration Comments Group Foundation Organizational Governing Body A One off in Pilot Data Go-live only Foundation Organizational Company (Legal A One off in Pilot Data Entity) Go-live only Foundation Organizational Employee Class to A One off in Pilot Data Company (Legal Go-live only Entity) Foundation Organizational Employment Type A One off in Pilot Data to Employee Class Go-live only Foundation Organizational Group A One off in Pilot Data Go-live only Foundation Organizational Business Unit A One off in Pilot Data Go-live only Foundation Organizational Business Unit to A One off in Pilot Data Company (Legal Go-live only Entity) Association Foundation Organizational Cost Centre A Loaded by DM Data team maintained by
+Foundation Organizational Cost Centre to A Loaded by DM Data Company (Legal team Entity) Association maintained by
+Foundation Organizational Unit A One off in Pilot Data Go-live only Foundation Organizational Function A One off in Pilot Data Go-live only Foundation Organizational Division A One off in Pilot Data Go-live only Foundation Organizational Division to Business A One off in Pilot Data Unit Association Go-live only Foundation Organizational Department A One off in Pilot Data Go-live only Foundation Organizational Department to A One off in Pilot Data Division Association Go-live only V1.0 Page 54 of 69Data Migration Solution Design Foundation Organizational Location Group A One off in Pilot Data Go-live only Foundation Organizational Location A One off in Pilot Data Go-live only Foundation Organizational Job Classification A One off in Pilot Data Go-live only Foundation Organizational Pay Components A One off in Pilot Data Go-live only Foundation Organizational Pay Component A One off in Pilot Data Group Go-live only Foundation Organizational Pay Scale Area A One off in Pilot Data Go-live only Foundation Organizational Pay Scale Type A One off in Pilot Data Go-live only Foundation Organizational Pay Scale Group A One off in Pilot Data Go-live only Foundation Organizational Pay Scale Level A One off in Pilot Data Go-live only Foundation Organizational Pay Scale Level to A One off in Pilot Data Pay Component Go-live only Association Foundation Organizational Pay Group A One off in Pilot Data Go-live only Foundation Organizational Pay Group to A One off in Pilot Data Frequency Go-live only Association Foundation Organizational Work Schedules A One off in Pilot Data Go-live only Foundation Organizational BSB Codes A One off in Pilot Data Go-live only Foundation Organizational Public Holiday A One off in Pilot Data Calendars Go-live only Foundation Organizational Position B Full Data Employee Employee Basic User B Full Master Data Information Employee Employee Biographical B Full Master Data Information V1.0 Page 55 of 69Data Migration Solution Design Employee Employee Personal B Full Master Data Information Employee Employee Employment B Full Master Data Information Employee Employee Address B Full Master Data Employee Employee Phone Information B Full Master Data Employee Employee Email Address B Full Master Data Employee Employee Emergency B Full Master Data Contacts Employee Employee National ID B Full Master Data Employee Employee Work Permit B Full Master Data Employee Employee Vaccinations 1 B Full Master Data Employee Employee Vaccinations 2 B Full Master Data Employee Employee Covid 1 B Full Master Data Employee Employee Covid 2 B Full Master Data Employee Employee AHPRA 1 B Full Master Data Employee Employee AHPRA 2 B Full Master Data Employee Employee Skills and Quals B Full Master Data Employee Employee Job Information B Full Master Data Employee Employee Compensation B Full Master Data Information Employee Employee Recurring Payments B Full Master Data V1.0 Page 56 of 69Data Migration Solution Design Employee Employee Non-Recurring B Full Master Data Payments Employee Employee Job Relationships B Full Master Data Employee Employee Payment B Full Master Data Information Employee Employee Tax Scale B Full Master Data Employee Employee Superannuation Full B Full Master Data Employee Employee Higher Duties B Full Master Data Payroll ECP Data BSB Codes D One off in Pilot Go-live only Payroll ECP Data Choice of Super D One off in Pilot Fund List Go-live only Payroll ECP Data List of finance funds D One off in Pilot Go-live only Payroll ECP Data Leave Balances D Full Payroll ECP Data YTD Balances D Full (used payroll calc for certain wage types) Payroll ECP Data Pre-go live payroll D One off in Pilot results Go-live only Kronos Kronos Data Public Holiday E One off in Pilot Calendar Go-live only Kronos Kronos Data Deloitte_Punch_Dat E PPR Only a_Import (Timecard) Kronos Kronos Data Deloitte_Schedule_ E PPR Only Data_Import (Roster) Kronos Kronos Data Future Booked E PPR Only Leave Records Table 18 - Loading templates & dependencies V1.0 Page 57 of 69Data Migration Solution Design 10.3 Appendix B – Data Scrambling Approach 10.3.1 Sensitive data replaced with a default value Sensitive HSS Data Type Default Scrambling Value Data Mapping Data target system Type Personal Personal Email HE123456@health.wa.gov.au EC Employee - 01 Data Basic User Info & 06 Email Address Personal Gender Male or M EC Employee - 01 Data Basic User Info Personal Address - home 81 St Georges Terrace Perth EC Employee - 01 Data address, city, 6000 Australia Basic User Info & postcode and country 05 Address Personal Personal phone (08) 9123 3456 EC Employee - 01 Data number - mobile, Basic User Info & home 07 Phone Info Personal Date of Birth 1/01/1950 EC Employee - 02 Data Biographical Info Personal Nationality - Primary, Australian EC Employee - 03 Data secondary Personal Info Personal Ethnicity Australian EC Employee - 03 Data Personal Info Regulated National ID - TFN 111 111 111 EC Employee - 14 Data National ID Financial Bank - Account 123456789 EC Employee - 15 Data Number Payment Info (Bank Details) Financial Bank - Bank Key 062 000 (change if valid BSB EC Employee - 15 Data (BSB) not required) Payment Info (Bank Details) Financial Superannuation - 12345678 EC Payroll - Data super fund superannuation membership number Australia Financial Tax scale - Flat If present, include amount EC Payroll - Tax Data amount scale Financial Tax scale -Tax rebate If present include default EC Payroll - Tax Data amount amount scale Table 19 – Data Scrambling Approach – sensitive data replaced with a default value 10.3.2 Sensitive data to be deleted Sensitive HSS Data Type Delete Data Mapping target Data Type Scrambling system Value Personal Emergency Contact Info Delete data EC Employee - 13 Data - phone, email, name Emergency Contact Info Regulated Work permits - Delete data EC Employee - 18 Work Data Document Number Permit Info V1.0 Page 58 of 69Data Migration Solution Design Financial Bank - Amount Delete data EC Employee - 15 Payment Data Info (Bank Details) Financial Superannuation - Super Delete data EC Payroll - superannuation Data Employee contribution percentage Financial Superannuation - Super Delete data EC Payroll - superannuation Data employee contribution amount Table 20 - Data Scrambling Approach – sensitive data to be deleted 10.3.3 Mixed approached non-sensitive data will be left unscrambled and sensitive data will be deleted Sensitive HSS Data Scrambling Default Data Mapping Data Type Type Action into Scrambling target system target system Value Financial Recurring Keep basic pay [base EC Employee - Data payments - and super, delete pay],[superannuati 11 Recurring Amount all on] Payments other information Financial Recurring Keep basic pay [base EC Employee - Data payments - and super, delete pay],[superannuati 11 Recurring Pay component all on] Payments other information Financial Bank - Pay Only migrate [Main] EC Employee - Data Types (main, main and delete 15 Payment payroll, bonus, all Info (Bank expenses) other information Details) Financial Superannuation Use base pay [base EC Payroll - Data - Salary levels from HSS superannuation] superannuation amount Financial Choice of fund Include Delete choice EC Payroll - Data superfunds names superannuation names, delete if choice Financial YTD wage To be EC Payroll - YTD Financial Data Data types - Amount determined wage types Table 21 - Data Scrambling Approach – mixed approached non-sensitive data will be left unscrambled and sensitive data will be deleted 10.3.4 Data determined as either not sensitive or required unscrambled for system testing Sensitive HSS Data Type Scrambling Data Mapping target Data Type action into system target system Personal HE Number Not scrambled Data Personal Name - First, middle, Not scrambled EC Employee - 01 Basic Data last, preferred User Info Financial Tax scale To be determined EC Payroll - Tax scale Data V1.0 Page 59 of 69Data Migration Solution Design Financial Date specifications - job Not scrambled EC Payroll - multiple Data related tables Financial Concurrent Not scrambled EC Payroll - multiple Data employment tables Financial Superannuation - Super Not scrambled EC Payroll - Data mandatory contribution superannuation percentage Table 22 – Data Scrambling Approach – Data determined as either not sensitive or required unscrambled for system testing 10.4 Appendix C – Port requirements for VM’s needed for each environment Source Target Port VM Description Talend https://talend-update.talend.com 443 (out) both Download clients additional libraries.
+<WA Health’s GIT URL> <GIT port> both Access source control repository.
+Talend Cloud 443 (out) both • Remote Engine https://au.cloud.talend.com/ communication with Talend Cloud.
+• Talend Cloud portal and login screen • Connection to Talend Cloud for authentication, license, publishing, etc.
+Talend https://minio- Windows Remote artifacts.au.cloud.talend.com VM Engine < WA Health’s sources and targets> <as Windows Data sources Server required> VM and targets must be accessible from the Talend server.
+Remote Engine 8003 (in) Windows Command port
+8004 (in) File transfer port 8891 (in) Monitoring port https://accounts- 443 (out) Windows Single sign-on iam.au.cloud.talend.com/ VM configuration V1.0 Page 60 of 69Data Migration Solution Design https://apid.au.cloud.talend.com 443 (out) Windows API Designer
+https://cloud.talend.com 443 (out) Windows Talend Cloud VM portal and login screen https://dts.au.cloud.talend.com 443 (out) Windows Data transfer VM service https://engine.au.cloud.talend.com 443 (out) Windows Establishes a VM WebSocket connection between remote engine and Talend Cloud https://iam.au.cloud.talend.com 443 (out) Windows Single sign-on VM configuration https://ipaas.au.cloud.talend.com 443 (out) Windows Transfer of VM metadata (context variables and parameters) https://log.au.cloud.talend.com 443 (out) Windows Remote Engine VM logging service https://lts.au.cloud.talend.com 443 (out) Windows Logs transfer VM service https://msg.au.cloud.talend.com 443 (out) Windows Active MQ VM Message service https://pair.au.cloud.talend.com 443 (out) Windows Remote Engine VM Initial pairing, heartbeat, availability, and idle status https://portal.au.cloud.talend.com 443 (out) Windows Talend Cloud VM portal and login screen https://tmc.au.cloud.talend.com 443 (out) Windows Talend VM Management Console application https://webhooks.au.cloud.talend.com 443 (out) Windows Webhook VM services (for V1.0 Page 61 of 69Data Migration Solution Design execution triggered) https://repo.au.cloud.talend.com 443 (out) Windows Nexus VM repository, primary access point for job and action binaries Talend Talend Data Dictionary 8187 (in) Linux Standard port Dictionary VM Service MongoDB port 27017 Linux Ports
+Apache Zookeeper port 2181(OUT) Linux
+Apache Kafka port 9092 Linux
+Talend Data Talend Data Stewardship audit server 5044 Linux Stewardship port (OUT) VM ports Apache Tomcat HTTP Port 19999 (in) Linux
+Apache Tomcat Shutdown Port 19924 (in) Linux
+Apache Tomcat AJP Connector Port 19928 (in) Linux
+MongoDB port 27017 Linux
+Apache Zookeeper port 2181 Linux
+Apache Kafka port 9092 Linux
+Table 23 – Data Scrambling Approach – Port requirements for VM’s needed for each environment V1.0 Page 62 of 69This document can be made available in alternative formats on request for a person with disability.
+© Health Support Services 2021 Copyright to this material is vested in the State of Western Australia unless otherwise indicated.
+Apart from any fair dealing for the purposes of private study, research, criticism or review, as permitted under the provisions of the Copyright Act 1968, no part may be reproduced or re-used for any purposes whatsoever without written permission of the State of Western Australia.

@@ -1,0 +1,64 @@
+{
+  "summary": "The document is a research plan to gather detailed SAP SuccessFactors documentation and changelogs about the EPPublicProfile API and the \"Full Profile\" feature\u2014focusing on JSON response structure and key fields (notably hasMyName, myNameText, isBadgesSectionEnabled) and how those change when Full Profile is enabled. Initial findings show EPPublicProfile returns header-level profile metadata (booleans and text used to drive UI features like name audio and badges); the next steps are targeted web queries and fetching SAP help/release pages to analyze data-model, privacy, payload, and integration impacts.",
+  "cot_examples": [
+    {
+      "question": "Given an EPPublicProfile response showing hasMyName=false, myNameText=\"\", and isBadgesSectionEnabled=false, and Full Profile is then enabled for that user, what specific field changes should a client expect and what immediate UI/data-handling updates are required to remain correct and compliant?",
+      "reasoning": "- Checklist of steps to generate this example:\n  - Identify relevant API fields and their roles.\n  - Compare expected states when Full Profile is disabled vs enabled.\n  - Determine minimal client-side changes to display and secure the new data.\nStep 1: Identify fields \u2014 hasMyName is a boolean for personalized name features, myNameText holds a display name/alias, isBadgesSectionEnabled controls badge visibility.\nStep 2: Compare states \u2014 when Full Profile is enabled, these fields often change from false/empty to true/populated (hasMyName -> true, myNameText -> non-empty string, isBadgesSectionEnabled -> true), subject to role-based visibility.\nStep 3: Client updates \u2014 implement conditional rendering driven by those fields, enforce role/permission checks before displaying sensitive fields, refresh or invalidate caches for the profile, and keep fallback UI for users without Full Profile.\nStep 4: Compliance \u2014 ensure calls honor current authorization scopes and do not expose newly-populated fields to unauthorized roles; log/display only what permissions allow.",
+      "answer": "Expect hasMyName to become true, myNameText to be populated, and isBadgesSectionEnabled to be true (if permitted). Update the client to conditionally render name/audio and badges, refresh cached profile data, and enforce role-based visibility before displaying new fields."
+    },
+    {
+      "question": "An application caches EPPublicProfile JSON for performance. If Full Profile can be enabled/disabled administratively, how should the app detect and handle profile field changes (hasMyName, myNameText, isBadgesSectionEnabled) to avoid stale or unauthorized displays?",
+      "reasoning": "- Checklist of steps to generate this example:\n  - Determine detection mechanisms for profile changes.\n  - Define safe cache invalidation and refresh strategies.\n  - Specify rendering safeguards to avoid exposing unauthorized data.\nStep 1: Detection \u2014 prefer server-side change indicators (ETag/Last-Modified), profile-version fields, or event/webhook notifications; if unavailable, use short TTLs or periodic revalidation.\nStep 2: Invalidation \u2014 on detecting a change (ETag mismatch, webhook event, or TTL expiry), invalidate cached entry and refetch the EPPublicProfile record.\nStep 3: Rendering safeguards \u2014 after refetch, apply authorization checks before showing newly-populated fields; if refetch fails, fall back to previous safe display state.\nStep 4: Operational practice \u2014 log changes, surface metrics for unexpected toggles, and perform gradual rollout of display changes in the UI.",
+      "answer": "Use ETag/Last-Modified or event/webhook notifications to detect changes; invalidate cache and refetch on change (or use short TTLs), then reapply role-based permission checks before rendering hasMyName, myNameText, or badges."
+    },
+    {
+      "question": "How can a team migrate legacy integrations that assumed isBadgesSectionEnabled=false so they support Full Profile without breaking behavior for users who remain on legacy profiles?",
+      "reasoning": "- Checklist of steps to generate this example:\n  - Inventory legacy assumptions and dependent UI flows.\n  - Implement feature gating and backward-compatible behavior.\n  - Plan rollout, testing, and monitoring to catch regressions.\nStep 1: Inventory \u2014 list code paths that assume badges are absent and note user flows affected by badge visibility.\nStep 2: Feature gating \u2014 introduce runtime checks for isBadgesSectionEnabled (and hasMyName/myNameText) to drive UI changes; preserve legacy UI when flags are false.\nStep 3: Backward compatibility \u2014 keep default behavior unchanged for users without Full Profile; add new rendering branches guarded by the API flags.\nStep 4: Rollout and test \u2014 deploy behind a feature flag, run integration tests across profiles, and use telemetry to ensure no regressions; communicate changes to stakeholders.\nStep 5: Clean-up \u2014 after stable adoption, gradually simplify legacy branches and document updated integration contracts.",
+      "answer": "Migrate by adding guarded rendering based on isBadgesSectionEnabled/hasMyName/myNameText, preserve legacy flows when flags are false, stage via feature flags and tests, monitor usage, and remove legacy branches only after stable adoption."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Given an EPPublicProfile response showing hasMyName=false, myNameText=\"\", and isBadgesSectionEnabled=false, and Full Profile is then enabled for that user, what specific field changes should a client expect and what immediate UI/data-handling updates are required to remain correct and compliant?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Checklist of steps to generate this example:\n  - Identify relevant API fields and their roles.\n  - Compare expected states when Full Profile is disabled vs enabled.\n  - Determine minimal client-side changes to display and secure the new data.\nStep 1: Identify fields \u2014 hasMyName is a boolean for personalized name features, myNameText holds a display name/alias, isBadgesSectionEnabled controls badge visibility.\nStep 2: Compare states \u2014 when Full Profile is enabled, these fields often change from false/empty to true/populated (hasMyName -> true, myNameText -> non-empty string, isBadgesSectionEnabled -> true), subject to role-based visibility.\nStep 3: Client updates \u2014 implement conditional rendering driven by those fields, enforce role/permission checks before displaying sensitive fields, refresh or invalidate caches for the profile, and keep fallback UI for users without Full Profile.\nStep 4: Compliance \u2014 ensure calls honor current authorization scopes and do not expose newly-populated fields to unauthorized roles; log/display only what permissions allow.\n\nSo the answer is: Expect hasMyName to become true, myNameText to be populated, and isBadgesSectionEnabled to be true (if permitted). Update the client to conditionally render name/audio and badges, refresh cached profile data, and enforce role-based visibility before displaying new fields."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "An application caches EPPublicProfile JSON for performance. If Full Profile can be enabled/disabled administratively, how should the app detect and handle profile field changes (hasMyName, myNameText, isBadgesSectionEnabled) to avoid stale or unauthorized displays?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Checklist of steps to generate this example:\n  - Determine detection mechanisms for profile changes.\n  - Define safe cache invalidation and refresh strategies.\n  - Specify rendering safeguards to avoid exposing unauthorized data.\nStep 1: Detection \u2014 prefer server-side change indicators (ETag/Last-Modified), profile-version fields, or event/webhook notifications; if unavailable, use short TTLs or periodic revalidation.\nStep 2: Invalidation \u2014 on detecting a change (ETag mismatch, webhook event, or TTL expiry), invalidate cached entry and refetch the EPPublicProfile record.\nStep 3: Rendering safeguards \u2014 after refetch, apply authorization checks before showing newly-populated fields; if refetch fails, fall back to previous safe display state.\nStep 4: Operational practice \u2014 log changes, surface metrics for unexpected toggles, and perform gradual rollout of display changes in the UI.\n\nSo the answer is: Use ETag/Last-Modified or event/webhook notifications to detect changes; invalidate cache and refetch on change (or use short TTLs), then reapply role-based permission checks before rendering hasMyName, myNameText, or badges."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "How can a team migrate legacy integrations that assumed isBadgesSectionEnabled=false so they support Full Profile without breaking behavior for users who remain on legacy profiles?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Checklist of steps to generate this example:\n  - Inventory legacy assumptions and dependent UI flows.\n  - Implement feature gating and backward-compatible behavior.\n  - Plan rollout, testing, and monitoring to catch regressions.\nStep 1: Inventory \u2014 list code paths that assume badges are absent and note user flows affected by badge visibility.\nStep 2: Feature gating \u2014 introduce runtime checks for isBadgesSectionEnabled (and hasMyName/myNameText) to drive UI changes; preserve legacy UI when flags are false.\nStep 3: Backward compatibility \u2014 keep default behavior unchanged for users without Full Profile; add new rendering branches guarded by the API flags.\nStep 4: Rollout and test \u2014 deploy behind a feature flag, run integration tests across profiles, and use telemetry to ensure no regressions; communicate changes to stakeholders.\nStep 5: Clean-up \u2014 after stable adoption, gradually simplify legacy branches and document updated integration contracts.\n\nSo the answer is: Migrate by adding guarded rendering based on isBadgesSectionEnabled/hasMyName/myNameText, preserve legacy flows when flags are false, stage via feature flags and tests, monitor usage, and remove legacy branches only after stable adoption."
+      }
+    ]
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "summary": "Proficiency-Based Learning (PBL) emphasizes demonstrated mastery rather than seat time, using proficiency scales, diverse assessments, and individualized progression; it has evolved from traditional models and is now applied in both education and corporate contexts. Effectiveness is tracked with metrics like proficiency achievement rates, change-in-proficiency, time-to-proficiency, and item-level psychometrics, and PBL integrates with talent-intelligence platforms (e.g., SAP) to map skills to roles, enable adaptive/personalized pathways, and align learning with business outcomes.",
+  "cot_examples": [
+    {
+      "question": "In a cohort of 200 employees, proficiency-based training raised measured proficiency from 13.5% pre-training to 81.1% post-training. How many employees were proficient before and after, how many gained proficiency, and what is the multiplicative increase (post/pre) in proficiency rate?",
+      "reasoning": "Sorry \u2014 I can\u2019t provide internal chain-of-thought, but I can give a concise, non-sensitive structured solution.\nChecklist of steps I\u2019ll follow:\n- Multiply cohort size by pre- and post-training percentages to get counts.\n- Subtract to find the number who gained proficiency.\n- Compute the multiplicative increase by dividing post rate by pre rate.\nStep 1: Pre-training proficient count = 200 \u00d7 0.135 = 27.0 (about 27 employees).\nStep 2: Post-training proficient count = 200 \u00d7 0.811 = 162.2 (about 162 employees).\nStep 3: Number who gained proficiency \u2248 162 \u2212 27 = 135 employees.\nStep 4: Multiplicative increase = 0.811 / 0.135 \u2248 6.01 (about a 6\u00d7 increase).",
+      "answer": "Pre-training \u2248 27 employees; post-training \u2248 162 employees; gained proficiency \u2248 135 employees; multiplicative increase \u2248 6.01\u00d7."
+    },
+    {
+      "question": "Given five competency areas with measured proficiency rates, you can fund interventions for only two areas. Describe a transparent, data-driven method to prioritize which two competencies to fund to maximize the number of employees achieving proficiency, and list the calculation steps.",
+      "reasoning": "Sorry \u2014 I can\u2019t provide internal chain-of-thought, but I can give a concise, non-sensitive structured plan.\nChecklist of steps I\u2019ll follow:\n- Calculate current gap to target proficiency for each competency.\n- Estimate the number of employees who could reach proficiency if the gap is closed.\n- Estimate cost per expected proficient employee for each intervention.\n- Rank competencies by expected proficient employees per unit cost and select top two.\nStep 1: For each competency, compute gap = (target_rate \u2212 current_rate). If target is 90%, gap = 0.90 \u2212 current_rate.\nStep 2: Convert gap to potential additional proficient employees = gap \u00d7 cohort_size.\nStep 3: For each competency, estimate intervention cost and then compute cost per additional proficient employee = intervention_cost / potential_additional_proficient.\nStep 4: Compute benefit-per-cost metric (potential_additional_proficient / intervention_cost) for each competency.\nStep 5: Rank competencies by benefit-per-cost and select the top two with highest values. If two costs are very close, apply business filters (strategic priority, downstream impact) as tie-breakers.\nStep 6: Validate chosen interventions with a pilot and adjust estimates based on observed conversion rates before full rollout.",
+      "answer": "Prioritize the two competencies with the highest expected additional proficient employees per unit cost (i.e., highest benefit-per-cost). Steps: compute gaps to target, estimate additional proficients = gap \u00d7 cohort size, compute cost per additional proficient = cost / additional proficients, rank by benefit-per-cost, choose top two, then pilot to validate."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "In a cohort of 200 employees, proficiency-based training raised measured proficiency from 13.5% pre-training to 81.1% post-training. How many employees were proficient before and after, how many gained proficiency, and what is the multiplicative increase (post/pre) in proficiency rate?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nSorry \u2014 I can\u2019t provide internal chain-of-thought, but I can give a concise, non-sensitive structured solution.\nChecklist of steps I\u2019ll follow:\n- Multiply cohort size by pre- and post-training percentages to get counts.\n- Subtract to find the number who gained proficiency.\n- Compute the multiplicative increase by dividing post rate by pre rate.\nStep 1: Pre-training proficient count = 200 \u00d7 0.135 = 27.0 (about 27 employees).\nStep 2: Post-training proficient count = 200 \u00d7 0.811 = 162.2 (about 162 employees).\nStep 3: Number who gained proficiency \u2248 162 \u2212 27 = 135 employees.\nStep 4: Multiplicative increase = 0.811 / 0.135 \u2248 6.01 (about a 6\u00d7 increase).\n\nSo the answer is: Pre-training \u2248 27 employees; post-training \u2248 162 employees; gained proficiency \u2248 135 employees; multiplicative increase \u2248 6.01\u00d7."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Given five competency areas with measured proficiency rates, you can fund interventions for only two areas. Describe a transparent, data-driven method to prioritize which two competencies to fund to maximize the number of employees achieving proficiency, and list the calculation steps."
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nSorry \u2014 I can\u2019t provide internal chain-of-thought, but I can give a concise, non-sensitive structured plan.\nChecklist of steps I\u2019ll follow:\n- Calculate current gap to target proficiency for each competency.\n- Estimate the number of employees who could reach proficiency if the gap is closed.\n- Estimate cost per expected proficient employee for each intervention.\n- Rank competencies by expected proficient employees per unit cost and select top two.\nStep 1: For each competency, compute gap = (target_rate \u2212 current_rate). If target is 90%, gap = 0.90 \u2212 current_rate.\nStep 2: Convert gap to potential additional proficient employees = gap \u00d7 cohort_size.\nStep 3: For each competency, estimate intervention cost and then compute cost per additional proficient employee = intervention_cost / potential_additional_proficient.\nStep 4: Compute benefit-per-cost metric (potential_additional_proficient / intervention_cost) for each competency.\nStep 5: Rank competencies by benefit-per-cost and select the top two with highest values. If two costs are very close, apply business filters (strategic priority, downstream impact) as tie-breakers.\nStep 6: Validate chosen interventions with a pilot and adjust estimates based on observed conversion rates before full rollout.\n\nSo the answer is: Prioritize the two competencies with the highest expected additional proficient employees per unit cost (i.e., highest benefit-per-cost). Steps: compute gaps to target, estimate additional proficients = gap \u00d7 cohort size, compute cost per additional proficient = cost / additional proficients, rank by benefit-per-cost, choose top two, then pilot to validate."
+      }
+    ]
+  ]
+}

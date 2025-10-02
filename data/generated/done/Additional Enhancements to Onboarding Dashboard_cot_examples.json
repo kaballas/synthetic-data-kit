@@ -1,0 +1,64 @@
+{
+  "summary": "The document synthesizes current SAP and industry findings on onboarding dashboards, detailing standard features (task tracking, document management, analytics, automated workflows, self\u2011service, training and security), user\u2011role needs (hiring managers vs new hires), recent AI and integration enhancements, and SAP\u2011specific technical and UX challenges. It concludes that improved dashboards measurably boost retention and time\u2011to\u2011productivity, recommends iterative benchmarking and analytics-driven design, and proposes further technical research to produce detailed, actionable recommendations.",
+  "cot_examples": [
+    {
+      "question": "Checklist: Steps I will take to generate each reasoning example",
+      "reasoning": "- Identify relevant facts in the provided text.\n- Formulate a challenging, multi-step question grounded in those facts.\n- Outline a concise, high-level step-by-step solution (no internal chain-of-thought).\n- Perform necessary calculations or synthesis from the outline.\n- Report a concise final answer derived from the steps.",
+      "answer": "Checklist provided."
+    },
+    {
+      "question": "If SAP implements AI-driven personalized onboarding that removes 30% of irrelevant tasks, and irrelevant tasks currently account for 25% of a 45-day average onboarding duration, what is the new average onboarding duration and percentage reduction?",
+      "reasoning": "Step 1: Calculate time spent on irrelevant tasks: 25% of 45 days = 11.25 days.\nStep 2: Time saved by removing 30% of irrelevant tasks = 0.30 \u00d7 11.25 = 3.375 days.\nStep 3: New onboarding duration = 45 \u2212 3.375 = 41.625 days.\nStep 4: Percentage reduction = (3.375 / 45) \u00d7 100 \u2248 7.5%.",
+      "answer": "New average \u2248 41.6 days, about a 7.5% reduction."
+    },
+    {
+      "question": "A hiring manager oversees 10 new hires with 12 onboarding tasks each (120 tasks). If 10% of tasks are overdue and current admin time per overdue task is 3 minutes, how much weekly time is saved when bulk task management cuts per-overdue-task admin time to 1 minute?",
+      "reasoning": "Step 1: Total tasks = 10 \u00d7 12 = 120.\nStep 2: Overdue tasks = 10% of 120 = 12.\nStep 3: Current admin time = 12 \u00d7 3 min = 36 minutes.\nStep 4: With bulk management = 12 \u00d7 1 min = 12 minutes.\nStep 5: Time saved = 36 \u2212 12 = 24 minutes per week.",
+      "answer": "Approximately 24 minutes of administrative time saved per week."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Checklist: Steps I will take to generate each reasoning example"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Identify relevant facts in the provided text.\n- Formulate a challenging, multi-step question grounded in those facts.\n- Outline a concise, high-level step-by-step solution (no internal chain-of-thought).\n- Perform necessary calculations or synthesis from the outline.\n- Report a concise final answer derived from the steps.\n\nSo the answer is: Checklist provided."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "If SAP implements AI-driven personalized onboarding that removes 30% of irrelevant tasks, and irrelevant tasks currently account for 25% of a 45-day average onboarding duration, what is the new average onboarding duration and percentage reduction?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nStep 1: Calculate time spent on irrelevant tasks: 25% of 45 days = 11.25 days.\nStep 2: Time saved by removing 30% of irrelevant tasks = 0.30 \u00d7 11.25 = 3.375 days.\nStep 3: New onboarding duration = 45 \u2212 3.375 = 41.625 days.\nStep 4: Percentage reduction = (3.375 / 45) \u00d7 100 \u2248 7.5%.\n\nSo the answer is: New average \u2248 41.6 days, about a 7.5% reduction."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "A hiring manager oversees 10 new hires with 12 onboarding tasks each (120 tasks). If 10% of tasks are overdue and current admin time per overdue task is 3 minutes, how much weekly time is saved when bulk task management cuts per-overdue-task admin time to 1 minute?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nStep 1: Total tasks = 10 \u00d7 12 = 120.\nStep 2: Overdue tasks = 10% of 120 = 12.\nStep 3: Current admin time = 12 \u00d7 3 min = 36 minutes.\nStep 4: With bulk management = 12 \u00d7 1 min = 12 minutes.\nStep 5: Time saved = 36 \u2212 12 = 24 minutes per week.\n\nSo the answer is: Approximately 24 minutes of administrative time saved per week."
+      }
+    ]
+  ]
+}

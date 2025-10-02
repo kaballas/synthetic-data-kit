@@ -1,0 +1,64 @@
+{
+  "summary": "The document explains SAP SuccessFactors Employee Central workflows and the shift from employment-based to person-based approver replacement, where approvers are resolved by person ID and substituted (typically by their manager) during workflow processing to prevent self-approval. It details the mechanics, scope (approvers, contributors, CCs with specific exemptions), triggers, limitations, and configuration implications. The change strengthens controls and auditability, improving stability and compliance, and the report recommends maintaining accurate manager data and avoiding manual overrides.",
+  "cot_examples": [
+    {
+      "question": "An employee (User A) has two active employments: Employment 1 (E1) with Manager M1 and Employment 2 (E2) with Manager M2. User A initiates a workflow from E1. The workflow resolves the approver as User A via a role tied to E2. Under the person-based approver replacement rules, who will be the actual approver and why?",
+      "reasoning": "- Identify applicable resolution context (person vs employment).\n- Apply person-based replacement rule: if approver person ID == subject person ID, replace approver by that approver's manager from their active employment.\n- Check exceptions (Self, Manager, Manager Manager, Employee HR roles) \u2014 none apply here.\n- Conclude final approver and rationale.\n\nStep 1: The approver resolved to the same person as the workflow subject (User A), even though via a different employment (E2).\nStep 2: Under person-based logic, the system compares person IDs, not employment IDs, so this is treated as self-approval and triggers replacement.\nStep 3: The system replaces the approver with the approver's manager determined from the approver's active employment assignment. Since the approver is User A in E2, the replacement manager is M2 (User A's manager for E2).\nStep 4: No listed exceptions (Self, Manager, Manager Manager, Employee HR) apply to prevent replacement, so replacement stands.\n\nConclusion: The actual approver will be M2, the manager of User A for Employment 2, because person-based replacement substitutes the approver by their manager when the approver equals the subject user.",
+      "answer": "M2 (the manager of User A for Employment 2). The person-based logic replaces the approver because the approver's person ID equals the subject user, so the approver is substituted by their manager from that employment."
+    },
+    {
+      "question": "A workflow is created for an MDF Position object. The position owner (User B) is also the person who triggered the workflow. The resolved approver is the position owner (User B). Does person-based approver replacement apply here, and who ends up approving?",
+      "reasoning": "- Determine workflow object type and if replacement is enabled for it.\n- Check whether the approver equals the subject person.\n- Apply exception for Position MDF workflows if applicable.\n- State the effective approver.\n\nStep 1: Identify that this workflow is for the MDF Position object.\nStep 2: The resolved approver equals the subject person (position owner is the initiator), which normally would trigger person-based replacement.\nStep 3: Position MDF workflows are explicitly excluded from person-based approver replacement per the documented exceptions, allowing the position owner to approve.\nStep 4: Because of that exception, no automatic replacement occurs, and the resolved approver remains the position owner.\n\nConclusion: Person-based replacement does not apply for MDF Position workflows in this scenario; the position owner (User B) remains the approver.",
+      "answer": "No \u2014 person-based replacement is not applied for MDF Position workflows. The position owner (User B) remains the approver."
+    },
+    {
+      "question": "A workflow step resolves an approver who is also the workflow subject (User C). The system replaces that approver with User C's manager (Manager D). The workflow has an escalation configured to escalate to the approver's manager after timeout. If the replacement occurs, who will receive the escalation and why?",
+      "reasoning": "- Resolve initial approver and detect subject match.\n- Apply person-based replacement to obtain the substituted approver.\n- Determine how escalation targets are resolved relative to replacement.\n- Conclude which user receives escalation.\n\nStep 1: The initial approver equals the subject (User C), so person-based replacement substitutes that approver with User C's manager, Manager D.\nStep 2: Escalation targets are evaluated against the active approver assignment once replacement has occurred; the system logs and routes notifications/escalations to the substituted approver.\nStep 3: Therefore, the escalation will be directed to Manager D (the replacement approver). If escalation logic specifies manager-of-approver beyond that, it will evaluate from Manager D onward per standard escalation chain.\n\nConclusion: The escalation will be sent to Manager D (the substituted approver) because escalation targets follow the resolved, post-replacement approver.",
+      "answer": "Manager D receives the escalation. Escalations are applied to the substituted (post-replacement) approver, so the replacement manager becomes the escalation target."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "An employee (User A) has two active employments: Employment 1 (E1) with Manager M1 and Employment 2 (E2) with Manager M2. User A initiates a workflow from E1. The workflow resolves the approver as User A via a role tied to E2. Under the person-based approver replacement rules, who will be the actual approver and why?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Identify applicable resolution context (person vs employment).\n- Apply person-based replacement rule: if approver person ID == subject person ID, replace approver by that approver's manager from their active employment.\n- Check exceptions (Self, Manager, Manager Manager, Employee HR roles) \u2014 none apply here.\n- Conclude final approver and rationale.\n\nStep 1: The approver resolved to the same person as the workflow subject (User A), even though via a different employment (E2).\nStep 2: Under person-based logic, the system compares person IDs, not employment IDs, so this is treated as self-approval and triggers replacement.\nStep 3: The system replaces the approver with the approver's manager determined from the approver's active employment assignment. Since the approver is User A in E2, the replacement manager is M2 (User A's manager for E2).\nStep 4: No listed exceptions (Self, Manager, Manager Manager, Employee HR) apply to prevent replacement, so replacement stands.\n\nConclusion: The actual approver will be M2, the manager of User A for Employment 2, because person-based replacement substitutes the approver by their manager when the approver equals the subject user.\n\nSo the answer is: M2 (the manager of User A for Employment 2). The person-based logic replaces the approver because the approver's person ID equals the subject user, so the approver is substituted by their manager from that employment."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "A workflow is created for an MDF Position object. The position owner (User B) is also the person who triggered the workflow. The resolved approver is the position owner (User B). Does person-based approver replacement apply here, and who ends up approving?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Determine workflow object type and if replacement is enabled for it.\n- Check whether the approver equals the subject person.\n- Apply exception for Position MDF workflows if applicable.\n- State the effective approver.\n\nStep 1: Identify that this workflow is for the MDF Position object.\nStep 2: The resolved approver equals the subject person (position owner is the initiator), which normally would trigger person-based replacement.\nStep 3: Position MDF workflows are explicitly excluded from person-based approver replacement per the documented exceptions, allowing the position owner to approve.\nStep 4: Because of that exception, no automatic replacement occurs, and the resolved approver remains the position owner.\n\nConclusion: Person-based replacement does not apply for MDF Position workflows in this scenario; the position owner (User B) remains the approver.\n\nSo the answer is: No \u2014 person-based replacement is not applied for MDF Position workflows. The position owner (User B) remains the approver."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "A workflow step resolves an approver who is also the workflow subject (User C). The system replaces that approver with User C's manager (Manager D). The workflow has an escalation configured to escalate to the approver's manager after timeout. If the replacement occurs, who will receive the escalation and why?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Resolve initial approver and detect subject match.\n- Apply person-based replacement to obtain the substituted approver.\n- Determine how escalation targets are resolved relative to replacement.\n- Conclude which user receives escalation.\n\nStep 1: The initial approver equals the subject (User C), so person-based replacement substitutes that approver with User C's manager, Manager D.\nStep 2: Escalation targets are evaluated against the active approver assignment once replacement has occurred; the system logs and routes notifications/escalations to the substituted approver.\nStep 3: Therefore, the escalation will be directed to Manager D (the replacement approver). If escalation logic specifies manager-of-approver beyond that, it will evaluate from Manager D onward per standard escalation chain.\n\nConclusion: The escalation will be sent to Manager D (the substituted approver) because escalation targets follow the resolved, post-replacement approver.\n\nSo the answer is: Manager D receives the escalation. Escalations are applied to the substituted (post-replacement) approver, so the replacement manager becomes the escalation target."
+      }
+    ]
+  ]
+}

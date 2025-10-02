@@ -1,0 +1,64 @@
+{
+  "summary": "The report explains that SAP SuccessFactors Goal Management\u2019s People Selector lets authorized users search and navigate to related employees\u2019 goal plans, and includes a configurable \"Include inactive users in search results\" toggle whose visibility and effect are governed by role-based permissions and system settings. Including inactive users aids auditing, succession, rehiring, and historical performance review but increases data volume and complexity across Performance, Succession, and Talent modules, so best practices recommend role-based control, clear UI indicators, and periodic review; recent updates add admin controls, improved pagination, and editable inactive-user goals.",
+  "cot_examples": [
+    {
+      "question": "Checklist for generating each reasoning example",
+      "reasoning": "- Identify the relevant topic areas from the text (functionality, configuration, impacts).\n- Formulate a challenging, text-relevant question that requires multiple steps to answer.\n- Provide a concise, high-level summary of the logical steps to solve the question (non-sensitive summary).\n- State a brief final answer derived from those summarized steps.\n- Validate that question, reasoning summary, and answer are non-empty strings.",
+      "answer": "Provided checklist of steps."
+    },
+    {
+      "question": "For a 50,000-employee enterprise that needs HR and managers to access inactive users' goal histories while keeping search performance acceptable, what configuration and permission strategy should be applied and what trade-offs must leadership expect?",
+      "reasoning": "Step 1: Identify functional requirements \u2014 HR and managers must see inactive users; general staff should not. Step 2: Configure the People Selector setting to allow inclusion of inactive users at system level but keep the toggle visibility controlled. Step 3: Use Role-Based Permissions (RBP) to grant the 'Include inactive users' visibility and search target permissions only to HR and manager roles; ensure XML field/action permissions allow view of goal plans for inactive users. Step 4: Limit search population scope or add filters (organizational unit, date ranges) to reduce returned rows and enable pagination to manage UI load. Step 5: Test search performance with representative datasets and monitor search query metrics; iterate by narrowing target populations or using archival policies if needed. Step 6: Communicate trade-offs and apply monitoring and periodic reviews.",
+      "answer": "Enable the inactive-user inclusion setting but restrict visibility via RBP to HR and managers, tune target populations/filters and pagination to limit returned results, and validate performance with testing; trade-offs include increased data volume and potential search latency versus improved auditability and historical access."
+    },
+    {
+      "question": "How will enabling 'Include inactive users in search results' affect cross-module reporting, compliance (e.g., GDPR), and what mitigation steps should be implemented to maintain accurate reports and legal compliance?",
+      "reasoning": "Step 1: Determine which modules consume People Selector results (Performance & Goals, Succession & Development, Career Development) and identify reports that aggregate active/inactive records. Step 2: Recognize compliance risks: broader visibility of personal data, longer retention exposure, and potential unauthorized access. Step 3: Apply mitigations \u2014 restrict visibility with RBP, mark inactive users clearly in UI and reports, and implement data retention/archival policies aligned with legal requirements. Step 4: Update report definitions to include explicit active/inactive filters and document whether historical data should be included in longitudinal analyses. Step 5: Audit and log accesses to inactive user records and perform periodic reviews to ensure retention and consent requirements are met.",
+      "answer": "Including inactive users increases historical data in cross-module reports and raises compliance exposure; mitigate by enforcing RBP restrictions, clearly flagging inactive records, applying retention/archival policies, updating report filters to be explicit about active/inactive inclusion, and auditing access to maintain accurate reporting and legal compliance."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Checklist for generating each reasoning example"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Identify the relevant topic areas from the text (functionality, configuration, impacts).\n- Formulate a challenging, text-relevant question that requires multiple steps to answer.\n- Provide a concise, high-level summary of the logical steps to solve the question (non-sensitive summary).\n- State a brief final answer derived from those summarized steps.\n- Validate that question, reasoning summary, and answer are non-empty strings.\n\nSo the answer is: Provided checklist of steps."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "For a 50,000-employee enterprise that needs HR and managers to access inactive users' goal histories while keeping search performance acceptable, what configuration and permission strategy should be applied and what trade-offs must leadership expect?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nStep 1: Identify functional requirements \u2014 HR and managers must see inactive users; general staff should not. Step 2: Configure the People Selector setting to allow inclusion of inactive users at system level but keep the toggle visibility controlled. Step 3: Use Role-Based Permissions (RBP) to grant the 'Include inactive users' visibility and search target permissions only to HR and manager roles; ensure XML field/action permissions allow view of goal plans for inactive users. Step 4: Limit search population scope or add filters (organizational unit, date ranges) to reduce returned rows and enable pagination to manage UI load. Step 5: Test search performance with representative datasets and monitor search query metrics; iterate by narrowing target populations or using archival policies if needed. Step 6: Communicate trade-offs and apply monitoring and periodic reviews.\n\nSo the answer is: Enable the inactive-user inclusion setting but restrict visibility via RBP to HR and managers, tune target populations/filters and pagination to limit returned results, and validate performance with testing; trade-offs include increased data volume and potential search latency versus improved auditability and historical access."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "How will enabling 'Include inactive users in search results' affect cross-module reporting, compliance (e.g., GDPR), and what mitigation steps should be implemented to maintain accurate reports and legal compliance?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nStep 1: Determine which modules consume People Selector results (Performance & Goals, Succession & Development, Career Development) and identify reports that aggregate active/inactive records. Step 2: Recognize compliance risks: broader visibility of personal data, longer retention exposure, and potential unauthorized access. Step 3: Apply mitigations \u2014 restrict visibility with RBP, mark inactive users clearly in UI and reports, and implement data retention/archival policies aligned with legal requirements. Step 4: Update report definitions to include explicit active/inactive filters and document whether historical data should be included in longitudinal analyses. Step 5: Audit and log accesses to inactive user records and perform periodic reviews to ensure retention and consent requirements are met.\n\nSo the answer is: Including inactive users increases historical data in cross-module reports and raises compliance exposure; mitigate by enforcing RBP restrictions, clearly flagging inactive records, applying retention/archival policies, updating report filters to be explicit about active/inactive inclusion, and auditing access to maintain accurate reporting and legal compliance."
+      }
+    ]
+  ]
+}

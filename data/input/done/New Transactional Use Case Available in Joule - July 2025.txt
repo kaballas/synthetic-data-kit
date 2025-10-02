@@ -1,0 +1,13 @@
+The first tool call returned relevant official SAP and related information sources primarily about SAP SuccessFactors Employee Central Time Off features, usage, and integration, but they do not address all questions directly. The key source covering Time Off module detailed features, its setup, and recent mobile features changes is  and , which I will analyze deeply to cover functional and architectural aspects. Additional searches may be needed for SAP Business AI-specific impacts and transactional use case migration details.
+
+Now I will proceed with a detailed extraction and synthesis of the functionalities of "View time off instructions" in SAP Employee Central, focusing on the shift from navigational to transactional use cases, and how it fits into the time management ecosystem including mobile platforms, technology, compliance, and challenges. I will expand on architectural, technical, and strategic implications based on SAP documentation and integration principles. 
+
+***
+
+# Deep Research Report on "View Time Off Instructions" Use Case in SAP Employee Central and Platform
+
+## 1. Functionalities and Primary Features of "View Time Off Instructions" in SAP Employee Central and Platform
+
+The "View time off instructions" use case in SAP SuccessFactors Employee Central is a critical functionality allowing employees to access detailed guidelines and procedural information related to requesting and managing time off. This feature supports transparency and employee self-service by providing clear instructions on:
+
+- How to request different types of

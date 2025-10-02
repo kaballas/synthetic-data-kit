@@ -1,0 +1,2863 @@
+{
+  "summary": "The document outlines the solution architecture for the HRplus Human Resources Management Information System (HRMIS) Program, a major ICT-enabled transformation for WA Health. Its main goal is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience. The program is led by Health Support Services in partnership with Deloitte and is structured into five stages: Mobilisation, Design, Build, Test, and Deployment. Key concepts include leveraging commercial-off-the-shelf software with minimal customisation, redesigning business processes, and focusing on integration, data migration, and change management. The document details the program\u2019s objectives, implementation strategy, and the collaborative approach involving subject matter experts across the WA health system.",
+  "qa_pairs": [
+    {
+      "question": "What is the main goal of the HRplus Human Resources Management Information System (HRMIS) Program?",
+      "answer": "The main goal is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience.",
+      "rating": 9
+    },
+    {
+      "question": "Who leads the implementation and delivery of the HRMIS Program?",
+      "answer": "The implementation and delivery are led by Health Support Services (HSS) in partnership with Deloitte.",
+      "rating": 10
+    },
+    {
+      "question": "How many stages is the HRMIS Program structured into, and what are they?",
+      "answer": "The program is structured into five stages: Mobilisation, Design, Build, Test, and Deployment.",
+      "rating": 10
+    },
+    {
+      "question": "What approach does the HRMIS Program take regarding software customisation?",
+      "answer": "The program leverages commercial-off-the-shelf software with minimal customisation, relying mainly on configuration and base product functionality.",
+      "rating": 10
+    },
+    {
+      "question": "What are some key focus areas of the HRMIS Program?",
+      "answer": "Key focus areas include integration, data migration, and change management.",
+      "rating": 7
+    },
+    {
+      "question": "Who is involved in the collaborative approach for the HRMIS Program?",
+      "answer": "The collaborative approach involves Health Support Services, Deloitte, and subject matter experts from across the WA health system.",
+      "rating": 9
+    },
+    {
+      "question": "What are some objectives of the HRMIS Program?",
+      "answer": "Objectives include delivering a more reliable and efficient service, supporting workforce reporting and planning, reducing administrative burden, and improving staff allocation.",
+      "rating": 9
+    },
+    {
+      "question": "What is the current name of the HRMIS solution?",
+      "answer": "The current name of the HRMIS solution is HRplus.",
+      "rating": 10
+    },
+    {
+      "question": "What is the main purpose of the document?",
+      "answer": "The document outlines the solution architecture of the HRMIS, identifying major system components and data flows to support business processes.",
+      "rating": 9
+    },
+    {
+      "question": "What should be referenced for more detailed design information?",
+      "answer": "Related detailed design documents for each system or integration should be referenced for more information.",
+      "rating": 8
+    },
+    {
+      "question": "What is the assumption regarding job classifications in SuccessFactors?",
+      "answer": "Job classifications in SuccessFactors will be created based on the standard ANZSCO codes for medical, with Job Profile Builder detailing these classifications.",
+      "rating": 8
+    },
+    {
+      "question": "How will payroll vendors be paid according to the assumptions?",
+      "answer": "Payroll vendors will be paid via an Accounts Payable Process in FMIS instead of directly from Payroll.",
+      "rating": 9
+    },
+    {
+      "question": "What is the approach for reporting in the new HRMIS solution?",
+      "answer": "New reporting will be created in Snowflake unless direct reporting from an HRMIS component is justified; no new reporting will be created within EDW.",
+      "rating": 9
+    },
+    {
+      "question": "Which employees will be migrated to the HRMIS solution at go-live?",
+      "answer": "Only active employees, including external employees, at go-live will be migrated to the HRMIS solution.",
+      "rating": 9
+    },
+    {
+      "question": "What is the planned replacement for the CredWA credentialing solution?",
+      "answer": "A new credentialing solution based on the cGov credentialing solution will replace CredWA.",
+      "rating": 8
+    },
+    {
+      "question": "What tool is assumed for organisation modelling and integration with SuccessFactors EC?",
+      "answer": "Ingentis org.manager is assumed to be used for organisation modelling and integrated with SuccessFactors EC.",
+      "rating": 9
+    },
+    {
+      "question": "When will the full WRICEF requirements be built and unit tested?",
+      "answer": "The full WRICEF requirements will be built and unit tested during the Build phase.",
+      "rating": 7
+    },
+    {
+      "question": "What is the main purpose of the HRplus Human Resources Management Information System (HRMIS) Program?",
+      "answer": "The main purpose is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience for WA Health.",
+      "rating": 10
+    },
+    {
+      "question": "Which organisation is leading the HRMIS Program and who are they partnering with?",
+      "answer": "The program is led by Health Support Services in partnership with Deloitte.",
+      "rating": 9
+    },
+    {
+      "question": "What are the five stages of the HRMIS Program?",
+      "answer": "The five stages are Mobilisation, Design, Build, Test, and Deployment.",
+      "rating": 9
+    },
+    {
+      "question": "What is the approach to software customisation in the HRMIS solution?",
+      "answer": "The solution leverages commercial-off-the-shelf software with minimal customisation.",
+      "rating": 8
+    },
+    {
+      "question": "What are some of the key HR services covered by the HRMIS solution?",
+      "answer": "Key services include a Human Resources portal, rostering management, employee records management, position management, workforce management, and payroll processing.",
+      "rating": 9
+    },
+    {
+      "question": "What is the 'Single Source of Truth' design principle?",
+      "answer": "It means defining one system as the system of record for each data entity and transaction type, ensuring all other systems are notified of changes from that system.",
+      "rating": 9
+    },
+    {
+      "question": "Which system is responsible for employee and organisational structure management in the HRMIS solution?",
+      "answer": "SuccessFactors Employee Central is responsible for employee and organisational structure management.",
+      "rating": 10
+    },
+    {
+      "question": "What is the role of SuccessFactors Employee Central Payroll (ECP) in the HRMIS solution?",
+      "answer": "ECP is responsible for payroll processing, leave accrual calculations, superannuation, pay statements, legal reporting, and financial posting.",
+      "rating": 10
+    },
+    {
+      "question": "Which product is used for rostering and scheduling in the HRMIS solution?",
+      "answer": "UKG Workforce Dimensions is used for rostering and scheduling.",
+      "rating": 9
+    },
+    {
+      "question": "What is the rationale for only converting a minimal set of historical data in the HRMIS implementation?",
+      "answer": "Converting only minimal historical data accelerates implementation and decreases the complexity of the process.",
+      "rating": 7
+    },
+    {
+      "question": "What is UKG Workforce Dimensions responsible for in the HRplus solution?",
+      "answer": "UKG Workforce Dimensions is responsible for rostering, timecard entry, clock in/out (where relevant), and award interpretation.",
+      "rating": 9
+    },
+    {
+      "question": "What is the purpose of the Widget Brain application in the HRplus solution?",
+      "answer": "Widget Brain is used for automated rostering, assigning open shifts to employees based on hard and soft rules, and providing a Compliance Checker to validate roster changes.",
+      "rating": 9
+    },
+    {
+      "question": "How does Widget Brain ensure compliance with rostering rules?",
+      "answer": "Widget Brain uses a Compliance Checker that can be run manually or is scheduled to run four times a day to validate that roster changes comply with award rules.",
+      "rating": 8
+    },
+    {
+      "question": "Where is the Widget Brain application hosted and how is employee data handled?",
+      "answer": "Widget Brain is hosted in Australia and does not store personal employee information on its servers; information is held in cache at runtime only.",
+      "rating": 9
+    },
+    {
+      "question": "What integration is used to calculate nursing requirements based on patient numbers?",
+      "answer": "An integration with WebPAS is used to receive patient numbers per hospital unit to calculate nursing requirements.",
+      "rating": 8
+    },
+    {
+      "question": "What is Deloitte PeopleForms used for in the HRplus solution?",
+      "answer": "Deloitte PeopleForms is used as a development environment to create solution enhancements where standard functionality cannot be accommodated via configuration.",
+      "rating": 8
+    },
+    {
+      "question": "What is the function of the custom Reporting Portal in HRplus?",
+      "answer": "The Reporting Portal manages access to reports developed using HRplus data in Snowflake, ensuring consistent reporting based on user access rights.",
+      "rating": 9
+    },
+    {
+      "question": "What is the purpose of the Agency Nurse Management solution?",
+      "answer": "The Agency Nurse Management solution is used for the allocation of vacant shifts to Agency Nurses managed by NurseWest.",
+      "rating": 8
+    },
+    {
+      "question": "Which integration solutions are used in HRplus for connecting third-party applications?",
+      "answer": "SAP Business Transformation Platform (BTP) and Dell Boomi are used for managing integrations with third-party applications and between solution components.",
+      "rating": 9
+    },
+    {
+      "question": "Which system is the source of truth for core employee data in HRplus?",
+      "answer": "Employee Central is the source of truth for all core employee data in HRplus.",
+      "rating": 10
+    },
+    {
+      "question": "What is the main purpose of the HRplus Human Resources Management Information System (HRMIS) Program?",
+      "answer": "To replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience.",
+      "rating": 10
+    },
+    {
+      "question": "Which organisation is leading the HRplus HRMIS Program?",
+      "answer": "Health Support Services is leading the program in partnership with Deloitte.",
+      "rating": 9
+    },
+    {
+      "question": "What are the five stages of the HRplus HRMIS Program?",
+      "answer": "Mobilisation, Design, Build, Test, and Deployment.",
+      "rating": 9
+    },
+    {
+      "question": "What is the approach to software customisation in the HRplus HRMIS Program?",
+      "answer": "The program leverages commercial-off-the-shelf software with minimal customisation.",
+      "rating": 8
+    },
+    {
+      "question": "Where is the organisational structure managed in the HRplus solution?",
+      "answer": "The organisational structure is managed in Employee Central, with enhancements from the Ingentis org.manager plugin.",
+      "rating": 8
+    },
+    {
+      "question": "Which system is responsible for creating and maintaining cost centres?",
+      "answer": "Cost centres are created and maintained in FMIS.",
+      "rating": 9
+    },
+    {
+      "question": "How are roster patterns managed and used?",
+      "answer": "Roster patterns are mastered in UKG Dimensions and used for scheduling purposes.",
+      "rating": 7
+    },
+    {
+      "question": "Where are accruals calculated in the HRplus solution?",
+      "answer": "Accruals are calculated within Employee Central in the payroll environment.",
+      "rating": 7
+    },
+    {
+      "question": "How are leave requests created and approved?",
+      "answer": "Leave requests are created in UKG Dimensions by the employee or manager and approved in SAP ECP, with Deloitte PeopleForms managing user interaction and approval.",
+      "rating": 8
+    },
+    {
+      "question": "How are time-based allowances assigned to employees?",
+      "answer": "Allowances are assigned in UKG Dimensions based on entitlement from awards, and can be added manually by managers, requested by employees, or automatically based on working hours.",
+      "rating": 9
+    },
+    {
+      "question": "What is the source of valid BSB codes for bank details?",
+      "answer": "Valid BSB codes are provided by the Bank Master and can be extracted from the Australian Payment Network website.",
+      "rating": 8
+    },
+    {
+      "question": "How are documents and attachments managed in Employee Central?",
+      "answer": "Documents are attached to data in Employee Central and transferred to the EDRMS solution (Objective ECM), with document IDs stored and purged after a defined retention period.",
+      "rating": 8
+    },
+    {
+      "question": "What is the main goal of the HRplus Human Resources Management Information System (HRMIS) Program?",
+      "answer": "The main goal is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience.",
+      "rating": 9
+    },
+    {
+      "question": "Who leads the HRplus HRMIS Program and who is their main partner?",
+      "answer": "The program is led by Health Support Services in partnership with Deloitte.",
+      "rating": 10
+    },
+    {
+      "question": "How many stages is the HRplus HRMIS Program structured into, and what are they?",
+      "answer": "The program is structured into five stages: Mobilisation, Design, Build, Test, and Deployment.",
+      "rating": 10
+    },
+    {
+      "question": "What is the approach to software customisation in the HRplus solution?",
+      "answer": "The solution leverages commercial-off-the-shelf software with minimal customisation.",
+      "rating": 8
+    },
+    {
+      "question": "How are permission groups and roles managed in the HRplus solution?",
+      "answer": "Permission groups and roles are managed centrally in SF EC, with automated assignment based on employee attributes.",
+      "rating": 8
+    },
+    {
+      "question": "What is the minimum permission group assigned to all employees, and what does it allow?",
+      "answer": "The minimum permission group is 'Employee', which allows every employee to view and amend their own details and request leave.",
+      "rating": 10
+    },
+    {
+      "question": "What principle is followed to reduce the risk of fraudulent activities in permission role design?",
+      "answer": "Segregation of Duties is followed, distributing process steps to different people.",
+      "rating": 10
+    },
+    {
+      "question": "How are paycodes managed and mapped between systems in the HRplus solution?",
+      "answer": "Paycodes are configured in each environment, mapped between UKG and SAP ECP, and must go through development, testing, and change processes before production.",
+      "rating": 8
+    },
+    {
+      "question": "What happens when actuarial and leave provision rates change during the year?",
+      "answer": "The relevant change is maintained in the customising table in ECP, first in development, then transported to test and production.",
+      "rating": 7
+    },
+    {
+      "question": "Can employees belong to more than one permission group in the HRplus solution?",
+      "answer": "Yes, every employee can have or belong to more than one permission group.",
+      "rating": 10
+    },
+    {
+      "question": "How are permission groups assigned to users in SF EC?",
+      "answer": "Permission groups are assigned dynamically to users in SF EC based on rules that identify employee attributes.",
+      "rating": 8
+    },
+    {
+      "question": "What happens if a user is no longer assigned to a Permission Role in SF EC for SAP ECP?",
+      "answer": "The user will be unassigned from the corresponding Permission Role in SAP ECP.",
+      "rating": 7
+    },
+    {
+      "question": "How many Permission Roles can a user hold in SF EC and SAP ECP?",
+      "answer": "A user can hold multiple Permission Roles in both SF EC and SAP ECP.",
+      "rating": 7
+    },
+    {
+      "question": "How is access to Schedule Planning managed?",
+      "answer": "Access to Schedule Planning is managed from within the UKGD Solution, with no additional security controls.",
+      "rating": 7
+    },
+    {
+      "question": "How does the Reporting Portal manage security?",
+      "answer": "Security is managed at two levels: which reports a user can access and what data within each report the user can view.",
+      "rating": 7
+    },
+    {
+      "question": "How are permissions for PeopleForms determined?",
+      "answer": "Permissions for PeopleForms are inherited from SF EC, except for administrator roles which are assigned directly.",
+      "rating": 8
+    },
+    {
+      "question": "How are Target Groups used in UKG Dimensions?",
+      "answer": "Target Groups in UKG Dimensions define which group of employees a permission relates to and are integrated from UKG Dimensions to EC.",
+      "rating": 7
+    },
+    {
+      "question": "How is the assignment of Permission Roles handled in UKG Dimensions if a user has multiple roles in SF EC?",
+      "answer": "The first Permission Role alphabetically is assigned to the user in UKG Dimensions.",
+      "rating": 7
+    },
+    {
+      "question": "What is Concurrent Employment in the context of WA Health?",
+      "answer": "Concurrent Employment refers to scenarios where employees hold multiple positions, such as working part time in multiple jobs or picking up agency shifts.",
+      "rating": 7
+    },
+    {
+      "question": "How does SuccessFactors Employee Central (EC) handle employees with concurrent employments?",
+      "answer": "In SuccessFactors EC, employees with concurrent employments are created with multiple employments, each with its own user id, while sharing some personal data across employments.",
+      "rating": 8
+    },
+    {
+      "question": "What unique identifier is used for each person in SuccessFactors EC?",
+      "answer": "Each person has a unique identifier called Person ID external, which is equal to their HE number for Health.",
+      "rating": 8
+    },
+    {
+      "question": "How does UKG Dimensions manage concurrent employment?",
+      "answer": "UKG Dimensions uses the 'Multiple Assignments' functionality, allowing each employee to hold a primary assignment and up to 12 additional positions, each with its own ID and attributes.",
+      "rating": 8
+    },
+    {
+      "question": "What must employees specify when requesting leave in UKG Dimensions with multiple assignments?",
+      "answer": "Employees must specify the assignment that they wish the leave to be created against.",
+      "rating": 10
+    },
+    {
+      "question": "How are person records linked in the Payroll environment for employees with multiple employments?",
+      "answer": "Person records are linked using a Central Person (CP) ID, which is equal to the Person ID External/HE number.",
+      "rating": 8
+    },
+    {
+      "question": "What is the difference between planned and unplanned higher duties in the HRMIS solution?",
+      "answer": "Planned higher duties are managed in Employee Central for periods over five days, while unplanned higher duties are managed in UKG Dimensions for ad-hoc or shift-based assignments.",
+      "rating": 9
+    },
+    {
+      "question": "What happens when an employee is assigned planned higher duties in Employee Central?",
+      "answer": "The employee is assigned to the acting position for the specified duration, receives a higher duties allowance, and is automatically reverted to their substantive position when the assignment ends.",
+      "rating": 9
+    },
+    {
+      "question": "How are rate changes for unplanned higher duties processed in UKG Dimensions?",
+      "answer": "A code is applied to the shift to override the base rate, and when hours are integrated to payroll, the higher rate hours are split into separate wage types with the appropriate allowance.",
+      "rating": 8
+    },
+    {
+      "question": "What is required for a person to be transferred across legal entities (HSPs) in HRplus?",
+      "answer": "The person must be terminated from their existing employment and re-hired, due to SAP Payroll solution limitations and legal requirements.",
+      "rating": 9
+    },
+    {
+      "question": "How are employees on secondment across HSPs paid during their secondment?",
+      "answer": "They continue to be paid by their substantive employer, with payroll costs transferred to the seconded employer and intercompany clearing used to reconcile costs.",
+      "rating": 9
+    },
+    {
+      "question": "What is the purpose of Payroll Certification in the legacy process?",
+      "answer": "Payroll Certification requires managers to certify payroll payments for each employee to comply with WA Treasury Instruction 308 and reduce the risk of error or fraud.",
+      "rating": 10
+    },
+    {
+      "question": "How does the HRplus solution improve the Payroll Certification process?",
+      "answer": "HRplus initiates workflow approvals at the point of data entry, so managers certify changes impacting payments before payroll is processed, rather than after.",
+      "rating": 9
+    },
+    {
+      "question": "What happens if a manager does not sign off an employee's timecard before the pay run in HRplus?",
+      "answer": "The employee will still be paid based on their auto-populated schedule, but any unapproved hours outside the schedule will not be paid and must be adjusted in the next period.",
+      "rating": 9
+    },
+    {
+      "question": "How does the payroll solution handle rounding of hours worked?",
+      "answer": "Hours are stored as numeric values with two decimal points, which can cause minor under or overpayments due to rounding, and totals are compared each fortnight to minimise discrepancies.",
+      "rating": 7
+    },
+    {
+      "question": "How are fortnightly payroll adjustments handled in the HRplus system?",
+      "answer": "A total of the fortnightly ordinary and leave hours worked is provided by UKGD and compared to payroll records; adjustments are made in payroll to align the hours.",
+      "rating": 7
+    },
+    {
+      "question": "What is the process for filling unallocated nursing shifts in the Agency Nurse Management workflow?",
+      "answer": "Shifts are first offered to ward nurses, then hospital nurses, then casual pool staff; if still unfilled, the Agency Nurse Management process offers the shift to agencies in order of cost until filled.",
+      "rating": 9
+    },
+    {
+      "question": "How does the Agency Nurse Management portal determine which agency to offer a shift to first?",
+      "answer": "It prioritizes agencies based on the cheapest agency for the required role type.",
+      "rating": 8
+    },
+    {
+      "question": "What happens if no agency is able to fill a vacant nursing shift?",
+      "answer": "NurseWest will discuss with the NUM to change the shift parameters so it can be filled.",
+      "rating": 7
+    },
+    {
+      "question": "Which systems are involved in the leave management solution?",
+      "answer": "UKG Dimensions, Employee Central Payroll, Deloitte PeopleForms, and a custom leave application on Employee Central Payroll.",
+      "rating": 9
+    },
+    {
+      "question": "What is the role of the custom leave component in the leave management process?",
+      "answer": "It acts as a middleman between solution components, handling leave validation and determining approval steps.",
+      "rating": 8
+    },
+    {
+      "question": "When does leave balance validation occur in the leave management process?",
+      "answer": "Validation occurs after the leave record is created, which can take up to 10 minutes.",
+      "rating": 7
+    },
+    {
+      "question": "What happens if an employee does not have sufficient leave balance for a request?",
+      "answer": "The leave request is automatically rejected, and a note with the validation errors is sent back to the employee in UKG Dimensions.",
+      "rating": 8
+    },
+    {
+      "question": "How are approved leave requests reflected in the system?",
+      "answer": "Approved leave requests are passed into the system as approved time off, ensuring visibility within the roster.",
+      "rating": 8
+    },
+    {
+      "question": "What system is responsible for processing approved time off as part of payroll processing in HRplus?",
+      "answer": "Employee Central Payroll (ECP) is responsible for processing approved time off as part of payroll processing.",
+      "rating": 8
+    },
+    {
+      "question": "How are discrepancies between an employee\u2019s certificates and their position requirements handled in HRplus?",
+      "answer": "A nightly job compares the certificates of the person with the requirements of their position, and if discrepancies are found, a report is sent to their manager.",
+      "rating": 9
+    },
+    {
+      "question": "What is the purpose of the Country Relief Shortfall solution in HRplus?",
+      "answer": "The Country Relief Shortfall solution allows managers to create shortfall campaigns for available positions and enables eligible employees to apply for these positions via Employee Self-Service.",
+      "rating": 9
+    },
+    {
+      "question": "How are roster requirements validated in the HRplus rostering solution?",
+      "answer": "Roster requirements are constantly validated against the competencies and skills of staff, and discrepancies such as insufficient qualified staff trigger notifications to the roster manager.",
+      "rating": 8
+    },
+    {
+      "question": "Where are all relevant certificates, professional qualifications, credentials, competencies, and skills held for employees in HRplus?",
+      "answer": "They are held against the employee record in SuccessFactors Employee Central (SF EC) and passed to the rostering solution as required.",
+      "rating": 8
+    },
+    {
+      "question": "What determines the delegation Tier a person holds in HRplus?",
+      "answer": "The delegation Tier is determined by the position the person holds in the system.",
+      "rating": 7
+    },
+    {
+      "question": "How does the approval workflow function in SF EC for Tier approvals?",
+      "answer": "In SF EC, the workflow is initially assigned to a dummy approver representing Tier approval, and an enhanced solution running in SAP BTP replaces the dummy approver with the relevant person based on the required Tier of delegation.",
+      "rating": 8
+    },
+    {
+      "question": "What is the main purpose of the near real-time integration between WebPAS and UKG Dimensions in the Schedule Planning solution?",
+      "answer": "The near real-time integration allows up-to-date calculation of current patient occupancy for each inpatient and emergency ward at a hospital.",
+      "rating": 8
+    },
+    {
+      "question": "How is patient occupancy forecast data used in the rostering process?",
+      "answer": "The forecast occupancy data is used by each ward to project the number of staff members needed per shift based on the number of forecasted beds occupied.",
+      "rating": 9
+    },
+    {
+      "question": "Where will the FTE replacement functionality be implemented in the HRplus solution?",
+      "answer": "The FTE functionality will be replicated in Snowflake, with planned costs maintained by Finance in Snowflake and actuals sourced from multiple applications including HRplus.",
+      "rating": 8
+    },
+    {
+      "question": "How will task-based rostering be managed in the UKG solution?",
+      "answer": "Task-based rostering will be managed using Schedule Tag, Labour Category Entry, additional organizational levels, or defining Job as a task, with the method chosen based on departmental needs.",
+      "rating": 8
+    },
+    {
+      "question": "What is the role of WACHSView in contract management for doctors?",
+      "answer": "WACHSView manages doctor information, credentials, Medical Service Agreements (MSAs), rosters, and integrates with MAAS for invoice matching and payment for contracted doctors.",
+      "rating": 9
+    },
+    {
+      "question": "What is the main purpose of the HRplus Human Resources Management Information System (HRMIS) Program?",
+      "answer": "The main purpose is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience.",
+      "rating": 10
+    },
+    {
+      "question": "What is the new name for the revised version of WACHSView?",
+      "answer": "The revised version of WACHSView has been named CMGS (Contract Management & Generation System).",
+      "rating": 10
+    },
+    {
+      "question": "Which system is the source of truth for all people engaged in WA Health and for the organisation structure?",
+      "answer": "HRplus is the source of truth for all people engaged in WA Health and for the organisation structure.",
+      "rating": 10
+    },
+    {
+      "question": "What happens when credentialing data of a person is changed?",
+      "answer": "Any changes to the credentialing data of a person are replicated to both HRplus and CMGS.",
+      "rating": 8
+    },
+    {
+      "question": "Where are attachments initially stored when supporting documents are added to HRplus processes?",
+      "answer": "Attachments are initially stored in SF EC as part of the master data being recorded.",
+      "rating": 8
+    },
+    {
+      "question": "Which solution is used for permanent storage of documents related to HRplus processes?",
+      "answer": "HSS\u2019s instance of Objective ECM is used for permanent storage of documents.",
+      "rating": 10
+    },
+    {
+      "question": "What are the two methods available for payslip distribution to users?",
+      "answer": "Payslips can be accessed via Core HR Self Service (SF EC) or emailed to the user.",
+      "rating": 9
+    },
+    {
+      "question": "What add-on is used to email payslips to employees?",
+      "answer": "The Deloitte Payslip Distribution add-on to EC Payroll is used to email payslips.",
+      "rating": 8
+    },
+    {
+      "question": "What is the purpose of the HRplus Human Resources Management Information System (HRMIS) Program?",
+      "answer": "The purpose is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience.",
+      "rating": 9
+    },
+    {
+      "question": "Who leads the HRplus HRMIS Program and who are their partners?",
+      "answer": "The program is led by Health Support Services in partnership with Deloitte.",
+      "rating": 8
+    },
+    {
+      "question": "What are the five stages of the HRplus HRMIS Program?",
+      "answer": "The five stages are Mobilisation, Design, Build, Test, and Deployment.",
+      "rating": 10
+    },
+    {
+      "question": "What software approach does the HRplus solution leverage?",
+      "answer": "It leverages commercial-off-the-shelf software with minimal customisation.",
+      "rating": 9
+    },
+    {
+      "question": "What is Recipient Created Tax Invoices (RCTI) in the context of HRplus?",
+      "answer": "RCTI is a process where the recipient of an invoice creates the invoice on behalf of the supplier to simplify and accelerate payment.",
+      "rating": 7
+    },
+    {
+      "question": "Which tool is used for delivering custom reports and dashboards in HRplus?",
+      "answer": "Power BI is used for delivering custom reports and dashboards.",
+      "rating": 9
+    },
+    {
+      "question": "What is the long-term data platform selected for WA Health's reporting and analytics?",
+      "answer": "Snowflake has been selected as the long-term data platform.",
+      "rating": 10
+    },
+    {
+      "question": "How is access control managed in the HRplus reporting portal?",
+      "answer": "Access control is managed at the portal level using role-based access control, with user roles synchronised from SAP EC permission groups.",
+      "rating": 9
+    },
+    {
+      "question": "What are the four components of a pay scale in SuccessFactors EC?",
+      "answer": "The four components are Pay Scale Type, Pay Scale Area, Pay Scale Group, and Pay Scale Level.",
+      "rating": 10
+    },
+    {
+      "question": "What is the lowest level grouping of employees in the pay scale structure?",
+      "answer": "The Pay Scale Level is the lowest level grouping of employees based on their role.",
+      "rating": 8
+    },
+    {
+      "question": "How is an increase in base pay after the Annual Pay Review implemented?",
+      "answer": "The base pay associated with the Pay Scale Level is changed from the date the increase becomes effective.",
+      "rating": 8
+    },
+    {
+      "question": "Where should changes to pay scales be validated before being imported to production?",
+      "answer": "Changes should be validated in non-productive environments before being imported to production.",
+      "rating": 9
+    },
+    {
+      "question": "How are mass changes to pay scales, such as after the Annual Pay Review, typically managed?",
+      "answer": "The changed data is defined in a spreadsheet (CSV file) and imported into SF EC.",
+      "rating": 8
+    },
+    {
+      "question": "What must also be updated in employee records following an Annual Pay Review?",
+      "answer": "The base pay stored on the employee record must also be increased.",
+      "rating": 8
+    },
+    {
+      "question": "What is the recommended practice for making configuration changes in UKG?",
+      "answer": "All changes should be created and tested first in the development system before being moved to production.",
+      "rating": 10
+    },
+    {
+      "question": "What are the four components that make up the pay scale in SuccessFactors ECP?",
+      "answer": "Pay Scale Type, Pay Scale Area, Pay Scale Group, and Pay Scale Level.",
+      "rating": 10
+    },
+    {
+      "question": "What must be done to the Pay Scale Structure when changes are made?",
+      "answer": "All changes must be effective dated.",
+      "rating": 8
+    },
+    {
+      "question": "What is the purpose of linking data in the Pay Scale Structure to a Wage Type?",
+      "answer": "It allows the system to retrieve the associated amount during payroll processing.",
+      "rating": 8
+    },
+    {
+      "question": "How often is it recommended to update the Pay Scale Structure?",
+      "answer": "It is recommended to update annually if the rate is subject to a CPI increase.",
+      "rating": 8
+    },
+    {
+      "question": "What is required for a retrospective change to the Pay Scale Structure to be applied?",
+      "answer": "Payroll must be forced back to the effective change date to trigger recalculation.",
+      "rating": 8
+    },
+    {
+      "question": "What should be reviewed if there is a significant change to the Pay Scale Structure after an EBA renegotiation?",
+      "answer": "Payroll rules and custom tables for leave provision calculation should be reviewed.",
+      "rating": 8
+    },
+    {
+      "question": "What is the purpose of an off cycle payroll?",
+      "answer": "To pay an employee money they are owed that was not received due to no fault of their own.",
+      "rating": 8
+    },
+    {
+      "question": "What is the main goal of the HRplus Human Resources Management Information System (HRMIS) Program?",
+      "answer": "The main goal is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience.",
+      "rating": 10
+    },
+    {
+      "question": "Who leads the HRplus HRMIS Program and who is their main partner?",
+      "answer": "The program is led by Health Support Services in partnership with Deloitte.",
+      "rating": 10
+    },
+    {
+      "question": "What are the five stages of the HRplus HRMIS Program?",
+      "answer": "The five stages are Mobilisation, Design, Build, Test, and Deployment.",
+      "rating": 9
+    },
+    {
+      "question": "What type of software approach is emphasized in the HRplus solution architecture?",
+      "answer": "The approach emphasizes leveraging commercial-off-the-shelf software with minimal customisation.",
+      "rating": 10
+    },
+    {
+      "question": "What are some key focus areas in the HRplus HRMIS Program besides software implementation?",
+      "answer": "Key focus areas include redesigning business processes, integration, data migration, and change management.",
+      "rating": 9
+    },
+    {
+      "question": "What is the purpose of the integration between SAP SuccessFactors Employee Central and UKG Dimensions?",
+      "answer": "The purpose is to replicate data such as Organisation Structure, Employee Details, Employee Skills & Qualifications, and Cost Centres.",
+      "rating": 8
+    },
+    {
+      "question": "How frequently is the replication of Employee Details from SAP SuccessFactors Employee Central to UKG Dimensions performed?",
+      "answer": "Replication of Employee Details is performed in near real time.",
+      "rating": 8
+    },
+    {
+      "question": "What system is used to replicate Employee Details to Microsoft Active Directory and how often does this occur?",
+      "answer": "SAP BTP is used to replicate Employee Details to Microsoft Active Directory every 15 minutes.",
+      "rating": 8
+    },
+    {
+      "question": "What is the role of Dell Boomi in the HRplus solution architecture?",
+      "answer": "Dell Boomi is used for integration tasks such as replicating Organisation Structure, Employee Details, Skills & Qualifications, and Timecards between systems.",
+      "rating": 9
+    },
+    {
+      "question": "What is the function of the Enterprise Data Warehouse in the HRplus solution?",
+      "answer": "The Enterprise Data Warehouse is used for reporting and receives replicated data from HRplus components.",
+      "rating": 8
+    },
+    {
+      "question": "What is the main goal of the HRplus Human Resources Management Information System (HRMIS) Program?",
+      "answer": "The main goal is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience.",
+      "rating": 10
+    },
+    {
+      "question": "Who leads the HRplus HRMIS Program and who is their main partner?",
+      "answer": "The program is led by Health Support Services in partnership with Deloitte.",
+      "rating": 10
+    },
+    {
+      "question": "What are the five stages of the HRplus HRMIS Program?",
+      "answer": "The five stages are Mobilisation, Design, Build, Test, and Deployment.",
+      "rating": 10
+    },
+    {
+      "question": "What approach does the HRplus HRMIS Program take regarding software customisation?",
+      "answer": "The program leverages commercial-off-the-shelf software with minimal customisation.",
+      "rating": 8
+    },
+    {
+      "question": "What are some key focus areas of the HRplus HRMIS Program?",
+      "answer": "Key focus areas include integration, data migration, and change management.",
+      "rating": 7
+    },
+    {
+      "question": "What is the name of the solution developed for WA Health\u2019s HRMIS?",
+      "answer": "The solution is called HRplus.",
+      "rating": 10
+    },
+    {
+      "question": "What does the abbreviation 'SaaS' stand for in the context of the document?",
+      "answer": "SaaS stands for Software as a Service.",
+      "rating": 10
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the main goal of the HRplus Human Resources Management Information System (HRMIS) Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The main goal is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Who leads the implementation and delivery of the HRMIS Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The implementation and delivery are led by Health Support Services (HSS) in partnership with Deloitte."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How many stages is the HRMIS Program structured into, and what are they?"
+      },
+      {
+        "role": "assistant",
+        "content": "The program is structured into five stages: Mobilisation, Design, Build, Test, and Deployment."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What approach does the HRMIS Program take regarding software customisation?"
+      },
+      {
+        "role": "assistant",
+        "content": "The program leverages commercial-off-the-shelf software with minimal customisation, relying mainly on configuration and base product functionality."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What are some key focus areas of the HRMIS Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "Key focus areas include integration, data migration, and change management."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Who is involved in the collaborative approach for the HRMIS Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The collaborative approach involves Health Support Services, Deloitte, and subject matter experts from across the WA health system."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What are some objectives of the HRMIS Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "Objectives include delivering a more reliable and efficient service, supporting workforce reporting and planning, reducing administrative burden, and improving staff allocation."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the current name of the HRMIS solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "The current name of the HRMIS solution is HRplus."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the main purpose of the document?"
+      },
+      {
+        "role": "assistant",
+        "content": "The document outlines the solution architecture of the HRMIS, identifying major system components and data flows to support business processes."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What should be referenced for more detailed design information?"
+      },
+      {
+        "role": "assistant",
+        "content": "Related detailed design documents for each system or integration should be referenced for more information."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the assumption regarding job classifications in SuccessFactors?"
+      },
+      {
+        "role": "assistant",
+        "content": "Job classifications in SuccessFactors will be created based on the standard ANZSCO codes for medical, with Job Profile Builder detailing these classifications."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How will payroll vendors be paid according to the assumptions?"
+      },
+      {
+        "role": "assistant",
+        "content": "Payroll vendors will be paid via an Accounts Payable Process in FMIS instead of directly from Payroll."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the approach for reporting in the new HRMIS solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "New reporting will be created in Snowflake unless direct reporting from an HRMIS component is justified; no new reporting will be created within EDW."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Which employees will be migrated to the HRMIS solution at go-live?"
+      },
+      {
+        "role": "assistant",
+        "content": "Only active employees, including external employees, at go-live will be migrated to the HRMIS solution."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the planned replacement for the CredWA credentialing solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "A new credentialing solution based on the cGov credentialing solution will replace CredWA."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What tool is assumed for organisation modelling and integration with SuccessFactors EC?"
+      },
+      {
+        "role": "assistant",
+        "content": "Ingentis org.manager is assumed to be used for organisation modelling and integrated with SuccessFactors EC."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "When will the full WRICEF requirements be built and unit tested?"
+      },
+      {
+        "role": "assistant",
+        "content": "The full WRICEF requirements will be built and unit tested during the Build phase."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the main purpose of the HRplus Human Resources Management Information System (HRMIS) Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The main purpose is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience for WA Health."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Which organisation is leading the HRMIS Program and who are they partnering with?"
+      },
+      {
+        "role": "assistant",
+        "content": "The program is led by Health Support Services in partnership with Deloitte."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What are the five stages of the HRMIS Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The five stages are Mobilisation, Design, Build, Test, and Deployment."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the approach to software customisation in the HRMIS solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "The solution leverages commercial-off-the-shelf software with minimal customisation."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What are some of the key HR services covered by the HRMIS solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "Key services include a Human Resources portal, rostering management, employee records management, position management, workforce management, and payroll processing."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the 'Single Source of Truth' design principle?"
+      },
+      {
+        "role": "assistant",
+        "content": "It means defining one system as the system of record for each data entity and transaction type, ensuring all other systems are notified of changes from that system."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Which system is responsible for employee and organisational structure management in the HRMIS solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "SuccessFactors Employee Central is responsible for employee and organisational structure management."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the role of SuccessFactors Employee Central Payroll (ECP) in the HRMIS solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "ECP is responsible for payroll processing, leave accrual calculations, superannuation, pay statements, legal reporting, and financial posting."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Which product is used for rostering and scheduling in the HRMIS solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "UKG Workforce Dimensions is used for rostering and scheduling."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the rationale for only converting a minimal set of historical data in the HRMIS implementation?"
+      },
+      {
+        "role": "assistant",
+        "content": "Converting only minimal historical data accelerates implementation and decreases the complexity of the process."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is UKG Workforce Dimensions responsible for in the HRplus solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "UKG Workforce Dimensions is responsible for rostering, timecard entry, clock in/out (where relevant), and award interpretation."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the purpose of the Widget Brain application in the HRplus solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "Widget Brain is used for automated rostering, assigning open shifts to employees based on hard and soft rules, and providing a Compliance Checker to validate roster changes."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How does Widget Brain ensure compliance with rostering rules?"
+      },
+      {
+        "role": "assistant",
+        "content": "Widget Brain uses a Compliance Checker that can be run manually or is scheduled to run four times a day to validate that roster changes comply with award rules."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Where is the Widget Brain application hosted and how is employee data handled?"
+      },
+      {
+        "role": "assistant",
+        "content": "Widget Brain is hosted in Australia and does not store personal employee information on its servers; information is held in cache at runtime only."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What integration is used to calculate nursing requirements based on patient numbers?"
+      },
+      {
+        "role": "assistant",
+        "content": "An integration with WebPAS is used to receive patient numbers per hospital unit to calculate nursing requirements."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is Deloitte PeopleForms used for in the HRplus solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "Deloitte PeopleForms is used as a development environment to create solution enhancements where standard functionality cannot be accommodated via configuration."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the function of the custom Reporting Portal in HRplus?"
+      },
+      {
+        "role": "assistant",
+        "content": "The Reporting Portal manages access to reports developed using HRplus data in Snowflake, ensuring consistent reporting based on user access rights."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the purpose of the Agency Nurse Management solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "The Agency Nurse Management solution is used for the allocation of vacant shifts to Agency Nurses managed by NurseWest."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Which integration solutions are used in HRplus for connecting third-party applications?"
+      },
+      {
+        "role": "assistant",
+        "content": "SAP Business Transformation Platform (BTP) and Dell Boomi are used for managing integrations with third-party applications and between solution components."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Which system is the source of truth for core employee data in HRplus?"
+      },
+      {
+        "role": "assistant",
+        "content": "Employee Central is the source of truth for all core employee data in HRplus."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the main purpose of the HRplus Human Resources Management Information System (HRMIS) Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "To replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Which organisation is leading the HRplus HRMIS Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "Health Support Services is leading the program in partnership with Deloitte."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What are the five stages of the HRplus HRMIS Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "Mobilisation, Design, Build, Test, and Deployment."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the approach to software customisation in the HRplus HRMIS Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The program leverages commercial-off-the-shelf software with minimal customisation."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Where is the organisational structure managed in the HRplus solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "The organisational structure is managed in Employee Central, with enhancements from the Ingentis org.manager plugin."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Which system is responsible for creating and maintaining cost centres?"
+      },
+      {
+        "role": "assistant",
+        "content": "Cost centres are created and maintained in FMIS."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are roster patterns managed and used?"
+      },
+      {
+        "role": "assistant",
+        "content": "Roster patterns are mastered in UKG Dimensions and used for scheduling purposes."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Where are accruals calculated in the HRplus solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "Accruals are calculated within Employee Central in the payroll environment."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are leave requests created and approved?"
+      },
+      {
+        "role": "assistant",
+        "content": "Leave requests are created in UKG Dimensions by the employee or manager and approved in SAP ECP, with Deloitte PeopleForms managing user interaction and approval."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are time-based allowances assigned to employees?"
+      },
+      {
+        "role": "assistant",
+        "content": "Allowances are assigned in UKG Dimensions based on entitlement from awards, and can be added manually by managers, requested by employees, or automatically based on working hours."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the source of valid BSB codes for bank details?"
+      },
+      {
+        "role": "assistant",
+        "content": "Valid BSB codes are provided by the Bank Master and can be extracted from the Australian Payment Network website."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are documents and attachments managed in Employee Central?"
+      },
+      {
+        "role": "assistant",
+        "content": "Documents are attached to data in Employee Central and transferred to the EDRMS solution (Objective ECM), with document IDs stored and purged after a defined retention period."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the main goal of the HRplus Human Resources Management Information System (HRMIS) Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The main goal is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Who leads the HRplus HRMIS Program and who is their main partner?"
+      },
+      {
+        "role": "assistant",
+        "content": "The program is led by Health Support Services in partnership with Deloitte."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How many stages is the HRplus HRMIS Program structured into, and what are they?"
+      },
+      {
+        "role": "assistant",
+        "content": "The program is structured into five stages: Mobilisation, Design, Build, Test, and Deployment."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the approach to software customisation in the HRplus solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "The solution leverages commercial-off-the-shelf software with minimal customisation."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are permission groups and roles managed in the HRplus solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "Permission groups and roles are managed centrally in SF EC, with automated assignment based on employee attributes."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the minimum permission group assigned to all employees, and what does it allow?"
+      },
+      {
+        "role": "assistant",
+        "content": "The minimum permission group is 'Employee', which allows every employee to view and amend their own details and request leave."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What principle is followed to reduce the risk of fraudulent activities in permission role design?"
+      },
+      {
+        "role": "assistant",
+        "content": "Segregation of Duties is followed, distributing process steps to different people."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are paycodes managed and mapped between systems in the HRplus solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "Paycodes are configured in each environment, mapped between UKG and SAP ECP, and must go through development, testing, and change processes before production."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What happens when actuarial and leave provision rates change during the year?"
+      },
+      {
+        "role": "assistant",
+        "content": "The relevant change is maintained in the customising table in ECP, first in development, then transported to test and production."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Can employees belong to more than one permission group in the HRplus solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "Yes, every employee can have or belong to more than one permission group."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are permission groups assigned to users in SF EC?"
+      },
+      {
+        "role": "assistant",
+        "content": "Permission groups are assigned dynamically to users in SF EC based on rules that identify employee attributes."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What happens if a user is no longer assigned to a Permission Role in SF EC for SAP ECP?"
+      },
+      {
+        "role": "assistant",
+        "content": "The user will be unassigned from the corresponding Permission Role in SAP ECP."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How many Permission Roles can a user hold in SF EC and SAP ECP?"
+      },
+      {
+        "role": "assistant",
+        "content": "A user can hold multiple Permission Roles in both SF EC and SAP ECP."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How is access to Schedule Planning managed?"
+      },
+      {
+        "role": "assistant",
+        "content": "Access to Schedule Planning is managed from within the UKGD Solution, with no additional security controls."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How does the Reporting Portal manage security?"
+      },
+      {
+        "role": "assistant",
+        "content": "Security is managed at two levels: which reports a user can access and what data within each report the user can view."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are permissions for PeopleForms determined?"
+      },
+      {
+        "role": "assistant",
+        "content": "Permissions for PeopleForms are inherited from SF EC, except for administrator roles which are assigned directly."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are Target Groups used in UKG Dimensions?"
+      },
+      {
+        "role": "assistant",
+        "content": "Target Groups in UKG Dimensions define which group of employees a permission relates to and are integrated from UKG Dimensions to EC."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How is the assignment of Permission Roles handled in UKG Dimensions if a user has multiple roles in SF EC?"
+      },
+      {
+        "role": "assistant",
+        "content": "The first Permission Role alphabetically is assigned to the user in UKG Dimensions."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is Concurrent Employment in the context of WA Health?"
+      },
+      {
+        "role": "assistant",
+        "content": "Concurrent Employment refers to scenarios where employees hold multiple positions, such as working part time in multiple jobs or picking up agency shifts."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How does SuccessFactors Employee Central (EC) handle employees with concurrent employments?"
+      },
+      {
+        "role": "assistant",
+        "content": "In SuccessFactors EC, employees with concurrent employments are created with multiple employments, each with its own user id, while sharing some personal data across employments."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What unique identifier is used for each person in SuccessFactors EC?"
+      },
+      {
+        "role": "assistant",
+        "content": "Each person has a unique identifier called Person ID external, which is equal to their HE number for Health."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How does UKG Dimensions manage concurrent employment?"
+      },
+      {
+        "role": "assistant",
+        "content": "UKG Dimensions uses the 'Multiple Assignments' functionality, allowing each employee to hold a primary assignment and up to 12 additional positions, each with its own ID and attributes."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What must employees specify when requesting leave in UKG Dimensions with multiple assignments?"
+      },
+      {
+        "role": "assistant",
+        "content": "Employees must specify the assignment that they wish the leave to be created against."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are person records linked in the Payroll environment for employees with multiple employments?"
+      },
+      {
+        "role": "assistant",
+        "content": "Person records are linked using a Central Person (CP) ID, which is equal to the Person ID External/HE number."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the difference between planned and unplanned higher duties in the HRMIS solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "Planned higher duties are managed in Employee Central for periods over five days, while unplanned higher duties are managed in UKG Dimensions for ad-hoc or shift-based assignments."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What happens when an employee is assigned planned higher duties in Employee Central?"
+      },
+      {
+        "role": "assistant",
+        "content": "The employee is assigned to the acting position for the specified duration, receives a higher duties allowance, and is automatically reverted to their substantive position when the assignment ends."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are rate changes for unplanned higher duties processed in UKG Dimensions?"
+      },
+      {
+        "role": "assistant",
+        "content": "A code is applied to the shift to override the base rate, and when hours are integrated to payroll, the higher rate hours are split into separate wage types with the appropriate allowance."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is required for a person to be transferred across legal entities (HSPs) in HRplus?"
+      },
+      {
+        "role": "assistant",
+        "content": "The person must be terminated from their existing employment and re-hired, due to SAP Payroll solution limitations and legal requirements."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are employees on secondment across HSPs paid during their secondment?"
+      },
+      {
+        "role": "assistant",
+        "content": "They continue to be paid by their substantive employer, with payroll costs transferred to the seconded employer and intercompany clearing used to reconcile costs."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the purpose of Payroll Certification in the legacy process?"
+      },
+      {
+        "role": "assistant",
+        "content": "Payroll Certification requires managers to certify payroll payments for each employee to comply with WA Treasury Instruction 308 and reduce the risk of error or fraud."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How does the HRplus solution improve the Payroll Certification process?"
+      },
+      {
+        "role": "assistant",
+        "content": "HRplus initiates workflow approvals at the point of data entry, so managers certify changes impacting payments before payroll is processed, rather than after."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What happens if a manager does not sign off an employee's timecard before the pay run in HRplus?"
+      },
+      {
+        "role": "assistant",
+        "content": "The employee will still be paid based on their auto-populated schedule, but any unapproved hours outside the schedule will not be paid and must be adjusted in the next period."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How does the payroll solution handle rounding of hours worked?"
+      },
+      {
+        "role": "assistant",
+        "content": "Hours are stored as numeric values with two decimal points, which can cause minor under or overpayments due to rounding, and totals are compared each fortnight to minimise discrepancies."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are fortnightly payroll adjustments handled in the HRplus system?"
+      },
+      {
+        "role": "assistant",
+        "content": "A total of the fortnightly ordinary and leave hours worked is provided by UKGD and compared to payroll records; adjustments are made in payroll to align the hours."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the process for filling unallocated nursing shifts in the Agency Nurse Management workflow?"
+      },
+      {
+        "role": "assistant",
+        "content": "Shifts are first offered to ward nurses, then hospital nurses, then casual pool staff; if still unfilled, the Agency Nurse Management process offers the shift to agencies in order of cost until filled."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How does the Agency Nurse Management portal determine which agency to offer a shift to first?"
+      },
+      {
+        "role": "assistant",
+        "content": "It prioritizes agencies based on the cheapest agency for the required role type."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What happens if no agency is able to fill a vacant nursing shift?"
+      },
+      {
+        "role": "assistant",
+        "content": "NurseWest will discuss with the NUM to change the shift parameters so it can be filled."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Which systems are involved in the leave management solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "UKG Dimensions, Employee Central Payroll, Deloitte PeopleForms, and a custom leave application on Employee Central Payroll."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the role of the custom leave component in the leave management process?"
+      },
+      {
+        "role": "assistant",
+        "content": "It acts as a middleman between solution components, handling leave validation and determining approval steps."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "When does leave balance validation occur in the leave management process?"
+      },
+      {
+        "role": "assistant",
+        "content": "Validation occurs after the leave record is created, which can take up to 10 minutes."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What happens if an employee does not have sufficient leave balance for a request?"
+      },
+      {
+        "role": "assistant",
+        "content": "The leave request is automatically rejected, and a note with the validation errors is sent back to the employee in UKG Dimensions."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are approved leave requests reflected in the system?"
+      },
+      {
+        "role": "assistant",
+        "content": "Approved leave requests are passed into the system as approved time off, ensuring visibility within the roster."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What system is responsible for processing approved time off as part of payroll processing in HRplus?"
+      },
+      {
+        "role": "assistant",
+        "content": "Employee Central Payroll (ECP) is responsible for processing approved time off as part of payroll processing."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are discrepancies between an employee\u2019s certificates and their position requirements handled in HRplus?"
+      },
+      {
+        "role": "assistant",
+        "content": "A nightly job compares the certificates of the person with the requirements of their position, and if discrepancies are found, a report is sent to their manager."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the purpose of the Country Relief Shortfall solution in HRplus?"
+      },
+      {
+        "role": "assistant",
+        "content": "The Country Relief Shortfall solution allows managers to create shortfall campaigns for available positions and enables eligible employees to apply for these positions via Employee Self-Service."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are roster requirements validated in the HRplus rostering solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "Roster requirements are constantly validated against the competencies and skills of staff, and discrepancies such as insufficient qualified staff trigger notifications to the roster manager."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Where are all relevant certificates, professional qualifications, credentials, competencies, and skills held for employees in HRplus?"
+      },
+      {
+        "role": "assistant",
+        "content": "They are held against the employee record in SuccessFactors Employee Central (SF EC) and passed to the rostering solution as required."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What determines the delegation Tier a person holds in HRplus?"
+      },
+      {
+        "role": "assistant",
+        "content": "The delegation Tier is determined by the position the person holds in the system."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How does the approval workflow function in SF EC for Tier approvals?"
+      },
+      {
+        "role": "assistant",
+        "content": "In SF EC, the workflow is initially assigned to a dummy approver representing Tier approval, and an enhanced solution running in SAP BTP replaces the dummy approver with the relevant person based on the required Tier of delegation."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the main purpose of the near real-time integration between WebPAS and UKG Dimensions in the Schedule Planning solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "The near real-time integration allows up-to-date calculation of current patient occupancy for each inpatient and emergency ward at a hospital."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How is patient occupancy forecast data used in the rostering process?"
+      },
+      {
+        "role": "assistant",
+        "content": "The forecast occupancy data is used by each ward to project the number of staff members needed per shift based on the number of forecasted beds occupied."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Where will the FTE replacement functionality be implemented in the HRplus solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "The FTE functionality will be replicated in Snowflake, with planned costs maintained by Finance in Snowflake and actuals sourced from multiple applications including HRplus."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How will task-based rostering be managed in the UKG solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "Task-based rostering will be managed using Schedule Tag, Labour Category Entry, additional organizational levels, or defining Job as a task, with the method chosen based on departmental needs."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the role of WACHSView in contract management for doctors?"
+      },
+      {
+        "role": "assistant",
+        "content": "WACHSView manages doctor information, credentials, Medical Service Agreements (MSAs), rosters, and integrates with MAAS for invoice matching and payment for contracted doctors."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the main purpose of the HRplus Human Resources Management Information System (HRMIS) Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The main purpose is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the new name for the revised version of WACHSView?"
+      },
+      {
+        "role": "assistant",
+        "content": "The revised version of WACHSView has been named CMGS (Contract Management & Generation System)."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Which system is the source of truth for all people engaged in WA Health and for the organisation structure?"
+      },
+      {
+        "role": "assistant",
+        "content": "HRplus is the source of truth for all people engaged in WA Health and for the organisation structure."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What happens when credentialing data of a person is changed?"
+      },
+      {
+        "role": "assistant",
+        "content": "Any changes to the credentialing data of a person are replicated to both HRplus and CMGS."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Where are attachments initially stored when supporting documents are added to HRplus processes?"
+      },
+      {
+        "role": "assistant",
+        "content": "Attachments are initially stored in SF EC as part of the master data being recorded."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Which solution is used for permanent storage of documents related to HRplus processes?"
+      },
+      {
+        "role": "assistant",
+        "content": "HSS\u2019s instance of Objective ECM is used for permanent storage of documents."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What are the two methods available for payslip distribution to users?"
+      },
+      {
+        "role": "assistant",
+        "content": "Payslips can be accessed via Core HR Self Service (SF EC) or emailed to the user."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What add-on is used to email payslips to employees?"
+      },
+      {
+        "role": "assistant",
+        "content": "The Deloitte Payslip Distribution add-on to EC Payroll is used to email payslips."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the purpose of the HRplus Human Resources Management Information System (HRMIS) Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The purpose is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Who leads the HRplus HRMIS Program and who are their partners?"
+      },
+      {
+        "role": "assistant",
+        "content": "The program is led by Health Support Services in partnership with Deloitte."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What are the five stages of the HRplus HRMIS Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The five stages are Mobilisation, Design, Build, Test, and Deployment."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What software approach does the HRplus solution leverage?"
+      },
+      {
+        "role": "assistant",
+        "content": "It leverages commercial-off-the-shelf software with minimal customisation."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is Recipient Created Tax Invoices (RCTI) in the context of HRplus?"
+      },
+      {
+        "role": "assistant",
+        "content": "RCTI is a process where the recipient of an invoice creates the invoice on behalf of the supplier to simplify and accelerate payment."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Which tool is used for delivering custom reports and dashboards in HRplus?"
+      },
+      {
+        "role": "assistant",
+        "content": "Power BI is used for delivering custom reports and dashboards."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the long-term data platform selected for WA Health's reporting and analytics?"
+      },
+      {
+        "role": "assistant",
+        "content": "Snowflake has been selected as the long-term data platform."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How is access control managed in the HRplus reporting portal?"
+      },
+      {
+        "role": "assistant",
+        "content": "Access control is managed at the portal level using role-based access control, with user roles synchronised from SAP EC permission groups."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What are the four components of a pay scale in SuccessFactors EC?"
+      },
+      {
+        "role": "assistant",
+        "content": "The four components are Pay Scale Type, Pay Scale Area, Pay Scale Group, and Pay Scale Level."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the lowest level grouping of employees in the pay scale structure?"
+      },
+      {
+        "role": "assistant",
+        "content": "The Pay Scale Level is the lowest level grouping of employees based on their role."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How is an increase in base pay after the Annual Pay Review implemented?"
+      },
+      {
+        "role": "assistant",
+        "content": "The base pay associated with the Pay Scale Level is changed from the date the increase becomes effective."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Where should changes to pay scales be validated before being imported to production?"
+      },
+      {
+        "role": "assistant",
+        "content": "Changes should be validated in non-productive environments before being imported to production."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How are mass changes to pay scales, such as after the Annual Pay Review, typically managed?"
+      },
+      {
+        "role": "assistant",
+        "content": "The changed data is defined in a spreadsheet (CSV file) and imported into SF EC."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What must also be updated in employee records following an Annual Pay Review?"
+      },
+      {
+        "role": "assistant",
+        "content": "The base pay stored on the employee record must also be increased."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the recommended practice for making configuration changes in UKG?"
+      },
+      {
+        "role": "assistant",
+        "content": "All changes should be created and tested first in the development system before being moved to production."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What are the four components that make up the pay scale in SuccessFactors ECP?"
+      },
+      {
+        "role": "assistant",
+        "content": "Pay Scale Type, Pay Scale Area, Pay Scale Group, and Pay Scale Level."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What must be done to the Pay Scale Structure when changes are made?"
+      },
+      {
+        "role": "assistant",
+        "content": "All changes must be effective dated."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the purpose of linking data in the Pay Scale Structure to a Wage Type?"
+      },
+      {
+        "role": "assistant",
+        "content": "It allows the system to retrieve the associated amount during payroll processing."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How often is it recommended to update the Pay Scale Structure?"
+      },
+      {
+        "role": "assistant",
+        "content": "It is recommended to update annually if the rate is subject to a CPI increase."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is required for a retrospective change to the Pay Scale Structure to be applied?"
+      },
+      {
+        "role": "assistant",
+        "content": "Payroll must be forced back to the effective change date to trigger recalculation."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What should be reviewed if there is a significant change to the Pay Scale Structure after an EBA renegotiation?"
+      },
+      {
+        "role": "assistant",
+        "content": "Payroll rules and custom tables for leave provision calculation should be reviewed."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the purpose of an off cycle payroll?"
+      },
+      {
+        "role": "assistant",
+        "content": "To pay an employee money they are owed that was not received due to no fault of their own."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the main goal of the HRplus Human Resources Management Information System (HRMIS) Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The main goal is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Who leads the HRplus HRMIS Program and who is their main partner?"
+      },
+      {
+        "role": "assistant",
+        "content": "The program is led by Health Support Services in partnership with Deloitte."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What are the five stages of the HRplus HRMIS Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The five stages are Mobilisation, Design, Build, Test, and Deployment."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What type of software approach is emphasized in the HRplus solution architecture?"
+      },
+      {
+        "role": "assistant",
+        "content": "The approach emphasizes leveraging commercial-off-the-shelf software with minimal customisation."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What are some key focus areas in the HRplus HRMIS Program besides software implementation?"
+      },
+      {
+        "role": "assistant",
+        "content": "Key focus areas include redesigning business processes, integration, data migration, and change management."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the purpose of the integration between SAP SuccessFactors Employee Central and UKG Dimensions?"
+      },
+      {
+        "role": "assistant",
+        "content": "The purpose is to replicate data such as Organisation Structure, Employee Details, Employee Skills & Qualifications, and Cost Centres."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "How frequently is the replication of Employee Details from SAP SuccessFactors Employee Central to UKG Dimensions performed?"
+      },
+      {
+        "role": "assistant",
+        "content": "Replication of Employee Details is performed in near real time."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What system is used to replicate Employee Details to Microsoft Active Directory and how often does this occur?"
+      },
+      {
+        "role": "assistant",
+        "content": "SAP BTP is used to replicate Employee Details to Microsoft Active Directory every 15 minutes."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the role of Dell Boomi in the HRplus solution architecture?"
+      },
+      {
+        "role": "assistant",
+        "content": "Dell Boomi is used for integration tasks such as replicating Organisation Structure, Employee Details, Skills & Qualifications, and Timecards between systems."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the function of the Enterprise Data Warehouse in the HRplus solution?"
+      },
+      {
+        "role": "assistant",
+        "content": "The Enterprise Data Warehouse is used for reporting and receives replicated data from HRplus components."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the main goal of the HRplus Human Resources Management Information System (HRMIS) Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The main goal is to replace legacy HR, payroll, and rostering systems with a unified, modern platform to improve reliability, efficiency, and user experience."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "Who leads the HRplus HRMIS Program and who is their main partner?"
+      },
+      {
+        "role": "assistant",
+        "content": "The program is led by Health Support Services in partnership with Deloitte."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What are the five stages of the HRplus HRMIS Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "The five stages are Mobilisation, Design, Build, Test, and Deployment."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What approach does the HRplus HRMIS Program take regarding software customisation?"
+      },
+      {
+        "role": "assistant",
+        "content": "The program leverages commercial-off-the-shelf software with minimal customisation."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What are some key focus areas of the HRplus HRMIS Program?"
+      },
+      {
+        "role": "assistant",
+        "content": "Key focus areas include integration, data migration, and change management."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What is the name of the solution developed for WA Health\u2019s HRMIS?"
+      },
+      {
+        "role": "assistant",
+        "content": "The solution is called HRplus."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful AI assistant that provides accurate, detailed responses."
+      },
+      {
+        "role": "user",
+        "content": "What does the abbreviation 'SaaS' stand for in the context of the document?"
+      },
+      {
+        "role": "assistant",
+        "content": "SaaS stands for Software as a Service."
+      }
+    ]
+  ],
+  "metrics": {
+    "total": 157,
+    "filtered": 150,
+    "retention_rate": 0.96,
+    "avg_score": 8.5
+  }
+}

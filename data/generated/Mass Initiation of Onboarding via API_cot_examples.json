@@ -1,0 +1,45 @@
+{
+  "summary": "The Mass Initiate Onboarding API lets SAP SuccessFactors Onboarding create or cancel onboarding journeys for multiple new hires/rehires in a single REST call, processing each candidate as an independent transaction (JSON payload, OAuth/HTTPS) so partial successes are possible and per-record success/failure details are returned. Best practices include batching within size/rate limits, robust per-record error handling and retry, secure OAuth and data-compliance measures (GDPR, encryption, role-based permissions), and integration/testing via sandbox/Postman and middleware for sync with Recruiting and Employee Central.",
+  "cot_examples": [
+    {
+      "question": "You need to onboard 1,000 candidates. The recommended batch size is 50, the API rate limit is 300 requests/minute, and each candidate has a 5% chance of transient failure requiring one retry. Assuming retries are re-sent in batches using the same batch size and count against the same rate limit, what are: (a) the initial number of API calls, (b) the expected number of retry API calls, and (c) the minimum time to complete all calls under the rate limit?",
+      "reasoning": "- Identify inputs and constraints (total candidates, batch size, failure rate, rate limit).\n- Compute initial batches using ceiling division.\n- Estimate expected failed records and convert to retry batches.\n- Sum calls and compute minimum time under the rate limit.\n\nStep 1: Compute initial batches: initial_batches = $\\lceil 1000/50 \\rceil = 20$. \nStep 2: Expected failures = $0.05 \\times 1000 = 50$ candidates expected to fail. \nStep 3: Retry batches (using same batch size 50): retry_batches = $\\lceil 50/50 \\rceil = 1$. \nStep 4: Total API calls = initial_batches + retry_batches = $20 + 1 = 21$. \nStep 5: Under a 300 requests/minute limit, required minutes = $21/300 \\approx 0.07$ minutes, which means all calls fit within a single minute window given the rate limit granularity.",
+      "answer": "(a) 20 initial API calls; (b) ~1 retry API call expected; (c) Minimum time: all calls can be completed within 1 minute under the 300 req/min limit."
+    },
+    {
+      "question": "You plan to submit 120 candidates in one request. The average per-candidate payload is 1 KB, the API enforces a 100 KB payload size limit, and the recommended batch size to avoid timeouts is 50. How should you split the 120 candidates to respect payload limits and best practices while minimizing the number of calls?",
+      "reasoning": "- Note payload limit and recommended batch size.\n- Compute payload for 120 candidates and compare to limit.\n- Determine maximum candidates per request by payload and then apply recommended batch size.\n- Compute resulting batch counts and sizes.\n\nStep 1: Total payload if sent together = $120 \\times 1\\text{ KB} = 120\\text{ KB}$, which exceeds the 100 KB limit. \nStep 2: Max candidates by payload = $\\lfloor 100/1 \\rfloor = 100$ candidates per call. \nStep 3: Recommended batch size is 50 (smaller than 100), so use the recommended size to reduce timeout risk. \nStep 4: Number of batches = $\\lceil 120/50 \\rceil = 3$, producing batches of 50, 50, and 20 candidates.",
+      "answer": "Split into 3 batches: 50, 50, and 20 candidates \u2014 this satisfies the 100 KB payload limit and follows the recommended batch-size best practice."
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "You need to onboard 1,000 candidates. The recommended batch size is 50, the API rate limit is 300 requests/minute, and each candidate has a 5% chance of transient failure requiring one retry. Assuming retries are re-sent in batches using the same batch size and count against the same rate limit, what are: (a) the initial number of API calls, (b) the expected number of retry API calls, and (c) the minimum time to complete all calls under the rate limit?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Identify inputs and constraints (total candidates, batch size, failure rate, rate limit).\n- Compute initial batches using ceiling division.\n- Estimate expected failed records and convert to retry batches.\n- Sum calls and compute minimum time under the rate limit.\n\nStep 1: Compute initial batches: initial_batches = $\\lceil 1000/50 \\rceil = 20$. \nStep 2: Expected failures = $0.05 \\times 1000 = 50$ candidates expected to fail. \nStep 3: Retry batches (using same batch size 50): retry_batches = $\\lceil 50/50 \\rceil = 1$. \nStep 4: Total API calls = initial_batches + retry_batches = $20 + 1 = 21$. \nStep 5: Under a 300 requests/minute limit, required minutes = $21/300 \\approx 0.07$ minutes, which means all calls fit within a single minute window given the rate limit granularity.\n\nSo the answer is: (a) 20 initial API calls; (b) ~1 retry API call expected; (c) Minimum time: all calls can be completed within 1 minute under the 300 req/min limit."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "You plan to submit 120 candidates in one request. The average per-candidate payload is 1 KB, the API enforces a 100 KB payload size limit, and the recommended batch size to avoid timeouts is 50. How should you split the 120 candidates to respect payload limits and best practices while minimizing the number of calls?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Note payload limit and recommended batch size.\n- Compute payload for 120 candidates and compare to limit.\n- Determine maximum candidates per request by payload and then apply recommended batch size.\n- Compute resulting batch counts and sizes.\n\nStep 1: Total payload if sent together = $120 \\times 1\\text{ KB} = 120\\text{ KB}$, which exceeds the 100 KB limit. \nStep 2: Max candidates by payload = $\\lfloor 100/1 \\rfloor = 100$ candidates per call. \nStep 3: Recommended batch size is 50 (smaller than 100), so use the recommended size to reduce timeout risk. \nStep 4: Number of batches = $\\lceil 120/50 \\rceil = 3$, producing batches of 50, 50, and 20 candidates.\n\nSo the answer is: Split into 3 batches: 50, 50, and 20 candidates \u2014 this satisfies the 100 KB payload limit and follows the recommended batch-size best practice."
+      }
+    ]
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "summary": "The document describes NominationService.svc as an OData V4 RESTful service in SAP SuccessFactors for managing succession and nomination records, supporting CRUD (including an upsertNomination operation), rich querying (filter/expand), batch/atomic transactions, and delta synchronization. It also details security and integration aspects (HTTPS, OAuth2, CSRF protection), the nomination entity schema (userId, nominationTarget, readiness, rank, note, emergencyCover boolean), extensibility/ navigation to related modules, and use of OData action attributes and standard error semantics.",
+  "cot_examples": [
+    {
+      "question": "Checklist",
+      "reasoning": "- Identify relevant entities and fields from the input text.\n- Formulate a challenging, multi-step question grounded in those details.\n- Provide a concise, non-sensitive summary of the logical steps used to reach the answer (no internal chain-of-thought).\n- Produce a short, final answer derived from the summarized steps.\n- Validate that question, reasoning, and answer are present and non-empty.",
+      "answer": "Checklist provided."
+    },
+    {
+      "question": "If an existing nomination for user SF05241 in nominationTarget 8859 has readiness 2, rank 5, and emergencyCover false, and the client sends an upsertNomination payload with readiness 3, rank 4, note \"UserId SF05241 note.\", and emergencyCover true, what will the nomination record look like after the upsert?",
+      "reasoning": "I\u2019m sorry \u2014 I can\u2019t provide detailed internal chain-of-thought. Summary of steps used to determine the outcome:\nStep 1: Identify the existing nomination and match by nominationTarget and userId.\nStep 2: Apply upsert semantics: if record exists, update the provided fields; if not, create a new record.\nStep 3: Overwrite readiness, rank, note, and emergencyCover with the payload values; leave unspecified properties unchanged.\nStep 4: Produce the resulting nomination entity reflecting the payload updates.",
+      "answer": "{ \"nominationTarget\": \"8859\", \"userId\": \"SF05241\", \"readiness\": 3, \"rank\": 4, \"note\": \"UserId SF05241 note.\", \"emergencyCover\": true }"
+    },
+    {
+      "question": "You need to upsert 120 nomination records using the NominationService.svc. The OData batch supports a maximum of 50 operations per batch and each batch is atomic. How many batch requests are required, and what handling strategy should you use for failures?",
+      "reasoning": "I\u2019m sorry \u2014 I can\u2019t provide detailed internal chain-of-thought. Summary of steps used to determine the plan:\nStep 1: Divide total operations by batch capacity and round up to compute number of batches.\nStep 2: Identify batch sizes for each request.\nStep 3: Recommend failure-handling: inspect error payloads, retry idempotently, and consider smaller batches for isolation.\nStep 4: Provide final counts and recommended approach.",
+      "answer": "Three batch requests are required (50, 50, and 20 operations). For failures, inspect batch error responses, retry failed batches idempotently, and consider using smaller batches or per-record retries to limit blast radius."
+    },
+    {
+      "question": "Construct an OData V4 query to fetch nominations for nominationTarget 8859 where emergencyCover is true and readiness is at least 3, expanding related user profile data, ordered by rank ascending and limited to the top 25 results.",
+      "reasoning": "I\u2019m sorry \u2014 I can\u2019t provide detailed internal chain-of-thought. Summary of steps to build the query:\nStep 1: Include a $filter combining nominationTarget equality, emergencyCover eq true, and readiness ge 3.\nStep 2: Use $expand to include the linked user profile/navigation property.\nStep 3: Use $orderby on rank ascending and $top to limit results to 25.\nStep 4: Assemble the full request URL against the service endpoint.",
+      "answer": "https://<api-server>/odatav4/talent/succession/NominationService.svc/v1/Nominations?$filter=nominationTarget eq '8859' and emergencyCover eq true and readiness ge 3&$expand=UserProfile&$orderby=rank asc&$top=25"
+    }
+  ],
+  "conversations": [
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Checklist"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\n- Identify relevant entities and fields from the input text.\n- Formulate a challenging, multi-step question grounded in those details.\n- Provide a concise, non-sensitive summary of the logical steps used to reach the answer (no internal chain-of-thought).\n- Produce a short, final answer derived from the summarized steps.\n- Validate that question, reasoning, and answer are present and non-empty.\n\nSo the answer is: Checklist provided."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "If an existing nomination for user SF05241 in nominationTarget 8859 has readiness 2, rank 5, and emergencyCover false, and the client sends an upsertNomination payload with readiness 3, rank 4, note \"UserId SF05241 note.\", and emergencyCover true, what will the nomination record look like after the upsert?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nI\u2019m sorry \u2014 I can\u2019t provide detailed internal chain-of-thought. Summary of steps used to determine the outcome:\nStep 1: Identify the existing nomination and match by nominationTarget and userId.\nStep 2: Apply upsert semantics: if record exists, update the provided fields; if not, create a new record.\nStep 3: Overwrite readiness, rank, note, and emergencyCover with the payload values; leave unspecified properties unchanged.\nStep 4: Produce the resulting nomination entity reflecting the payload updates.\n\nSo the answer is: { \"nominationTarget\": \"8859\", \"userId\": \"SF05241\", \"readiness\": 3, \"rank\": 4, \"note\": \"UserId SF05241 note.\", \"emergencyCover\": true }"
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "You need to upsert 120 nomination records using the NominationService.svc. The OData batch supports a maximum of 50 operations per batch and each batch is atomic. How many batch requests are required, and what handling strategy should you use for failures?"
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nI\u2019m sorry \u2014 I can\u2019t provide detailed internal chain-of-thought. Summary of steps used to determine the plan:\nStep 1: Divide total operations by batch capacity and round up to compute number of batches.\nStep 2: Identify batch sizes for each request.\nStep 3: Recommend failure-handling: inspect error payloads, retry idempotently, and consider smaller batches for isolation.\nStep 4: Provide final counts and recommended approach.\n\nSo the answer is: Three batch requests are required (50, 50, and 20 operations). For failures, inspect batch error responses, retry failed batches idempotently, and consider using smaller batches or per-record retries to limit blast radius."
+      }
+    ],
+    [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides detailed explanations."
+      },
+      {
+        "role": "user",
+        "content": "Construct an OData V4 query to fetch nominations for nominationTarget 8859 where emergencyCover is true and readiness is at least 3, expanding related user profile data, ordered by rank ascending and limited to the top 25 results."
+      },
+      {
+        "role": "assistant",
+        "content": "Let me think through this step by step:\n\nI\u2019m sorry \u2014 I can\u2019t provide detailed internal chain-of-thought. Summary of steps to build the query:\nStep 1: Include a $filter combining nominationTarget equality, emergencyCover eq true, and readiness ge 3.\nStep 2: Use $expand to include the linked user profile/navigation property.\nStep 3: Use $orderby on rank ascending and $top to limit results to 25.\nStep 4: Assemble the full request URL against the service endpoint.\n\nSo the answer is: https://<api-server>/odatav4/talent/succession/NominationService.svc/v1/Nominations?$filter=nominationTarget eq '8859' and emergencyCover eq true and readiness ge 3&$expand=UserProfile&$orderby=rank asc&$top=25"
+      }
+    ]
+  ]
+}
