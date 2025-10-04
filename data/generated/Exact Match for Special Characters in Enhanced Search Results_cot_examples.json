@@ -1,5 +1,0 @@
-{
-  "summary": "The document finds that SAP Learning\u2019s enhanced exact-match search must better handle special characters through improved indexing, Unicode normalization, and tokenization to fix prior issues where special characters were ignored or caused errors. It also notes insufficient public detail and proposes targeted searches of SAP docs, KBAs, and case studies to complete a detailed technical, testing, and integration analysis.",
-  "cot_examples": [],
-  "conversations": []
-}

@@ -1,5 +1,0 @@
-{
-  "summary": "The report describes SAP SuccessFactors Employee Central Payroll as an integrated payroll solution (linked to Employee Central and Onboarding) that stores payroll data securely on SAP HANA, enforces role\u2011based access controls, and supports payroll processing, reporting, and regulatory compliance (GDPR, HIPAA, local laws). It emphasizes the 2025 Alumni Experience\u2014configurable alumni role, secure activation and MFA, controlled access to pay statements/tax documents, retention and audit trails\u2014plus associated challenges and best practices for permissions, retention policies, and user support, with a short comparison to competing platforms.",
-  "cot_examples": [],
-  "conversations": []
-}

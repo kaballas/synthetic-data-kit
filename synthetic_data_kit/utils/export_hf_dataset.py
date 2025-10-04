@@ -32,7 +32,7 @@ def export_dataset_to_txt():
         dataset = load_dataset("Kaballas/SAP_NEW", split="train")
         
         # Create a directory to store output files
-        output_dir = "research_reports_txt"
+        output_dir = "C:\\DTT\\synthetic-data-kit\\data\\report"
         os.makedirs(output_dir, exist_ok=True)
         print(f"Output directory '{output_dir}' created or already exists.")
         

@@ -332,7 +332,7 @@ synthetic-data-kit create data/parsed/report.lance --type multimodal-qa
 synthetic-data-kit ingest ./data/input/
 synthetic-data-kit create ./data/parsed/ --type qa -n 20
 synthetic-data-kit curate ./data/generated/ -t 7.5
-synthetic-data-kit save-as ./data/curated/ -f chatml
+synthetic-data-kit save-as ./data/generated/ -f chatml
 
 # Generate blog posts from all parsed text files
 synthetic-data-kit create ./data/parsed/ --type blog
