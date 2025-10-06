@@ -10,7 +10,7 @@ paths:
     parsed: "data/parsed"       # Stage 1: Where parsed text files are saved (ingest output)
     generated: "data/generated" # Stage 2: Where generated QA pairs are saved (create output)
     curated: "data/curated"     # Stage 3: Where curated QA pairs are saved (curate output)
-    final: "data/final"         # Stage 4: Where final training formats are saved (save-as output)
+    final: "data/final_x"         # Stage 4: Where final training formats are saved (save-as output)
 
 # LLM Provider configuration
 llm:
@@ -29,7 +29,7 @@ vllm:
 api-endpoint:
   api_base: "http://localhost:8001/v1" # Optional base URL for API endpoint (null for default API)
   api_key: "llama-api-key"               # API key for API endpoint or compatible service (can use env var instead)
-  model: "gpt-5-mini" # Default model to use
+  model: "gpt-4.1" # Default model to use
   max_retries: 3                       # Number of retries for API calls
   retry_delay: 1.0                     # Initial delay between retries (seconds)
 
@@ -88,28 +88,65 @@ prompts:
   
   # QA pair generation prompt
   qa_generation: |
+      Role: Deliver clarity and stepwise reasoning.
+      Objective: Enable independent, high-fidelity cognition.
 
-    summary : {summary}
-    Create question-answer pairs from this text for LLM training.
-    
-    Rules:
-    1. Questions must be about important facts in the text
-    2. Answers must be directly supported by the text
-    3. Return JSON format only:
-    
-    [
-      {{
-        "question": "Question 1?",
-        "answer": "Answer 1."
-      }},
-      {{
-        "question": "Question 2?",
-        "answer": "Answer 2."
-      }}
-    ]
-    
-    Text:
-    {text}
+      Instructions:
+        - Start replies with scratchpad block, close explicitly.
+        - Provide 3–7 item checklist before work.
+        - Use strict headings/sub-task IDs.
+        - Always give full code blocks if code involved.
+        - Output must be direct, blunt, instructional only.
+
+      Sub-categories:
+        Reasoning_Structure: [Attention, Revision, ToM, Operations, Pathway, Extraction, Steps, Metacognition, ≥5 Questions]
+        Affective_Suppression: No sentiment or engagement.
+        Directive_Only: Blunt imperatives only.
+        Closure: Stop after deliverable.
+
+      Context:
+        Goal: Precision cognition for self-sufficiency.
+        Assumption: User needs minimal accommodation.
+        Rule: No filler, only cognitive signal.
+
+      Reasoning_Steps: [Map unknowns, Revise scope, Execute, Validate, Deliver]
+
+      Planning_Verification:
+        - Dissect requests, track assumptions, ensure progression.
+        - Validate output in ≤2 lines, self-correct if needed.
+        - Prioritize continuity, clarity, zero redundancy.
+
+      Output_Format:
+        - Scratchpad block always.
+        - Full explicit code when relevant.
+
+      Verbosity: Only substance. No transitions or flourishes.
+
+      Stop_Conditions: [Deliverable given, Sections complete, Stop]
+
+      Enforcement: Absolute ad  herence to directive-only structure.
+
+      summary : {summary}
+      Create question-answer pairs from this text for LLM training.
+      
+      Rules:
+      1. Questions must be about important facts in the text
+      2. Answers must be directly supported by the text
+      3. Return JSON format only:
+      
+      [
+        {{
+          "question": "Question 1?",
+          "answer": "Answer 1."
+        }},
+        {{
+          "question": "Question 2?",
+          "answer": "Answer 2."
+        }}
+      ]
+      
+      Text:
+      {text}
   
   # QA pair rating prompt
   qa_rating: |

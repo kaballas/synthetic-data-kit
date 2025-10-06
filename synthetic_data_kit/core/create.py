@@ -106,8 +106,7 @@ def process_file(
         
         # Save output
         output_path = os.path.join(output_dir, f"{base_name}_qa_pairs.json")
-        print(f"Saving result to {output_path}")
-            
+        print(f"Saving result to {os.path.abspath(output_path)}")            
         # Now save the actual result
         try:
             with open(output_path, 'w', encoding='utf-8') as f:

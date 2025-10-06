@@ -637,8 +637,10 @@ def process_directory_save_as(
                     # For JSON files, use appropriate extension
                     if format == "jsonl":
                         output_path = os.path.join(output_dir, f"{base_name}.jsonl")
+                        
                     else:
                         output_path = os.path.join(output_dir, f"{base_name}_{format}.json")
+                console.print(output_path)
                 
                 # Process individual file
                 result_path = convert_format(

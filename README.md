@@ -136,7 +136,7 @@ synthetic-data-kit curate ./data/generated/ --threshold 8.0
 # Saves curated files to data/curated/
 
 # Convert all curated files to training format
-synthetic-data-kit save-as ./data/curated/ --format alpaca
+synthetic-data-kit save-as "C:\Users\thevermeulen\data\generated\done" --format alpaca
 # Processes all .json files in the directory
 # Saves final files to data/final/
 ```
@@ -333,6 +333,7 @@ synthetic-data-kit ingest ./data/input/
 synthetic-data-kit create ./data/parsed/ --type qa -n 20
 synthetic-data-kit curate ./data/generated/ -t 7.5
 synthetic-data-kit save-as ./data/generated/ -f chatml
+synthetic-data-kit save-as "C:\Users\thevermeulen\data\generated" -f chatml
 
 # Generate blog posts from all parsed text files
 synthetic-data-kit create ./data/parsed/ --type blog
