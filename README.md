@@ -95,6 +95,7 @@ synthetic-data-kit ingest docs/report.pdf
 
 # Generate QA pairs (default)
 synthetic-data-kit create data/parsed/report.lance --type qa
+synthetic-data-kit create data/parsed/ --type qa
 
 OR 
 
