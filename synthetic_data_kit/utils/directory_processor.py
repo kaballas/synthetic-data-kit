@@ -300,6 +300,9 @@ def process_directory_create(
     elif content_type == "knowledge":
         # Knowledge extraction can work with both text files and JSON files (for QA pairs)
         extensions = ['.txt', '.json']
+    elif content_type == "cot":
+        # Knowledge extraction can work with both text files and JSON files (for QA pairs)
+        extensions = ['.txt', '.json']    
     elif content_type == "blog":
         # Blog generation works with text files
         extensions = ['.txt']
@@ -388,6 +391,8 @@ def process_directory_create(
                 
                 if verbose:
                     console.print(f"✓ Generated {content_type} from {filename} -> {os.path.basename(output_path)}", style="green")
+                    console.print(f"✓ Generated {content_type} from {filename} -> {output_path}", style="green")
+
                 else:
                     console.print(f"✓ {filename}", style="green")
                 
